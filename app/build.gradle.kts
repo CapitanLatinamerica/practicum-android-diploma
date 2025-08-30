@@ -13,7 +13,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "ru.practicum.android.diploma"

@@ -9,7 +9,6 @@ buildscript {
         google()
     }
     dependencies {
-        val nav_version = "2.9.3"
         classpath(libs.navigation.safe.args.gradle.plugin)
     }
 }
