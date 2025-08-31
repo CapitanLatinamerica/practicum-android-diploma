@@ -1,23 +1,60 @@
 [versions]
 
+activityKtx = "1.6.1"
+appcompat = "1.7.0"
+coreKtx = "1.13.1"
+espressoCore = "3.6.1"
+fragmentKtx = "1.8.6"
+glide = "4.14.2"
+gson = "2.10"
 java = "VERSION_1_8"
 
 # Build constants
-minSdk = "26"
+junit = "1.2.1"
+koinAndroid = "3.3.0"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.8.7"
+material = "1.12.0"
+materialVersion = "1.8.0"
+minSdk = "29"
 compileSdk = "34"
-navigationFragmentKtx = "2.9.3"
-targetSdk = "33"
+navigationFragmentKtx = "2.8.9"
+navigationSafeArgsGradlePlugin = "2.9.3"
+retrofit = "2.9.0"
+roomRuntime = "2.7.1"
+targetSdk = "34"
 
 # Detekt
 detekt = "1.23.3"
-detektTwitterComposeRules ="0.0.26"
-kotlin = "1.9.24"
+detektTwitterComposeRules = "0.0.26"
+viewpager2 = "1.0.0"
 
 [libraries]
 
 # Detekt
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
+appcompat-v170 = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+core-ktx-v1131 = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+espresso-core-v361 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+junit-v121 = { module = "androidx.test.ext:junit", version.ref = "junit" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLivedataKtx" }
+material-v1120 = { module = "com.google.android.material:material", version.ref = "material" }
+material-v180 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePlugin" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 staticAnalysis-detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
 staticAnalysis-detektApi = { module = "io.gitlab.arturbosch.detekt:detekt-api", version.ref = "detekt" }
@@ -40,7 +77,6 @@ unitTests-junit = "junit:junit:4.13.2"
 # UI tests
 uiTests-junitExt = "androidx.test.ext:junit:1.1.5"
 uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
-[plugins]
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 
 [bundles]
