@@ -16,14 +16,11 @@ object Tools {
         ) as ConnectivityManager
         val capabilities =
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-            }
-        }
-        return false
+        return capabilities?.run {
+            hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } ?: false
     }
 
     fun <T> debounce(
