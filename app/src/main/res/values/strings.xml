@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_filter_country">Экран фильтрации по стране</string>
+    <string name="name_favourites">Экран избранного</string>
+    <string name="name_filter">Экран фильтрации</string>
+    <string name="name_filter_industry">Экран фильтрации по отрасли работы</string>
+    <string name="name_main">Главный экран - Экран поиска вакансий</string>
+    <string name="name_filter_region">Экран фильтрации по региону</string>
+    <string name="name_team">Экран команды</string>
+    <string name="name_vacancy_details">Экран детали вакансии</string>
+    <string name="name_filter_workplace">Экран фильтрации по месту работы</string>
 </resources>
