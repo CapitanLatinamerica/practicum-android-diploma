@@ -16,7 +16,7 @@
         app:title="MyAwesomeTitle" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/containerView"
+        android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="@dimen/zero_dp"
