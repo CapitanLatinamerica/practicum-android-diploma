@@ -11,4 +11,7 @@
     <string name="name_team">Экран команды</string>
     <string name="name_vacancy_details">Экран детали вакансии</string>
     <string name="name_filter_workplace">Экран фильтрации по месту работы</string>
+    <string name="title_main">Главная</string>
+    <string name="title_favourites">Избранное</string>
+    <string name="title_team">Команда</string>
 </resources>
