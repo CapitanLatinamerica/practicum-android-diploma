@@ -46,4 +46,14 @@
         <item name="navigationIcon">@drawable/tb_arrow_back</item>
     </style>
 
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@null</item>
+        <item name="itemRippleColor">@android:color/transparent</item>
+        <item name="android:background">@color/primary</item>
+        <item name="itemIconTint">@color/bottom_nav_color_state</item>
+        <item name="itemTextColor">@color/bottom_nav_color_state</item>
+        <item name="itemTextAppearanceActive">@style/TextRegular12</item>
+        <item name="itemTextAppearanceInactive">@style/TextRegular12</item>
+    </style>
+
 </resources>
