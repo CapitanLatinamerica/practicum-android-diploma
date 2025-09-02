@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         style="@style/OurCommonToolbar"
         app:navigationIcon="@null"
-        app:title="@string/team_header" />
+        app:title="@string/title_team" />
 
     <!-- Основной контейнер с отступами -->
     <LinearLayout

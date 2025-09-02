@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         style="@style/OurCommonToolbar"
         app:navigationIcon="@null"
-        app:title="@string/favorites_header" />
+        app:title="@string/title_favourites" />
 
     <!-- Основной контейнер с отступами -->
     <!-- Плейсхолдер и текст по умолчанию видим -->
