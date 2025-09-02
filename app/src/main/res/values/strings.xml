@@ -29,6 +29,8 @@
     <string name="country_header">Выбор страны</string>
     <string name="region_header">Выбор региона</string>
     <string name="vacancy_details_header">Вакансия</string>
+    <string name="favorites_header">Избранное</string>
+    <string name="team_header">Команда</string>
 
     <!-- Тексты экранов -->
     <string name="inventors">Над приложением работали</string>
