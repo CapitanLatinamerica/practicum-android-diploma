@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/OurCommonToolbar"
-        app:navigationIcon="none"
+        app:navigationIcon="@null"
         app:title="@string/team_header" />
 
     <!-- Основной контейнер с отступами -->

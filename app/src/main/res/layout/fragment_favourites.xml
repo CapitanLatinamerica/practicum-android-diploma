@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/OurCommonToolbar"
-        app:navigationIcon="none"
+        app:navigationIcon="@null"
         app:title="@string/favorites_header" />
 
     <!-- Основной контейнер с отступами -->
@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/fav_ph_height"
             android:layout_gravity="center"
+            android:contentDescription="@string/favorites_placeholder"
             android:src="@drawable/favorites_placeholder"/>
 
         <TextView
