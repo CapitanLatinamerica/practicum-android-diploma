@@ -1,15 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favoritesFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     tools:context=".favourites.ui.FavouritesFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/name_favourites"
-        android:textSize="30sp" />
+    <!-- Тулбар -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/OurCommonToolbar"
+        app:navigationIcon="none"
+        app:title="@string/favorites_header" />
 
-</FrameLayout>
+    <!-- Основной контейнер с отступами -->
+    <!-- Плейсхолдер и текст по умолчанию видим -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_16"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/placeholderImage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fav_ph_height"
+            android:layout_gravity="center"
+            android:src="@drawable/favorites_placeholder"/>
+
+        <TextView
+            android:id="@+id/emptyListTextView"
+            android:layout_width="@dimen/fav_empty_list_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="center"
+            android:maxLines="2"
+            style="@style/TextMedium22"
+            android:text="@string/empty_list" />
+
+    </LinearLayout>
+
+    <!-- RecyclerView (по умолчанию скрыт) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoritesRecyclerView"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
+        android:visibility="gone"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_16"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/padding_16" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
