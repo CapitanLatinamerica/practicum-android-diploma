@@ -4,7 +4,6 @@ plugins {
     id("ru.practicum.android.diploma.plugins.developproperties")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
-
 }
 
 android {
