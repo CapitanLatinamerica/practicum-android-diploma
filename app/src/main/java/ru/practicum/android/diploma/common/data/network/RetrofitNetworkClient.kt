@@ -59,9 +59,6 @@ class RetrofitNetworkClient(private val headHunterApi: HeadHunterApi, private va
                 e
             )
             NetResponse().error(e.code())
-        } catch (e: Throwable) {
-            Log.e(TAG, "doRequest failed", e)
-            NetResponse().error()
         }
     }
 
