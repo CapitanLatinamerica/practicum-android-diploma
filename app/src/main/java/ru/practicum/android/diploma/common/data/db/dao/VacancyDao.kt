@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
-
 import ru.practicum.android.diploma.common.data.db.entity.VacancyEntity
 
 @Dao

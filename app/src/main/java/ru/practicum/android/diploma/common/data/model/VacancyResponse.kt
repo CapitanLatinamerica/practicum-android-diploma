@@ -9,8 +9,6 @@ import ru.practicum.android.diploma.common.data.domain.api.Experience
 import ru.practicum.android.diploma.common.data.domain.api.Industry
 import ru.practicum.android.diploma.common.data.domain.api.Salary
 import ru.practicum.android.diploma.common.data.domain.api.Schedule
-import ru.practicum.android.diploma.common.data.domain.api.VacanciesDto
-import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 
 data class VacancyResponse(
     val address: Address,

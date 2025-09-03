@@ -19,9 +19,3 @@ data class VacancyEntity(
     val schedule: String,
     val description: String
 )
-
-
-
-
-
-

@@ -16,4 +16,8 @@ data class Vacancy(
     @SerializedName("employment") val employment: String,
     @SerializedName("schedule") val schedule: String,
     @SerializedName("description") val description: String
-) : Serializable
+) : Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+}
