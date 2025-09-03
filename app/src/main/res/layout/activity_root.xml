@@ -6,20 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".main.ui.RootActivity">
 
-    <!-- Тулбар -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/OurCommonToolbar"
-        app:title="MyAwesomeTitle" />
-
     <TextView
         android:id="@+id/buildConfigReadExampleTextView"
+        style="@style/TextBold32"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/TextBold32"
         android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
