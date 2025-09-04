@@ -37,7 +37,7 @@
         style="@style/EditText"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="@dimen/tb_height"
-        android:layout_marginVertical="@dimen/padding_8"
+        android:layout_marginTop="@dimen/padding_8"
         android:drawableEnd="@drawable/ic_search"
         android:hint="@string/hint_edit_text"
         android:paddingHorizontal="@dimen/padding_16"
@@ -45,10 +45,27 @@
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+    <TextView
+        android:id="@+id/countVacancies"
+        style="@style/TextRegular16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_11"
+        android:background="@drawable/background_count_vacancies"
+        android:elevation="@dimen/one_dp"
+        android:paddingHorizontal="@dimen/padding_12"
+        android:paddingVertical="@dimen/padding_4"
+        android:textColor="@color/white_universal"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        tools:text="Найдено 200 вакансий" />
+
     <ImageView
         android:id="@+id/placeholderMainScreen"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
         android:src="@drawable/placeholder_main_screen"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
