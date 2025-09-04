@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/teamFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".team.ui.TeamFragment">
+
+    <!-- Тулбар -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/OurCommonToolbar"
+        app:navigationIcon="@null"
+        app:title="@string/title_team" />
+
+    <!-- Основной контейнер с отступами -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/padding_16"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_16"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/teamDescrTextView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/team_header_height"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="start"
+            style="@style/TextBold32"
+            android:text="@string/inventors" />
+
+        <TextView
+            android:id="@+id/sintyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_24"
+            android:gravity="start"
+            style="@style/TextMedium16"
+            android:ellipsize="end"
+            android:text="@string/sinty" />
+
+        <TextView
+            android:id="@+id/kitLeskinenTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="start"
+            style="@style/TextMedium16"
+            android:ellipsize="end"
+            android:text="@string/kit_leskinen" />
+
+        <TextView
+            android:id="@+id/sTerTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="start"
+            style="@style/TextMedium16"
+            android:ellipsize="end"
+            android:text="@string/s_ter" />
+
+        <TextView
+            android:id="@+id/capitanLatAmTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="start"
+            style="@style/TextMedium16"
+            android:ellipsize="end"
+            android:text="@string/capitan_latam" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

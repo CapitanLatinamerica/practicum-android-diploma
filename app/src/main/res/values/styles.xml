@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- базовый стиль текста Regular12-->
+    <style name="TextRegular12" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/font_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- стиль текста Regular16-->
+    <style name="TextRegular16">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- стиль текста Medium16-->
+    <style name="TextMedium16">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- стиль текста Medium22-->
+    <style name="TextMedium22">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <!-- стиль текста Bold32-->
+    <style name="TextBold32">
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="OurCommonToolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:layout_height">@dimen/tb_height</item>
+        <item name="android:layout_width">@dimen/zero_dp</item>
+        <item name="titleTextColor">@color/onPrimary</item>
+        <item name="titleTextAppearance">@style/TextMedium22</item>
+        <item name="navigationIcon">@drawable/tb_arrow_back</item>
+    </style>
+
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@null</item>
+        <item name="itemRippleColor">@android:color/transparent</item>
+        <item name="android:background">@color/primary</item>
+        <item name="itemIconTint">@color/bottom_nav_color_state</item>
+        <item name="itemTextColor">@color/bottom_nav_color_state</item>
+        <item name="itemTextAppearanceActive">@style/TextRegular12</item>
+        <item name="itemTextAppearanceInactive">@style/TextRegular12</item>
+    </style>
+
+</resources>

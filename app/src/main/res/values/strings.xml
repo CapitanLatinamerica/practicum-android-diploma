@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name_filter_country">Экран фильтрации по стране</string>
+    <string name="name_favourites">Экран избранного</string>
+    <string name="name_filter">Экран фильтрации</string>
+    <string name="name_filter_industry">Экран фильтрации по отрасли работы</string>
+    <string name="name_main">Главный экран - Экран поиска вакансий</string>
+    <string name="name_filter_region">Экран фильтрации по региону</string>
+    <string name="name_team">Экран команды</string>
+    <string name="name_vacancy_details">Экран детали вакансии</string>
+    <string name="name_filter_workplace">Экран фильтрации по месту работы</string>
+    <string name="title_main">Главная</string>
+    <string name="title_favourites">Избранное</string>
+    <string name="title_team">Команда</string>
+
+    <!-- Разработчики -->
+    <string name="sinty">Сентябрина Тришина</string>
+    <string name="kit_leskinen">Никита Лескинен</string>
+    <string name="s_ter">Сергей Теряев</string>
+    <string name="capitan_latam">Алексей Полинкин</string>
+
+    <!-- Заголовки экранов -->
+    <string name="main_header">Поиск вакансий</string>
+    <string name="filter_header">Настройки фильтрации</string>
+    <string name="workplace_header">Выбор места работы</string>
+    <string name="industry_header">Выбор отрасли</string>
+    <string name="country_header">Выбор страны</string>
+    <string name="region_header">Выбор региона</string>
+    <string name="vacancy_details_header">Вакансия</string>
+    <string name="favorites_header">Избранное</string>
+    <string name="team_header">Команда</string>
+
+    <!-- Тексты экранов -->
+    <string name="inventors">Над приложением работали</string>
+    <string name="empty_list">Список пуст</string>
+    <string name="error_list">Не удалось получить список вакансий</string>
+    <string name="favorites_placeholder">Favorites placeholder</string>
 </resources>

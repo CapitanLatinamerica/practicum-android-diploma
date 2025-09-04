@@ -1,15 +1,8 @@
 # IntelliJ
 *.iml
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-/.idea/kotlinc.xml
-/.idea/gradle.xml
-/.idea/compiler.xml
-/.idea/misc.xml
+/.idea/
+
+
 
 # Gradle files
 .gradle/
@@ -47,3 +40,4 @@ google-services.json
 # OS specific
 .DS_Store
 *.log
+/.kotlin/sessions/kotlin-compiler-*.salive
