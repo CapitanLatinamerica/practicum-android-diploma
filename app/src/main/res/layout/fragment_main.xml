@@ -62,6 +62,17 @@
         app:layout_constraintTop_toBottomOf="@id/editText"
         tools:text="Найдено 200 вакансий" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMain"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
+        android:layout_marginTop="@dimen/padding_17"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/countVacancies"
+        tools:listitem="@layout/vacancy_item" />
+
     <ImageView
         android:id="@+id/placeholderMainScreen"
         android:layout_width="@dimen/zero_dp"

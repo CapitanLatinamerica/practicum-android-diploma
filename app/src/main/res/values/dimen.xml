@@ -11,6 +11,7 @@
     <dimen name="vacancy_icon_corner_radius">12dp</dimen>
 
     <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_17">17dp</dimen>
     <dimen name="padding_24">24dp</dimen>
     <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_11">11dp</dimen>
