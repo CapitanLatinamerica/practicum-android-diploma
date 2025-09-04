@@ -38,4 +38,6 @@
     <string name="error_list">Не удалось получить список вакансий</string>
     <string name="favorites_placeholder">Favorites placeholder</string>
     <string name="hint_edit_text">Введите запрос</string>
+    <string name="vacancy_name_default">Название вакансии длинное допустим ааа</string>
+    <string name="vacancy_salary_default">100 000</string>
 </resources>
