@@ -37,4 +37,5 @@
     <string name="empty_list">Список пуст</string>
     <string name="error_list">Не удалось получить список вакансий</string>
     <string name="favorites_placeholder">Favorites placeholder</string>
+    <string name="hint_edit_text">Введите запрос</string>
 </resources>

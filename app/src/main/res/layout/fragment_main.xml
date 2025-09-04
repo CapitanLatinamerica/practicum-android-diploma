@@ -7,7 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".search.ui.MainFragment">
 
-    <!-- Тулбар -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/padding_16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/padding_16" />
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/OurCommonToolbar"
@@ -16,9 +29,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/filter_menu"
         app:navigationIcon="@null"
-        app:title="@string/main_header"/>
+        app:title="@string/main_header" />
 
 
+    <EditText
+        android:id="@+id/editText"
+        style="@style/EditText"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/tb_height"
+        android:layout_marginVertical="@dimen/padding_8"
+        android:drawableEnd="@drawable/ic_search"
+        android:hint="@string/hint_edit_text"
+        android:paddingHorizontal="@dimen/padding_16"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

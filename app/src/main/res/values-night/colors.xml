@@ -9,4 +9,6 @@
     <color name="gray">#AEAFB4</color>
     <color name="light_gray">#E6E8EB</color>
     <color name="background_color">#AA1A1B22</color>
+    <color name="color_hint_edit_text">#FDFDFD</color>
+    <color name="background_edit_text">#AEAFB4</color>
 </resources>
