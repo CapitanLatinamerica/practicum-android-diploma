@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Общие и временные строки (для заглушек в ранних эпиках) -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name_filter_country">Экран фильтрации по стране</string>
     <string name="name_favourites">Экран избранного</string>
@@ -40,4 +41,20 @@
     <string name="hint_edit_text">Введите запрос</string>
     <string name="vacancy_name_default">Название вакансии длинное допустим ааа</string>
     <string name="vacancy_salary_default">100 000</string>
+    <string name="experience_needed">Требуемый опыт</string>
+    <string name="experience_sample">Опыт 1</string>
+    <string name="experience_description_default">Полная занятость, Удалённая работа</string>
+    <string name="vacancy_descr">Описание вакансии</string>
+    <string name="responsibilities_title">Обязанности</string>
+    <string name="responsibilities_description_default">" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения"</string>
+    <string name="element_text_default">Разработка</string>
+    <string name="vacancy_Requirements">Требования</string>
+    <string name="vacancy_skills">Ключевые навыки</string>
+    <string name="requirements_title">Требования</string>
+    <string name="conditions_title">Условия</string>
+    <string name="company_name">Company Name</string>
+    <string name="city">City</string>
+
+    <!-- Тексты для описаний блоков в разметках -->
+    <string name="image_view_details_descr">The same image as at the main screen</string>
 </resources>

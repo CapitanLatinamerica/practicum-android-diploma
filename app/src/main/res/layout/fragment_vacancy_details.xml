@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".vacancydetails.ui.VacancyDetailsFragment">
@@ -25,10 +24,10 @@
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/OurCommonToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/OurCommonToolbar"
         app:menu="@null"
         app:title="@string/vacancy_details_header" />
 
@@ -37,11 +36,11 @@
         android:id="@+id/detailsScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_marginTop="@dimen/padding_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/padding_24">
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,22 +81,23 @@
                     <!-- Обложка компании -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/companyLogoBlock"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        app:cardElevation="0dp"
+                        android:layout_width="@dimen/vacancy_icon_shape_size"
+                        android:layout_height="@dimen/vacancy_icon_shape_size"
+                        android:layout_marginStart="@dimen/padding_16"
+                        app:cardElevation="@dimen/zero_dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.5"
-                        app:shapeAppearance="@style/RoundedCorners12dp"
-                        android:layout_marginStart="16dp">
+                        app:shapeAppearance="@style/RoundedCorners12dp">
 
                         <ImageView
                             android:id="@+id/innerLogo"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="@dimen/vacancy_icon_shape_size"
+                            android:layout_height="@dimen/vacancy_icon_shape_size"
+                            android:contentDescription="@string/image_view_details_descr"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@drawable/fav_error_cat_meme" />
+                            app:srcCompat="@drawable/placeholder_vacancy" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <!-- Блок с названием компании и городом -->
@@ -105,25 +105,25 @@
                         android:id="@+id/companyTextBlock"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_8"
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="@id/companyLogoBlock"
                         app:layout_constraintStart_toEndOf="@id/companyLogoBlock"
-                        app:layout_constraintTop_toTopOf="@id/companyLogoBlock"
-                        android:layout_marginStart="8dp">
+                        app:layout_constraintTop_toTopOf="@id/companyLogoBlock">
 
                         <TextView
                             android:id="@+id/companyName"
+                            style="@style/TextMedium22"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Company Name"
-                            style="@style/TextMedium22" />
+                            android:text="@string/company_name" />
 
                         <TextView
                             android:id="@+id/companyCity"
+                            style="@style/TextRegular16"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="City"
-                            style="@style/TextRegular16" />
+                            android:text="@string/city" />
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -135,7 +135,7 @@
                 android:id="@+id/experienceBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/padding_30"
                 android:orientation="vertical">
 
                 <TextView
@@ -143,21 +143,125 @@
                     style="@style/TextMedium16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Требуемый опыт" />
+                    android:text="@string/experience_needed" />
 
                 <TextView
-                    android:id="@+id/experienceLine1"
-                    style="@style/TextRegular12"
+                    android:id="@+id/experienceLine"
+                    style="@style/TextRegular16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Опыт 1" />
+                    android:layout_marginTop="@dimen/padding_4"
+                    android:text="@string/experience_sample" />
 
-                <!-- Можно добавить дополнительные строки опыта при необходимости -->
+                <TextView
+                    android:id="@+id/experienceDescr"
+                    style="@style/TextRegular16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_8"
+                    android:text="@string/experience_description_default" />
 
             </LinearLayout>
 
-            <!-- Здесь можно добавить далее кнопки и другие элементы -->
+            <!-- Описание вакансии -->
+            <LinearLayout
+                android:id="@+id/descriptionBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vacancyDescription"
+                    style="@style/TextMedium22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vacancy_descr" />
+
+                <!-- ОБЯЗАННОСТИ -->
+                <TextView
+                    android:id="@+id/responsibilities"
+                    style="@style/TextMedium16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_16"
+                    android:text="@string/responsibilities_title" />
+
+                <!-- RecyclerView (ОБЯЗАННОСТИ) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/responsibilitiesRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/zero_dp"
+                    app:layout_constraintTop_toBottomOf="@id/responsibilities"
+                    tools:listitem="@layout/vacancy_detail_recycler_item" />
+
+                <!-- ТРЕБОВАНИЯ -->
+                <TextView
+                    android:id="@+id/requirements"
+                    style="@style/TextMedium16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_16"
+                    android:text="@string/requirements_title" />
+
+                <!-- RecyclerView (ТРЕБОВАНИЯ) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/requirementsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/zero_dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/requirements"
+                    tools:listitem="@layout/vacancy_detail_recycler_item" />
+
+                <!-- УСЛОВИЯ -->
+                <TextView
+                    android:id="@+id/conditions"
+                    style="@style/TextMedium16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_16"
+                    android:text="@string/conditions_title" />
+
+                <!-- RecyclerView (УСЛОВИЯ) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/conditionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/zero_dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/conditions"
+                    tools:listitem="@layout/vacancy_detail_recycler_item" />
+
+            </LinearLayout>
+
+            <!-- Ключевые навыки -->
+            <LinearLayout
+                android:id="@+id/skillsBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vacancySkills"
+                    style="@style/TextMedium22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vacancy_skills" />
+
+                <!-- RecyclerView (для ключевых навыков. скрыт) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/skillsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/zero_dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/responsibilities"
+                    tools:listitem="@layout/vacancy_detail_recycler_item" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
