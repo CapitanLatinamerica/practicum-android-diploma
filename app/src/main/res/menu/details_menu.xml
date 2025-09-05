@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share_btn"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_header"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/like_btn"
+        android:icon="@drawable/ic_like_button"
+        android:title="@string/liked_header"
+        app:showAsAction="ifRoom" />
+</menu>

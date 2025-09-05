@@ -30,7 +30,13 @@
         android:id="@+id/teamFragment"
         android:name="ru.practicum.android.diploma.team.ui.TeamFragment"
         android:label="fragment_team"
-        tools:layout="@layout/fragment_team" />
+        tools:layout="@layout/fragment_team" >
+        <!-- Временное действие для перехода на экран деталей -->
+        <action
+            android:id="@+id/action_teamFragment_to_vacancyDetailsFragment"
+            app:destination="@id/vacancyDetailsFragment" />
+        <!-- Удалять до сюда -->
+    </fragment>
     <fragment
         android:id="@+id/vacancyDetailsFragment"
         android:name="ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsFragment"
