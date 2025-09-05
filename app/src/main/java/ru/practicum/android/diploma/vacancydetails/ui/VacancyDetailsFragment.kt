@@ -20,7 +20,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         formatAllTextViews()
     }
 
-    //Метод для форматирования сплошного текста в соответствие макету
+    // Метод для форматирования сплошного текста в соответствие макету
     private fun formatAllTextViews() {
         binding.responsibilitiesTextView.formatTextWithBullets(R.string.responsibilities_text)
         binding.requirementsTextView.formatTextWithBullets(R.string.requirements_text)

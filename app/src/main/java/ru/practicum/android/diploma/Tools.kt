@@ -45,7 +45,7 @@ object Tools {
         }
     }
 
-    //Метод для форматирования списка описания, требований, условий, навыков
+    // Метод для форматирования списка описания, требований, условий, навыков
     fun autoFormatTextWithPaint(
         text: String,
         paint: TextPaint,
@@ -53,40 +53,98 @@ object Tools {
         prefix: String = " • "
     ): String {
         val indent = " ".repeat(prefix.length)
+        val formattingContext = FormattingContext(prefix, indent, paint, availableWidth)
 
         return buildString {
             text.lines().forEachIndexed { lineIndex, line ->
                 if (line.isNotBlank()) {
-                    val trimmedLine = line.trim()
                     if (lineIndex > 0) append("\n")
-
-                    val words = trimmedLine.split(" ")
-                    var currentLine = StringBuilder(prefix)
-                    var currentLineWidth = paint.measureText(prefix)
-
-                    words.forEach { word ->
-                        val wordWidth = paint.measureText(" $word")
-
-                        if (currentLineWidth + wordWidth > availableWidth && currentLine.length > prefix.length) {
-                            append(currentLine.toString())
-                            append("\n")
-                            currentLine = StringBuilder(indent).append(word)
-                            currentLineWidth = paint.measureText("$indent$word")
-                        } else {
-                            if (currentLine.length > prefix.length) {
-                                currentLine.append(" ")
-                                currentLineWidth += paint.measureText(" ")
-                            }
-                            currentLine.append(word)
-                            currentLineWidth += paint.measureText(word)
-                        }
-                    }
-
-                    if (currentLine.isNotEmpty()) {
-                        append(currentLine.toString())
-                    }
+                    processLine(line.trim(), formattingContext)
                 }
             }
+        }
+    }
+
+    private fun StringBuilder.processLine(
+        line: String,
+        context: FormattingContext
+    ) {
+        val words = line.split(" ")
+        var currentLine = StringBuilder(context.prefix)
+        var currentLineWidth = context.paint.measureText(context.prefix)
+
+        words.forEach { word ->
+            currentLineWidth = processWord(
+                word = word,
+                currentLine = currentLine,
+                currentLineWidth = currentLineWidth,
+                context = context
+            )
+        }
+
+        appendCurrentLineIfNotEmpty(currentLine)
+    }
+
+    private fun StringBuilder.processWord(
+        word: String,
+        currentLine: StringBuilder,
+        currentLineWidth: Float,
+        context: FormattingContext
+    ): Float {
+        var newLineWidth = currentLineWidth
+        val wordWidth = context.paint.measureText(" $word")
+
+        return if (shouldBreakLine(newLineWidth, wordWidth, context, currentLine)) {
+            breakLine(currentLine, word, context)
+            context.paint.measureText("${context.indent}$word")
+        } else {
+            addWordToCurrentLine(word, currentLine, newLineWidth, context.paint)
+        }
+    }
+
+    private fun shouldBreakLine(
+        currentLineWidth: Float,
+        wordWidth: Float,
+        context: FormattingContext,
+        currentLine: StringBuilder
+    ): Boolean {
+        return currentLineWidth + wordWidth > context.availableWidth &&
+            currentLine.length > context.prefix.length
+    }
+
+    private fun StringBuilder.breakLine(
+        currentLine: StringBuilder,
+        word: String,
+        context: FormattingContext
+    ) {
+        append(currentLine.toString())
+        append("\n")
+        currentLine.clear()
+        currentLine.append(context.indent).append(word)
+    }
+
+    private fun addWordToCurrentLine(
+        word: String,
+        currentLine: StringBuilder,
+        currentLineWidth: Float,
+        paint: TextPaint
+    ): Float {
+        var newLineWidth = currentLineWidth
+
+        if (currentLine.length > " • ".length) {
+            currentLine.append(" ")
+            newLineWidth += paint.measureText(" ")
+        }
+
+        currentLine.append(word)
+        newLineWidth += paint.measureText(word)
+
+        return newLineWidth
+    }
+
+    private fun StringBuilder.appendCurrentLineIfNotEmpty(currentLine: StringBuilder) {
+        if (currentLine.isNotEmpty()) {
+            append(currentLine.toString())
         }
     }
 
@@ -113,3 +171,11 @@ object Tools {
         }
     }
 }
+
+// Data class для группировки параметров форматирования
+private data class FormattingContext(
+    val prefix: String,
+    val indent: String,
+    val paint: TextPaint,
+    val availableWidth: Int
+)
