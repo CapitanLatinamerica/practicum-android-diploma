@@ -34,8 +34,8 @@
     <!-- ScrollView с ограничениями и отступами -->
     <ScrollView
         android:id="@+id/detailsScrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
         android:layout_marginTop="@dimen/padding_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
@@ -61,15 +61,15 @@
                 style="@style/TextMedium22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/padding_4"
                 android:text="@string/vacancy_salary_default" />
 
             <!-- Прямоугольник с скруглёнными углами для компании -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/companyInfoBlock"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="@dimen/shape_height"
+                android:layout_marginTop="@dimen/padding_16"
                 android:backgroundTint="@color/light_gray"
                 app:shapeAppearanceOverlay="@style/RoundedCorners12dp">
 
