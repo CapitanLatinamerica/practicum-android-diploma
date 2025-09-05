@@ -59,4 +59,8 @@
     <string name="image_view_details_descr">The same image as at the main screen</string>
     <string name="liked_header">Добавление в избранное</string>
     <string name="share_header">Поделиться</string>
+    <string name="responsibilities_text">Как будто здесь есть текст и его очень много прям вообще много, чтобы он на несколько строк расходился\nЕщё строка текста\nИ ещё одна</string>
+    <string name="requirements_text">Какие-то требования</string>
+    <string name="conditions_text">Какие-то условия\nУсловия номер два</string>
+    <string name="skills_text">Верстать экраны\nПить чай без сахара</string>
 </resources>

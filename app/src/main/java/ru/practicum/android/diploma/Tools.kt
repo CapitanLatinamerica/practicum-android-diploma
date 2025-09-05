@@ -7,6 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.widget.TextView
+import android.text.TextPaint
 
 object Tools {
 
@@ -40,6 +42,74 @@ object Tools {
                     action(param)
                 }
             }
+        }
+    }
+
+    //Метод для форматирования списка описания, требований, условий, навыков
+    fun autoFormatTextWithPaint(
+        text: String,
+        paint: TextPaint,
+        availableWidth: Int,
+        prefix: String = " • "
+    ): String {
+        val indent = " ".repeat(prefix.length)
+
+        return buildString {
+            text.lines().forEachIndexed { lineIndex, line ->
+                if (line.isNotBlank()) {
+                    val trimmedLine = line.trim()
+                    if (lineIndex > 0) append("\n")
+
+                    val words = trimmedLine.split(" ")
+                    var currentLine = StringBuilder(prefix)
+                    var currentLineWidth = paint.measureText(prefix)
+
+                    words.forEach { word ->
+                        val wordWidth = paint.measureText(" $word")
+
+                        if (currentLineWidth + wordWidth > availableWidth && currentLine.length > prefix.length) {
+                            append(currentLine.toString())
+                            append("\n")
+                            currentLine = StringBuilder(indent).append(word)
+                            currentLineWidth = paint.measureText("$indent$word")
+                        } else {
+                            if (currentLine.length > prefix.length) {
+                                currentLine.append(" ")
+                                currentLineWidth += paint.measureText(" ")
+                            }
+                            currentLine.append(word)
+                            currentLineWidth += paint.measureText(word)
+                        }
+                    }
+
+                    if (currentLine.isNotEmpty()) {
+                        append(currentLine.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    // Новая удобная функция для TextView
+    fun TextView.formatTextWithBullets(
+        textResource: Int,
+        prefix: String = " • "
+    ) {
+        val originalText = context.getString(textResource)
+
+        // Ждем когда layout будет готов для получения реальных размеров экрана
+        this.post {
+            val paint = this.paint
+            val availableWidth = this.width - this.paddingLeft - this.paddingRight
+
+            val formattedText = autoFormatTextWithPaint(
+                text = originalText,
+                paint = paint,
+                availableWidth = availableWidth,
+                prefix = prefix
+            )
+
+            this.text = formattedText
         }
     }
 }

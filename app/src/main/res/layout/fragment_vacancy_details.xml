@@ -169,11 +169,13 @@
                 android:layout_marginTop="@dimen/padding_16"
                 android:text="@string/responsibilities_title" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/responsibilitiesRecyclerView"
+            <TextView
+                android:id="@+id/responsibilitiesTextView"
+                style="@style/TextRegular16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/vacancy_detail_recycler_item" />
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/responsibilities_text" />
 
             <!-- Требования -->
             <TextView
@@ -184,14 +186,15 @@
                 android:layout_marginTop="@dimen/padding_16"
                 android:text="@string/requirements_title" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/requirementsRecyclerView"
+            <TextView
+                android:id="@+id/requirementsTextView"
+                style="@style/TextRegular16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:listitem="@layout/vacancy_detail_recycler_item" />
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/requirements_text" />
 
-            <!-- Условия -->
+                        <!-- Условия -->
             <TextView
                 android:id="@+id/conditions"
                 style="@style/TextMedium16"
@@ -200,12 +203,13 @@
                 android:layout_marginTop="@dimen/padding_16"
                 android:text="@string/conditions_title" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/conditionsRecyclerView"
+            <TextView
+                android:id="@+id/conditionsTextView"
+                style="@style/TextRegular16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:listitem="@layout/vacancy_detail_recycler_item" />
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/conditions_text" />
 
             <!-- Ключевые навыки -->
             <TextView
@@ -216,13 +220,14 @@
                 android:layout_marginTop="@dimen/padding_30"
                 android:text="@string/vacancy_skills" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/skillsRecyclerView"
+            <TextView
+                android:id="@+id/skillsTextView"
+                style="@style/TextRegular16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:listitem="@layout/vacancy_detail_recycler_item" />
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/skills_text" />
 
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
