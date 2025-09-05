@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@null"
+        app:menu="@menu/details_menu"
         app:title="@string/vacancy_details_header" />
 
     <!-- ScrollView с ограничениями и отступами -->

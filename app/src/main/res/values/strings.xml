@@ -57,4 +57,6 @@
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
+    <string name="liked_header">Добавление в избранное</string>
+    <string name="share_header">Поделиться</string>
 </resources>
