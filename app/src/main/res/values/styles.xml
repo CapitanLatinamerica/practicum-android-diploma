@@ -75,4 +75,14 @@
 
     </style>
 
+    <style name="RoundedCorners2dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
+    </style>
+
+    <style name="RoundedCorners12dp" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
 </resources>
