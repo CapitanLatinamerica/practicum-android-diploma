@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.common.data.mapper
 import org.junit.Assert.*
 import org.junit.Test
 import ru.practicum.android.diploma.common.data.domain.api.Address
-import ru.practicum.android.diploma.common.data.domain.api.Area
+import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.domain.api.Contacts
 import ru.practicum.android.diploma.common.data.domain.api.Employer
 import ru.practicum.android.diploma.common.data.domain.api.Employment
@@ -25,10 +25,10 @@ class VacancyMapperTest {
                 raw = "Челябинск, Труда, 7",
                 street = "Труда"
             ),
-            area = Area(
+            areaDto = AreaDto(
                 areas = listOf(
-                    Area(
-                        areas = listOf<Area>(),
+                    AreaDto(
+                        areas = listOf<AreaDto>(),
                         id = "28",
                         name = "Грузия",
                         parentId = null

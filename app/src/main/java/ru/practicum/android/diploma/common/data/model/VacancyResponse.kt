@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.common.data.model
 
 import ru.practicum.android.diploma.common.data.domain.api.Address
-import ru.practicum.android.diploma.common.data.domain.api.Area
+import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.domain.api.Contacts
 import ru.practicum.android.diploma.common.data.domain.api.Employer
 import ru.practicum.android.diploma.common.data.domain.api.Employment
@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.common.data.domain.api.Schedule
 
 data class VacancyResponse(
     val address: Address,
-    val area: Area,
+    val areaDto: AreaDto,
     val contacts: Contacts,
     val description: String,
     val employer: Employer,
