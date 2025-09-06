@@ -17,6 +17,7 @@ import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 class VacancyMapperTest {
     @Test
     fun should_map_VacancyDto_to_Vacancy() {
+
         val vacancyDto = VacancyDto(
             address = Address(
                 building = "7",
@@ -43,8 +44,13 @@ class VacancyMapperTest {
                 id = "0",
                 name = "Смирнов Алексей Иванович",
                 phones = listOf(
-                    Phone(comment = null, formatted = "+7 (999) 456-78-90"),
-                    Phone(comment = null, formatted = "+7 (999) 654-32-10")
+                    Phone(
+                        comment = null,
+                        formatted = "+7 (999) 456-78-90"
+                    ), Phone(
+                        comment = null,
+                        formatted = "+7 (999) 654-32-10"
+                    )
                 )
             ),
             description = "Описание",
@@ -99,5 +105,4 @@ class VacancyMapperTest {
         assertEquals("Описание", actualResult.description)
 
     }
-
 }
