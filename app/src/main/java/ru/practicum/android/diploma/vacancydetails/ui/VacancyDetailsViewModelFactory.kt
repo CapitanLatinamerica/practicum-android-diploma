@@ -5,13 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 
+// Фабрика для создания VacancyDetailsViewModel
 class VacancyDetailsViewModelFactory(
-    private val repository: VacancyDetailsRepository,
-    private val vacancyId: String
+    private val repository: VacancyDetailsRepository, // Зависимость репозитория
+    private val vacancyId: String // ID вакансии для загрузки
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        // Проверяем, что запрашивается правильный класс ViewModel
         if (modelClass.isAssignableFrom(VacancyDetailsViewModel::class.java)) {
             return VacancyDetailsViewModel(repository, vacancyId) as T
         }

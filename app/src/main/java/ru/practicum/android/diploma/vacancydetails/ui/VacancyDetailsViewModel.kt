@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 
@@ -15,8 +17,8 @@ class VacancyDetailsViewModel(
 ) : ViewModel() {
 
     // Состояние загрузки данных о вакансии
-    private val _vacancyState = MutableStateFlow<VacancyDetailsState>(VacancyDetailsState.Loading)
-    val vacancyState: StateFlow<VacancyDetailsState> = _vacancyState.asStateFlow()
+    private val _vacancyState = MutableStateFlow<Resource>(Resource.Loading)
+    val vacancyState: StateFlow<Resource> = _vacancyState.asStateFlow()
 
     // Состояние избранного (лайк/нелайк)
     private val _isLiked = MutableStateFlow(false)
@@ -30,13 +32,14 @@ class VacancyDetailsViewModel(
     // Загрузка детальной информации о вакансии из репозитория
     internal fun loadVacancyDetails() {
         viewModelScope.launch {
-            _vacancyState.value = VacancyDetailsState.Loading
+            _vacancyState.value = Resource.Loading
             try {
+                delay(1500) // искусственная задержка 1.5 секунды для показа ProgressBar
                 val vacancyDetails = repository.getVacancyDetails(vacancyId)
-                _vacancyState.value = VacancyDetailsState.Content(vacancyDetails)
+                _vacancyState.value = Resource.Content(vacancyDetails)
                 _isLiked.value = repository.isVacancyFavorite(vacancyId)
             } catch (e: Exception) {
-                _vacancyState.value = VacancyDetailsState.Error(
+                _vacancyState.value = Resource.Error(
                     e.message ?: "Unknown error occurred"
                 )
             }
@@ -57,11 +60,4 @@ class VacancyDetailsViewModel(
             _isLiked.value = newIsLiked
         }
     }
-}
-
-// состояния экрана деталей вакансии
-sealed interface VacancyDetailsState {
-    object Loading : VacancyDetailsState
-    data class Content(val vacancy: VacancyDetails) : VacancyDetailsState
-    data class Error(val message: String) : VacancyDetailsState
 }

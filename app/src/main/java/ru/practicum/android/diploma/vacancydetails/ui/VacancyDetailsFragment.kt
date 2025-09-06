@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools.formatTextWithBullets
+import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
@@ -61,9 +62,9 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         lifecycleScope.launch {
             viewModel.vacancyState.collect { state ->
                 when (state) {
-                    is VacancyDetailsState.Loading -> showLoading()
-                    is VacancyDetailsState.Content -> showVacancyDetails(state.vacancy)
-                    is VacancyDetailsState.Error -> showError(state.message)
+                    is Resource.Loading -> showLoading()
+                    is Resource.Content -> showVacancyDetails(state.vacancy)
+                    is Resource.Error -> showError(state.message)
                 }
             }
         }
@@ -82,7 +83,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 R.id.like_btn -> {
                     vacancyId?.let { id ->
                         val currentState = viewModel.vacancyState.value
-                        val vacancyDetails = (currentState as? VacancyDetailsState.Content)?.vacancy
+                        val vacancyDetails = (currentState as? Resource.Content)?.vacancy
                         viewModel.toggleFavorite(id, vacancyDetails)
                     }
                     true
@@ -101,12 +102,13 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private fun showLoading() {
         // Показать индикатор загрузки
         binding.detailsScrollView.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     // Отображение детальной информации о вакансии
     private fun showVacancyDetails(vacancy: VacancyDetails) {
         binding.detailsScrollView.visibility = View.VISIBLE
-        // binding.progressBar.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
         binding.vacancyTitle.text = vacancy.title
@@ -121,6 +123,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
     // Показать состояние ошибки
     private fun showError(message: String) {
+        binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
     }
 
