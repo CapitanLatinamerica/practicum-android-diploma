@@ -15,24 +15,13 @@ class VacancyDetailsRepositoryImpl : VacancyDetailsRepository {
             companyLogo = null,
             companyCity = "Москва",
             experience = "От 3 лет",
-            employmentType = "Полная занятость",
+            employmentType = "Полнейшая занятость",
             description = "Разработка мобильных приложений",
-            responsibilities = listOf(
-                "Разработка новых функций приложения",
-                "Участие в код-ревью",
-                "Оптимизация производительности"
-            ),
-            requirements = listOf(
-                "Опыт работы с Kotlin от 3 лет",
-                "Знание Android SDK",
-                "Опыт работы с REST API"
-            ),
-            conditions = listOf(
-                "Гибкий график работы",
-                "Медицинская страховка",
-                "Спортивный зал"
-            ),
-            skills = listOf("Kotlin", "Android SDK", "REST API", "Coroutines"),
+            responsibilities = "Разработка новых функций приложения\nУчастие в код-ревью\nОптимизация " +
+                "производительности",
+            requirements = "Опыт работы с Kotlin от 3 лет\nЗнание Android SDK\nОпыт работы с REST API",
+            conditions = "Гибкий график работы\nМедицинская страховка\nСпортивный зал",
+            skills = "Kotlin\nAndroid SDK\nREST API\nCoroutines",
             contactPerson = "Иван Иванов",
             contactEmail = "hr@yandex.ru",
             contactPhones = listOf("+7 (495) 123-45-67")

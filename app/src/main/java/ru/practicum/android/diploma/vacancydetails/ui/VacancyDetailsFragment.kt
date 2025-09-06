@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.Tools.formatTextWithBullets
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
@@ -38,9 +38,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         setupViewModel()
         setupObservers()
         setupToolbar()
-
-        // Форматируем поля
-        formatAllTextViews()
     }
 
     // Инициализация ViewModel с фабрикой, передающей зависимости
@@ -51,10 +48,37 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
     // Метод для форматирования сплошного текста в соответствие макету
     private fun formatAllTextViews() {
-        binding.responsibilitiesTextView.formatTextWithBullets(R.string.responsibilities_text)
-        binding.requirementsTextView.formatTextWithBullets(R.string.requirements_text)
-        binding.conditionsTextView.formatTextWithBullets(R.string.conditions_text)
-        binding.skillsTextView.formatTextWithBullets(R.string.skills_text)
+        val widthLeft = binding.responsibilitiesTextView.paddingLeft
+        val widthRight = binding.responsibilitiesTextView.paddingRight
+
+        binding.responsibilitiesTextView.post {
+            binding.responsibilitiesTextView.text = Tools.autoFormatTextWithPaint(
+                binding.responsibilitiesTextView.text.toString(),
+                binding.responsibilitiesTextView.paint,
+                binding.responsibilitiesTextView.width - widthLeft - widthRight
+            )
+        }
+        binding.requirementsTextView.post {
+            binding.requirementsTextView.text = Tools.autoFormatTextWithPaint(
+                binding.requirementsTextView.text.toString(),
+                binding.requirementsTextView.paint,
+                binding.requirementsTextView.width  - widthLeft - widthRight
+            )
+        }
+        binding.conditionsTextView.post {
+            binding.conditionsTextView.text = Tools.autoFormatTextWithPaint(
+                binding.conditionsTextView.text.toString(),
+                binding.conditionsTextView.paint,
+                binding.conditionsTextView.width - widthLeft - widthRight
+            )
+        }
+        binding.skillsTextView.post {
+            binding.skillsTextView.text = Tools.autoFormatTextWithPaint(
+                binding.skillsTextView.text.toString(),
+                binding.skillsTextView.paint,
+                binding.skillsTextView.width - widthLeft - widthRight
+            )
+        }
     }
 
     // Настройка observers для наблюдения за состоянием ViewModel
@@ -116,6 +140,10 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.companyName.text = vacancy.companyName
         binding.companyCity.text = vacancy.companyCity
         binding.experienceLine.text = vacancy.experience
+        binding.responsibilitiesTextView.text = vacancy.responsibilities
+        binding.requirementsTextView.text = vacancy.requirements
+        binding.conditionsTextView.text = vacancy.conditions
+        binding.skillsTextView.text = vacancy.skills
 
         // Форматируем текстовые поля
         formatAllTextViews()
