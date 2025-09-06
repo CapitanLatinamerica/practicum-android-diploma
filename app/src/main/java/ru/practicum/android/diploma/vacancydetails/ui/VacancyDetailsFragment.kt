@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
@@ -21,8 +20,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private val binding get() = _binding!!
 
     // Внедрение зависимости репозитория через Koin
-    private val repository: VacancyDetailsRepository by inject()
-    private lateinit var viewModel: VacancyDetailsViewModel
+    private val viewModel: VacancyDetailsViewModel by viewModel { parametersOf(vacancyId) }
     private var vacancyId: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,15 +33,8 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             return
         }
 
-        setupViewModel()
         setupObservers()
         setupToolbar()
-    }
-
-    // Инициализация ViewModel с фабрикой, передающей зависимости
-    private fun setupViewModel() {
-        val factory = VacancyDetailsViewModelFactory(repository, vacancyId)
-        viewModel = ViewModelProvider(this, factory)[VacancyDetailsViewModel::class.java]
     }
 
     // Метод для форматирования сплошного текста в соответствие макету
@@ -62,7 +53,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             binding.requirementsTextView.text = Tools.autoFormatTextWithPaint(
                 binding.requirementsTextView.text.toString(),
                 binding.requirementsTextView.paint,
-                binding.requirementsTextView.width  - widthLeft - widthRight
+                binding.requirementsTextView.width - widthLeft - widthRight
             )
         }
         binding.conditionsTextView.post {

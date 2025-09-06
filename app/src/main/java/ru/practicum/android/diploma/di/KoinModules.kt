@@ -24,7 +24,9 @@ val searchModule = module {
 // Модуль для деталей вакансии
 val vacancyDetailsModule = module {
 
-    viewModel { VacancyDetailsViewModel(get(), get()) }
+    viewModel { (vacancyId: String) ->
+        VacancyDetailsViewModel(get(), vacancyId)
+    }
     single<VacancyDetailsRepository> {
         VacancyDetailsRepositoryImpl() // Пока заглушка
     }
