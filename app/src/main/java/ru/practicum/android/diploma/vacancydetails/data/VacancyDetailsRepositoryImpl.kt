@@ -27,17 +27,4 @@ class VacancyDetailsRepositoryImpl : VacancyDetailsRepository {
             contactPhones = listOf("+7 (495) 123-45-67")
         )
     }
-
-    override suspend fun addToFavorites(vacancy: VacancyDetails) {
-        // Заглушка - потом реализуете
-    }
-
-    override suspend fun removeFromFavorites(vacancyId: String) {
-        // Заглушка - потом реализуете
-    }
-
-    override suspend fun isVacancyFavorite(vacancyId: String): Boolean {
-        // Заглушка - потом реализуете
-        return false
-    }
 }
