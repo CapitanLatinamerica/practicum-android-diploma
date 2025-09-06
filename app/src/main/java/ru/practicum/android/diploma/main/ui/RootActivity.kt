@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.main.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -23,6 +24,15 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        // Слушатель места, где мы находимся, чтобы скрывать панель
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.vacancyDetailsFragment) {
+                binding.bottomNavigationView.visibility = View.GONE
+            } else {
+                binding.bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
     }
 
 }

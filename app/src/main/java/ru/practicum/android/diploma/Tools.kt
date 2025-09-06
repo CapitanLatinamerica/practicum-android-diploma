@@ -148,28 +148,7 @@ object Tools {
         }
     }
 
-    // Новая удобная функция для TextView
-    fun TextView.formatTextWithBullets(
-        textResource: Int,
-        prefix: String = " • "
-    ) {
-        val originalText = context.getString(textResource)
 
-        // Ждем когда layout будет готов для получения реальных размеров экрана
-        this.post {
-            val paint = this.paint
-            val availableWidth = this.width - this.paddingLeft - this.paddingRight
-
-            val formattedText = autoFormatTextWithPaint(
-                text = originalText,
-                paint = paint,
-                availableWidth = availableWidth,
-                prefix = prefix
-            )
-
-            this.text = formattedText
-        }
-    }
 }
 
 // Data class для группировки параметров форматирования
