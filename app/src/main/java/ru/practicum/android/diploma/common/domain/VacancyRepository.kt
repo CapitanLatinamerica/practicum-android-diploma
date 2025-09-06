@@ -19,8 +19,6 @@ interface VacancyRepository {
 
     fun getAreas(): List<Area>
 
-    fun addVacancyToFavorites(vacancyList: List<Vacancy>)
-
     fun deleteVacancyFromFavorites(id: String)
 
 }
