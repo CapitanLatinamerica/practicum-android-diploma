@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.common.domain.entity.Area
 object AreaMapper {
 
     fun mapAreaDtoToArea(areaDto: AreaDto): Area {
-        return Area( id = areaDto.id.toInt(),
+        return Area(id = areaDto.id.toInt(),
             name = areaDto.name,
             parentId = areaDto.parentId?.toInt(),
             areas = areaDto.areas?.map { item -> mapAreaDtoToArea(item) } ?: emptyList()
