@@ -5,25 +5,20 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.common.data.db.entity.VacancyEntity
 
 @Dao
 interface VacancyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vacancy: VacancyEntity)
-
-    @Delete
-    suspend fun delete(vacancy: VacancyEntity)
+    suspend fun insertVacancy(vacancy: VacancyEntity)
 
     @Query("DELETE FROM vacancies_table WHERE id = :vacancyId")
-    suspend fun deleteById(vacancyId: String)
+    suspend fun deleteVacancyById(vacancyId: String)
 
     @Query("SELECT * FROM vacancies_table")
-    suspend fun getAll(): List<VacancyEntity>
+    fun getAllVacancies(): Flow<List<VacancyEntity>>
 
     @Query("SELECT * FROM vacancies_table WHERE id = :vacancyId")
-    suspend fun getById(vacancyId: String): VacancyEntity?
-
-    @Query("SELECT EXISTS(SELECT * FROM vacancies_table WHERE id = :vacancyId)")
-    suspend fun isFavorite(vacancyId: String): Boolean
+    suspend fun getVacancyById(vacancyId: String): VacancyEntity?
 }
