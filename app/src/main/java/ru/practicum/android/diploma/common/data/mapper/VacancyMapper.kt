@@ -55,5 +55,4 @@ object VacancyMapper {
             description = vacancyEntity.description
         )
     }
-    
 }

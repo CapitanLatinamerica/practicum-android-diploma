@@ -88,7 +88,7 @@ class VacancyMapperTest {
         )
 
 
-        val actualResult = VacancyMapper.map(
+        val actualResult = VacancyMapper.mapFromDtoToVacancy(
             vacancyDto
         )
 

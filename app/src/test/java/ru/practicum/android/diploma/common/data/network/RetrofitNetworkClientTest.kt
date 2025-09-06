@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.common.data.network
 
-import android.util.Log
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -9,18 +8,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.common.data.model.AreasRequest
 import ru.practicum.android.diploma.common.data.model.AreasResponse
-import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
 import ru.practicum.android.diploma.common.data.model.IndustriesRequest
 import ru.practicum.android.diploma.common.data.model.IndustriesResponse
 import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacanciesResponse
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
-import ru.practicum.android.diploma.common.domain.entity.Vacancy
 
 class RetrofitNetworkClientTest {
 
-    val token = ("Bearer ${BuildConfig.API_ACCESS_TOKEN}")
+    val token = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
 
     val retrofit: Retrofit =
         Retrofit.Builder().baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/")
