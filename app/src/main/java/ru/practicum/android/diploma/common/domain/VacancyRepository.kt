@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.common.domain
 
-import ru.practicum.android.diploma.common.data.domain.api.Area
+import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
 import ru.practicum.android.diploma.common.domain.entity.Industry
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
@@ -17,7 +17,7 @@ interface VacancyRepository {
 
     fun getIndustries(): List<Industry>
 
-    fun getAreas(): List<Area>
+    fun getAreas(): List<AreaDto>
 
     fun deleteVacancyFromFavorites(id: String)
 

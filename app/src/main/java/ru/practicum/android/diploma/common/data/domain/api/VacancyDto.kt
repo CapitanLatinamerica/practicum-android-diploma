@@ -2,7 +2,7 @@ package ru.practicum.android.diploma.common.data.domain.api
 
 data class VacancyDto(
     val address: Address,
-    val area: Area,
+    val areaDto: AreaDto,
     val contacts: Contacts,
     val description: String,
     val employer: Employer,

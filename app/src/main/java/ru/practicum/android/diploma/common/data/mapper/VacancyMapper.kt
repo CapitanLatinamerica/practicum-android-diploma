@@ -13,7 +13,7 @@ object VacancyMapper {
             salaryFrom = vacancyDto.salary.from,
             salaryTo = vacancyDto.salary.to,
             logo = vacancyDto.employer.logo,
-            area = vacancyDto.area.name,
+            area = vacancyDto.areaDto.name,
             employer = vacancyDto.employer.name,
             experience = vacancyDto.experience.name,
             employment = vacancyDto.employment.name,
