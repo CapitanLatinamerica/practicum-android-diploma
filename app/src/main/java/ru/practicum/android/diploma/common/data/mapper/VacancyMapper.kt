@@ -20,4 +20,6 @@ object VacancyMapper {
             description = vacancyDto.description
         )
     }
+
+
 }

@@ -5,7 +5,7 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.common.data.domain.api.Area
-import ru.practicum.android.diploma.common.data.domain.api.Industry
+import ru.practicum.android.diploma.common.data.domain.api.IndustryDto
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyResponse
 import ru.practicum.android.diploma.common.data.model.VacanciesResponse
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
@@ -26,7 +26,7 @@ interface HeadHunterApi {
     @GET("industries")
     suspend fun getIndustries(
         @Header("Authorization") token: String
-    ): List<Industry>
+    ): List<IndustryDto>
 
     @GET("areas")
     suspend fun getAreas(

@@ -9,7 +9,7 @@ data class VacancyDto(
     val employment: Employment,
     val experience: Experience,
     val id: String,
-    val industry: Industry,
+    val industryDto: IndustryDto,
     val name: String,
     val salary: Salary,
     val schedule: Schedule,

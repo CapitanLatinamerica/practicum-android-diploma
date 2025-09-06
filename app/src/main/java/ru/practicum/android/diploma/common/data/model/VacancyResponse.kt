@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.common.data.domain.api.Contacts
 import ru.practicum.android.diploma.common.data.domain.api.Employer
 import ru.practicum.android.diploma.common.data.domain.api.Employment
 import ru.practicum.android.diploma.common.data.domain.api.Experience
-import ru.practicum.android.diploma.common.data.domain.api.Industry
+import ru.practicum.android.diploma.common.data.domain.api.IndustryDto
 import ru.practicum.android.diploma.common.data.domain.api.Salary
 import ru.practicum.android.diploma.common.data.domain.api.Schedule
 
@@ -19,7 +19,7 @@ data class VacancyResponse(
     val employment: Employment,
     val experience: Experience,
     val id: String,
-    val industry: Industry,
+    val industryDto: IndustryDto,
     val name: String,
     val salary: Salary,
     val schedule: Schedule,
