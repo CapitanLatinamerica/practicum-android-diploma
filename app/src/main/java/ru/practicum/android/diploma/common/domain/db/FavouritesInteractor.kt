@@ -15,7 +15,3 @@ interface FavouritesInteractor {
 
     suspend fun isFavourite(vacancyId: String): Boolean
 }
-
-
-
-
