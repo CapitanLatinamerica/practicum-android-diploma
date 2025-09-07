@@ -5,7 +5,7 @@ import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 
 object VacancyMapper {
-    fun mapFromDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
+    fun mapFromVacancyDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
         return Vacancy(
             id = vacancyDto.id,
             name = vacancyDto.name,
@@ -13,7 +13,7 @@ object VacancyMapper {
             salaryFrom = vacancyDto.salary.from,
             salaryTo = vacancyDto.salary.to,
             logo = vacancyDto.employer.logo,
-            area = vacancyDto.area.name,
+            area = vacancyDto.areaDto.name,
             employer = vacancyDto.employer.name,
             experience = vacancyDto.experience.name,
             employment = vacancyDto.employment.name,
