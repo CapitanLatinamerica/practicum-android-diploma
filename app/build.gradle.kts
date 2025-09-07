@@ -72,6 +72,8 @@ dependencies {
     testImplementation(libs.unitTests.junit)
     androidTestImplementation(libs.junit.v121)
     androidTestImplementation(libs.espresso.core.v361)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)

@@ -7,7 +7,7 @@
     android:paddingVertical="@dimen/padding_9">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/logoCompany"
+        android:id="@+id/logoCompanyCard"
         android:layout_width="@dimen/vacancy_icon_shape_size"
         android:layout_height="@dimen/vacancy_icon_shape_size"
         app:cardBackgroundColor="@android:color/transparent"
@@ -18,9 +18,9 @@
         app:strokeWidth="@dimen/one_dp">
 
         <ImageView
+            android:id="@+id/logoCompany"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
             tools:src="@drawable/placeholder_vacancy" />
 
     </com.google.android.material.card.MaterialCardView>
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/logoCompany"
+        app:layout_constraintStart_toEndOf="@id/logoCompanyCard"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Разработчик на С++ в команду внутренних сервисов, Москва" />
 
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/logoCompany"
+        app:layout_constraintStart_toEndOf="@id/logoCompanyCard"
         app:layout_constraintTop_toBottomOf="@id/nameVacancy"
         tools:text="Авто.ру" />
 
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/padding_12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/logoCompany"
+        app:layout_constraintStart_toEndOf="@id/logoCompanyCard"
         app:layout_constraintTop_toBottomOf="@id/nameCompany"
         tools:text="от 1 000 до 1 500 €" />
 </androidx.constraintlayout.widget.ConstraintLayout>
