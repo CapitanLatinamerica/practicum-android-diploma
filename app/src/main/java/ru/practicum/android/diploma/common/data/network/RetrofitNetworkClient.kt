@@ -101,4 +101,3 @@ class RetrofitNetworkClient(private val headHunterApi: HeadHunterApi, private va
     private fun NetResponse.error(code: Int = ERROR): NetResponse = apply { resultCode = code }
     private fun NetResponse.serverError(): NetResponse = apply { resultCode = SERVER_ERROR }
 }
-

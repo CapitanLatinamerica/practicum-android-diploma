@@ -5,5 +5,5 @@ import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 
 interface VacancyRepository {
-     fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>>
+    fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>>
 }

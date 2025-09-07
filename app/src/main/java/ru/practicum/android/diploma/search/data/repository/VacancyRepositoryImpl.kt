@@ -23,7 +23,6 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
 
     override fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>> =
         flow {
-
             val request =
                 FilteredVacancyRequest(
                     areaId = null,
