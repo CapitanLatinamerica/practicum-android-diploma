@@ -13,9 +13,14 @@ import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 
-class RetrofitNetworkClient(private val headHunterApi: HeadHunterApi, private val token: String) : NetworkClient {
+class RetrofitNetworkClient(
+    private val headHunterApi: HeadHunterApi,
+    private val token: String,
+//    private val context: Context
+) : NetworkClient {
 
     companion object {
+//        private const val INTERNET_ERROR = -1
         private const val SUCCESS = 200
         private const val SERVER_ERROR = 500
         private const val ERROR = 400
@@ -24,6 +29,9 @@ class RetrofitNetworkClient(private val headHunterApi: HeadHunterApi, private va
 
     override suspend fun doRequest(dto: Any):
         NetResponse = withContext(Dispatchers.IO) {
+//        if (!Tools.isConnected(context)) {
+//            return@withContext NetResponse().internetError()
+//        }
         try {
             when (dto) {
                 is VacanciesRequest ->
@@ -100,4 +108,5 @@ class RetrofitNetworkClient(private val headHunterApi: HeadHunterApi, private va
     private fun NetResponse.success(): NetResponse = apply { resultCode = SUCCESS }
     private fun NetResponse.error(code: Int = ERROR): NetResponse = apply { resultCode = code }
     private fun NetResponse.serverError(): NetResponse = apply { resultCode = SERVER_ERROR }
+//    private fun NetResponse.internetError(): NetResponse = apply { resultCode = INTERNET_ERROR }
 }
