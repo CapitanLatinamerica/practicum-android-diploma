@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.VacancyDetailsResource
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 
@@ -17,8 +17,8 @@ class VacancyDetailsViewModel(
 ) : ViewModel() {
 
     // Состояние загрузки данных о вакансии
-    private val _vacancyState = MutableStateFlow<Resource>(Resource.Loading)
-    val vacancyState: StateFlow<Resource> = _vacancyState.asStateFlow()
+    private val _vacancyState = MutableStateFlow<VacancyDetailsResource>(VacancyDetailsResource.Loading)
+    val vacancyState: StateFlow<VacancyDetailsResource> = _vacancyState.asStateFlow()
 
     // Состояние избранного (лайк/нелайк)
     private val _isLiked = MutableStateFlow(false)
@@ -32,11 +32,11 @@ class VacancyDetailsViewModel(
     // Загрузка детальной информации о вакансии из репозитория
     internal fun loadVacancyDetails() {
         viewModelScope.launch {
-            _vacancyState.value = Resource.Loading
+            _vacancyState.value = VacancyDetailsResource.Loading
             delay(MY_AWESOME_DELAY) // искусственная задержка 1.5 секунды для показа ProgressBar
             val vacancyDetails = repository.getVacancyDetails(vacancyId)
-            _vacancyState.value = Resource.Content(vacancyDetails)
-            _isLiked.value = repository.isVacancyFavorite(vacancyId)
+            _vacancyState.value = VacancyDetailsResource.Content(vacancyDetails)
+//            _isLiked.value = repository.isVacancyFavorite(vacancyId)
         }
     }
 
@@ -47,9 +47,9 @@ class VacancyDetailsViewModel(
             val newIsLiked = !currentIsLiked
 
             if (newIsLiked && vacancyDetails != null) {
-                repository.addToFavorites(vacancyDetails)
+//                repository.addToFavorites(vacancyDetails)
             } else {
-                repository.removeFromFavorites(vacancyId)
+//                repository.removeFromFavorites(vacancyId)
             }
             _isLiked.value = newIsLiked
         }

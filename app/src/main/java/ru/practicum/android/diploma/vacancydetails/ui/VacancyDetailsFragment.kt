@@ -11,6 +11,7 @@ import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.VacancyDetailsResource
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 
@@ -77,9 +78,9 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         lifecycleScope.launch {
             viewModel.vacancyState.collect { state ->
                 when (state) {
-                    is Resource.Loading -> showLoading()
-                    is Resource.Content -> showVacancyDetails(state.vacancy)
-                    is Resource.Error -> showError(state.message)
+                    is VacancyDetailsResource.Loading -> showLoading()
+                    is VacancyDetailsResource.Content -> showVacancyDetails(state.vacancy)
+                    is VacancyDetailsResource.Error -> showError(state.message)
                 }
             }
         }
@@ -98,7 +99,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 R.id.like_btn -> {
                     vacancyId?.let { id ->
                         val currentState = viewModel.vacancyState.value
-                        val vacancyDetails = (currentState as? Resource.Content)?.vacancy
+                        val vacancyDetails = (currentState as? VacancyDetailsResource.Content)?.vacancy
                         viewModel.toggleFavorite(id, vacancyDetails)
                     }
                     true
