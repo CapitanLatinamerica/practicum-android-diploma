@@ -7,6 +7,9 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.common.data.db.AppDataBase
 import ru.practicum.android.diploma.favourites.data.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
+import ru.practicum.android.diploma.vacancydetails.data.VacancyDetailsRepositoryImpl
+import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
+import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
@@ -31,6 +34,17 @@ val databaseModule = module {
 // Модуль для работы с Room
 val searchModule = module {
 
+}
+
+// Модуль для деталей вакансии
+val vacancyDetailsModule = module {
+
+    viewModel { (vacancyId: String) ->
+        VacancyDetailsViewModel(get(), vacancyId)
+    }
+    single<VacancyDetailsRepository> {
+        VacancyDetailsRepositoryImpl()
+    }
 }
 
 val favouritesModule = module {
