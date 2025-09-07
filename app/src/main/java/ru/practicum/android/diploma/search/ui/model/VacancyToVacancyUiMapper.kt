@@ -19,8 +19,7 @@ class VacancyToVacancyUiMapper {
     }
 
     private fun formatSalary(from: Int?, to: Int?, currency: String?): String {
-
-        //Вспомогательная функция, которая форматирует целое число с разделением тысяч
+        // Вспомогательная функция, которая форматирует целое число с разделением тысяч
         fun format(salary: Int): String {
             val symbols = DecimalFormatSymbols(Locale.getDefault())
             symbols.groupingSeparator = '\u00A0'
@@ -46,7 +45,7 @@ class VacancyToVacancyUiMapper {
         "EUR" to "€",
     )
 
-    //Вспомогательная функция, которая форматирует валюту
+    // Вспомогательная функция, которая форматирует валюту
     private fun symbolFor(currency: String?): String {
         return currencySymbols[currency] ?: currency.orEmpty()
     }

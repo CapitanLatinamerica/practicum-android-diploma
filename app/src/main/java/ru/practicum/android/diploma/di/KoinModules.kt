@@ -29,6 +29,8 @@ import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import java.util.concurrent.TimeUnit
 
+private const val NETWORK_TIMEOUT_SECONDS = 30L
+private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 // Общие зависимости
 val appModule = module {
 
@@ -47,15 +49,18 @@ val databaseModule = module {
 
 // Модуль для работы с Room
 val searchModule = module {
+
     // OkHttp client
     single {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
         OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
+            .connectTimeout(NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
@@ -78,13 +83,19 @@ val searchModule = module {
 
     // NetworkClient
     single<NetworkClient> {
-        val token: String = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
-        RetrofitNetworkClient(get(), token)
+        val token = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
+        RetrofitNetworkClient(get(), token, androidContext())
     }
 
     // Repository / UseCase / Mapper / ViewModel
-    single<VacancyRepository> { VacancyRepositoryImpl(get()) }
-    single<SearchUseCase> { SearchUseCaseImpl(get()) }
+    single<VacancyRepository> {
+        VacancyRepositoryImpl(get())
+    }
+
+    single<SearchUseCase> {
+        SearchUseCaseImpl(get())
+    }
+
     factory { VacancyToVacancyUiMapper() }
 
     single<ErrorMessageProvider> {

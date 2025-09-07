@@ -31,7 +31,7 @@ class MainFragment : Fragment() {
 
     private var adapter: VacanciesAdapter? = null
 
-    private lateinit var onVacancyClickDebounce: (VacancyUi) -> Unit
+    private var onVacancyClickDebounce: ((VacancyUi) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,11 +49,11 @@ class MainFragment : Fragment() {
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
-        ) { //Тут будет логика перехода на другой экран с помощью SafeArgs
+        ) { // Тут будет логика перехода на другой экран с помощью SafeArgs
         }
 
         adapter = VacanciesAdapter { vacancy ->
-            onVacancyClickDebounce(vacancy)
+            onVacancyClickDebounce?.invoke(vacancy)
         }
 
         binding.recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
@@ -64,7 +64,9 @@ class MainFragment : Fragment() {
         }
 
         binding.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Для многоуважаемого детекта
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val text = s?.toString().orEmpty().trim()
@@ -79,7 +81,9 @@ class MainFragment : Fragment() {
                 updatePlaceholderForInput()
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                // Для многоуважаемого детекта
+            }
         })
 
         binding.editText.setOnFocusChangeListener { _, _ ->
@@ -159,7 +163,7 @@ class MainFragment : Fragment() {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
             placeholderMainScreen.visibility = View.VISIBLE
-            placeholderMainScreen.setImageResource(R.drawable.favorites_placeholder)
+            placeholderMainScreen.setImageResource(R.drawable.no_internet_placeholder)
             placeholderText.visibility = View.VISIBLE
             placeholderText.text = errorMessage
             countVacancies.visibility = View.GONE
