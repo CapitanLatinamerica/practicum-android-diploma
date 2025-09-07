@@ -1,28 +1,28 @@
 package ru.practicum.android.diploma.common.data.model
 
-import ru.practicum.android.diploma.common.data.domain.api.Address
+import ru.practicum.android.diploma.common.data.domain.api.AddressDto
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
-import ru.practicum.android.diploma.common.data.domain.api.Contacts
-import ru.practicum.android.diploma.common.data.domain.api.Employer
-import ru.practicum.android.diploma.common.data.domain.api.Employment
-import ru.practicum.android.diploma.common.data.domain.api.Experience
+import ru.practicum.android.diploma.common.data.domain.api.ContactsDto
+import ru.practicum.android.diploma.common.data.domain.api.EmployerDto
+import ru.practicum.android.diploma.common.data.domain.api.EmploymentDto
+import ru.practicum.android.diploma.common.data.domain.api.ExperienceDto
 import ru.practicum.android.diploma.common.data.domain.api.IndustryDto
-import ru.practicum.android.diploma.common.data.domain.api.Salary
-import ru.practicum.android.diploma.common.data.domain.api.Schedule
+import ru.practicum.android.diploma.common.data.domain.api.SalaryDto
+import ru.practicum.android.diploma.common.data.domain.api.ScheduleDto
 
 data class VacancyResponse(
-    val address: Address,
+    val addressDto: AddressDto,
     val areaDto: AreaDto,
-    val contacts: Contacts,
+    val contactsDto: ContactsDto,
     val description: String,
-    val employer: Employer,
-    val employment: Employment,
-    val experience: Experience,
+    val employerDto: EmployerDto,
+    val employmentDto: EmploymentDto,
+    val experienceDto: ExperienceDto,
     val id: String,
     val industryDto: IndustryDto,
     val name: String,
-    val salary: Salary,
-    val schedule: Schedule,
+    val salaryDto: SalaryDto,
+    val scheduleDto: ScheduleDto,
     val skills: List<String>,
     val url: String
 ) : NetResponse()

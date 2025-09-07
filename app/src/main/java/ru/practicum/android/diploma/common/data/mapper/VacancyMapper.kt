@@ -9,15 +9,15 @@ object VacancyMapper {
         return Vacancy(
             id = vacancyDto.id ?: "",
             name = vacancyDto.name ?: "",
-            salaryCurrency = vacancyDto.salary?.currency?.takeIf { it.isNotBlank() },
-            salaryFrom = vacancyDto.salary?.from?.takeIf { it != 0 },
-            salaryTo = vacancyDto.salary?.to?.takeIf { it != 0 },
-            logo = vacancyDto.employer?.logo,
+            salaryCurrency = vacancyDto.salaryDto?.currency?.takeIf { it.isNotBlank() },
+            salaryFrom = vacancyDto.salaryDto?.from?.takeIf { it != 0 },
+            salaryTo = vacancyDto.salaryDto?.to?.takeIf { it != 0 },
+            logo = vacancyDto.employerDto?.logo,
             area = vacancyDto.areaDto?.name,
-            employer = vacancyDto.employer?.name,
-            experience = vacancyDto.experience?.name,
-            employment = vacancyDto.employment?.name,
-            schedule = vacancyDto.schedule?.name,
+            employer = vacancyDto.employerDto?.name,
+            experience = vacancyDto.experienceDto?.name,
+            employment = vacancyDto.employmentDto?.name,
+            schedule = vacancyDto.scheduleDto?.name,
             description = vacancyDto.description
         )
     }
