@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.VacancyDetailsResource
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
