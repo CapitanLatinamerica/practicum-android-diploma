@@ -28,12 +28,12 @@ import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import java.util.concurrent.TimeUnit
-
-private const val NETWORK_TIMEOUT_SECONDS = 30L
-private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 import ru.practicum.android.diploma.vacancydetails.data.VacancyDetailsRepositoryImpl
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
+
+private const val NETWORK_TIMEOUT_SECONDS = 30L
+private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 
 // Общие зависимости
 val appModule = module {
