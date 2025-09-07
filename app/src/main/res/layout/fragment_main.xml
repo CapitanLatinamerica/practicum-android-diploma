@@ -31,19 +31,31 @@
         app:navigationIcon="@null"
         app:title="@string/main_header" />
 
-
     <EditText
         android:id="@+id/editText"
         style="@style/EditText"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="@dimen/tb_height"
         android:layout_marginTop="@dimen/padding_8"
-        android:drawableEnd="@drawable/ic_search"
         android:hint="@string/hint_edit_text"
-        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="56dp"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <ImageButton
+        android:id="@+id/btnEditAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="center"
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/editText"
+        app:layout_constraintEnd_toEndOf="@id/editText"
+        app:layout_constraintTop_toTopOf="@id/editText"
+        app:tint="@color/black_universal" />
 
     <TextView
         android:id="@+id/countVacancies"
@@ -88,13 +100,25 @@
     <ImageView
         android:id="@+id/placeholderMainScreen"
         android:layout_width="@dimen/zero_dp"
-        android:layout_height="@dimen/zero_dp"
+        android:layout_height="223dp"
         android:src="@drawable/placeholder_main_screen"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/editText" />
 
+    <TextView
+        android:id="@+id/placeholderText"
+        style="@style/TextMedium22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/nothing_found"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/placeholderMainScreen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

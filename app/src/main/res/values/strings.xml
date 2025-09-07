@@ -54,6 +54,12 @@
     <string name="conditions_title">Условия</string>
     <string name="company_name">Company Name</string>
     <string name="city">City</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+    <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="no_vacancies_title">Таких вакансий нет</string>
+    <string name="no_salary">Зарплата не указана</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>

@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.common.data.domain.api
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class IndustryDto(
+data class ScheduleDto(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String
 ) : Serializable {

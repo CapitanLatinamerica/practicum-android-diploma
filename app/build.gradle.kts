@@ -72,6 +72,8 @@ dependencies {
     testImplementation(libs.unitTests.junit)
     androidTestImplementation(libs.junit.v121)
     androidTestImplementation(libs.espresso.core.v361)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
