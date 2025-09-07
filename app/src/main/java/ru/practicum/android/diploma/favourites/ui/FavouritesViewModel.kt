@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.common.domain.db.FavouritesInteractor
+import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 
 class FavouritesViewModel(private val favouritesInteractor: FavouritesInteractor) : ViewModel() {
 
