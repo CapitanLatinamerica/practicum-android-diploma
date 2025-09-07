@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.common.data.domain.api
 
-data class Industry(
+data class IndustryDto(
     val id: String,
     val name: String
 )
