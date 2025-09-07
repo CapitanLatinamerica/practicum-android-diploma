@@ -4,17 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
-import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsFragment
+import ru.practicum.android.diploma.search.ui.VacanciesAdapter
 
 class FavouritesFragment : Fragment() {
 
@@ -23,7 +19,7 @@ class FavouritesFragment : Fragment() {
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
     private var isClickAllowed = true
-    private lateinit var adapter: VacancyAdapter
+    private lateinit var adapter: VacanciesAdapter
     private lateinit var debouncedClick: (String) -> Unit
 
     override fun onCreateView(
@@ -46,7 +42,7 @@ class FavouritesFragment : Fragment() {
             navigateToVacancyDetails(vacancyId)
         }
 
-        adapter = VacancyAdapter { vacancy ->
+        adapter = VacanciesAdapter() { vacancy ->
             debouncedClick(vacancy.id)
         }
 
@@ -84,9 +80,7 @@ class FavouritesFragment : Fragment() {
             }
 
             is FavouritesState.Content -> {
-                adapter.vacancies.clear()
-                adapter.vacancies.addAll(favouritesState.favouritesList)
-                adapter.notifyDataSetChanged()
+                adapter.updateData(favouritesState.favouritesList)
                 binding.emptyListTextView.visibility = View.GONE
                 binding.placeholderImage.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE
@@ -97,10 +91,6 @@ class FavouritesFragment : Fragment() {
     companion object {
 
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-
-        fun newInstance(): Fragment {
-            return FavouritesFragment()
-        }
     }
 }
 
