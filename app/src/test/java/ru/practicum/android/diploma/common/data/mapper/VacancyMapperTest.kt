@@ -81,7 +81,7 @@ class VacancyMapperTest {
             url = "https://picsum.photos/200/300"
         )
 
-        val actualResult = VacancyMapper.mapFromDtoToVacancy(
+        val actualResult = VacancyMapper.mapFromVacancyDtoToVacancy(
             vacancyDto
         )
 
