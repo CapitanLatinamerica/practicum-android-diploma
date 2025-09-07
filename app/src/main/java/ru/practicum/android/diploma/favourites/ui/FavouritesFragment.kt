@@ -7,18 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
 import ru.practicum.android.diploma.search.ui.VacanciesAdapter
+import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 
 class FavouritesFragment : Fragment() {
 
     private val favouritesViewModel: FavouritesViewModel by viewModel()
+    private val vacancyMapper: VacancyToVacancyUiMapper by inject()
     private var _binding: FragmentFavouritesBinding? = null
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
-    private var isClickAllowed = true
     private lateinit var adapter: VacanciesAdapter
     private lateinit var debouncedClick: (String) -> Unit
 
@@ -42,8 +44,8 @@ class FavouritesFragment : Fragment() {
             navigateToVacancyDetails(vacancyId)
         }
 
-        adapter = VacanciesAdapter() { vacancy ->
-            debouncedClick(vacancy.id)
+        adapter = VacanciesAdapter { vacancyUi ->
+            debouncedClick(vacancyUi.id)
         }
 
         binding.favoritesRecyclerView.adapter = adapter
@@ -51,7 +53,6 @@ class FavouritesFragment : Fragment() {
         favouritesViewModel.favouritesState.observe(viewLifecycleOwner) { state ->
             updateUI(state)
         }
-
     }
 
     private fun navigateToVacancyDetails(vacancyId: String) {
@@ -65,22 +66,20 @@ class FavouritesFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        isClickAllowed = true
-    }
-
     private fun updateUI(favouritesState: FavouritesState) {
         when (favouritesState) {
             is FavouritesState.Empty -> {
-
                 binding.emptyListTextView.visibility = View.VISIBLE
                 binding.placeholderImage.visibility = View.VISIBLE
                 binding.favoritesRecyclerView.visibility = View.GONE
             }
 
             is FavouritesState.Content -> {
-                adapter.updateData(favouritesState.favouritesList)
+                // Используем маппер для преобразования списка
+                val vacancyUiList = favouritesState.favouritesList.map { vacancy ->
+                    vacancyMapper.mapToUi(vacancy)
+                }
+                adapter.updateData(vacancyUiList)
                 binding.emptyListTextView.visibility = View.GONE
                 binding.placeholderImage.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE
@@ -89,11 +88,6 @@ class FavouritesFragment : Fragment() {
     }
 
     companion object {
-
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
-
-
-
-
