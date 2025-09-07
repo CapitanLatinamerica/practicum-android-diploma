@@ -31,6 +31,9 @@ import java.util.concurrent.TimeUnit
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
+import ru.practicum.android.diploma.vacancydetails.data.VacancyDetailsRepositoryImpl
+import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
+import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 
 // Общие зависимости
 val appModule = module {
@@ -104,6 +107,17 @@ val searchModule = module {
     }
 
     viewModel { SearchViewModel(get(), get(), get()) }
+}
+
+// Модуль для деталей вакансии
+val vacancyDetailsModule = module {
+
+    viewModel { (vacancyId: String) ->
+        VacancyDetailsViewModel(get(), vacancyId)
+    }
+    single<VacancyDetailsRepository> {
+        VacancyDetailsRepositoryImpl()
+    }
 }
 
 val favouritesModule = module {
