@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
+
 // Общие зависимости
 val appModule = module {
 

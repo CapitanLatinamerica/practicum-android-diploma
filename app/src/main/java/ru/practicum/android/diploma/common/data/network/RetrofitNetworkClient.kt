@@ -18,7 +18,8 @@ import ru.practicum.android.diploma.common.data.model.VacancyRequest
 class RetrofitNetworkClient(
     private val headHunterApi: HeadHunterApi,
     private val token: String,
-    private val context: Context) : NetworkClient {
+    private val context: Context
+) : NetworkClient {
 
     companion object {
         private const val INTERNET_ERROR = -1

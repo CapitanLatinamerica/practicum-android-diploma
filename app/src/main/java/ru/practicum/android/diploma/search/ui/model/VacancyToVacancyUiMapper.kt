@@ -41,8 +41,14 @@ class VacancyToVacancyUiMapper {
 
     private val currencySymbols = mapOf(
         "RUB" to "₽",
+        "BYR" to "ꀷ",
         "USD" to "$",
         "EUR" to "€",
+        "KZT" to "₸",
+        "UAH" to "₴",
+        "AZN" to "₼",
+        "GEL" to "₾",
+        "KGT" to "⃀",
     )
 
     // Вспомогательная функция, которая форматирует валюту
