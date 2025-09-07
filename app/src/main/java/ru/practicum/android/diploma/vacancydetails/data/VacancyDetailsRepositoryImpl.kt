@@ -21,10 +21,7 @@ class VacancyDetailsRepositoryImpl : VacancyDetailsRepository {
                 "производительности",
             requirements = "Опыт работы с Kotlin от 3 лет\nЗнание Android SDK\nОпыт работы с REST API",
             conditions = "Гибкий график работы\nМедицинская страховка\nСпортивный зал",
-            skills = "Kotlin\nAndroid SDK\nREST API\nCoroutines",
-            contactPerson = "Иван Иванов",
-            contactEmail = "hr@yandex.ru",
-            contactPhones = listOf("+7 (495) 123-45-67")
+            skills = "Kotlin\nAndroid SDK\nREST API\nCoroutines"
         )
     }
 }

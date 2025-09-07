@@ -13,8 +13,5 @@ data class VacancyDetails(
     val responsibilities: String,
     val requirements: String,
     val conditions: String,
-    val skills: String,
-    val contactPerson: String?,
-    val contactEmail: String?,
-    val contactPhones: List<String>
+    val skills: String
 )
