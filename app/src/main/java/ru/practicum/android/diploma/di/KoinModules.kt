@@ -41,9 +41,8 @@ val vacancyDetailsModule = module {
     viewModel { (vacancyId: String) ->
         VacancyDetailsViewModel(get(), vacancyId)
     }
-    
     single<VacancyDetailsRepository> {
-        VacancyDetailsRepositoryImpl() // Пока заглушка
+        VacancyDetailsRepositoryImpl()
     }
 }
 
@@ -52,7 +51,6 @@ val favouritesModule = module {
     single<FavouritesInteractor> {
         FavouritesInteractorImpl(get())
     }
-
     single<FavouritesRepository> {
         FavouritesRepositoryImpl(get(), get())
     }
