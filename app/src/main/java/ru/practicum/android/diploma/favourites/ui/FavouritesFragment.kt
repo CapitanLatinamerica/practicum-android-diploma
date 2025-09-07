@@ -4,14 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
+import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsFragment
 
 class FavouritesFragment : Fragment() {
 
+    private val favouritesViewModel: FavouritesViewModel by viewModel()
     private var _binding: FragmentFavouritesBinding? = null
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
+    private var isClickAllowed = true
+    private lateinit var adapter: VacancyAdapter
+    private lateinit var debouncedClick: (String) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,4 +34,76 @@ class FavouritesFragment : Fragment() {
         _binding = FragmentFavouritesBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        debouncedClick = Tools.debounce(
+            delayMillis = CLICK_DEBOUNCE_DELAY,
+            coroutineScope = viewLifecycleOwner.lifecycleScope,
+            useLastParam = false
+        ) { vacancyId ->
+            navigateToVacancyDetails(vacancyId)
+        }
+
+        adapter = VacancyAdapter { vacancy ->
+            debouncedClick(vacancy.id)
+        }
+
+        binding.favoritesRecyclerView.adapter = adapter
+
+        favouritesViewModel.favouritesState.observe(viewLifecycleOwner) { state ->
+            updateUI(state)
+        }
+
+    }
+
+    private fun navigateToVacancyDetails(vacancyId: String) {
+        val action = FavouritesFragmentDirections.actionFavouritesFragmentToVacancyDetailsFragment(vacancyId)
+        findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        binding.favoritesRecyclerView.adapter = null
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
+    private fun updateUI(favouritesState: FavouritesState) {
+        when (favouritesState) {
+            is FavouritesState.Empty -> {
+
+                binding.emptyListTextView.visibility = View.VISIBLE
+                binding.placeholderImage.visibility = View.VISIBLE
+                binding.favoritesRecyclerView.visibility = View.GONE
+            }
+
+            is FavouritesState.Content -> {
+                adapter.vacancies.clear()
+                adapter.vacancies.addAll(favouritesState.favouritesList)
+                adapter.notifyDataSetChanged()
+                binding.emptyListTextView.visibility = View.GONE
+                binding.placeholderImage.visibility = View.GONE
+                binding.favoritesRecyclerView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    companion object {
+
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+
+        fun newInstance(): Fragment {
+            return FavouritesFragment()
+        }
+    }
 }
+
+
+
+
