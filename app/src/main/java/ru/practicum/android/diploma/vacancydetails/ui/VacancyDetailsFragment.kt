@@ -144,7 +144,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
         binding.placeholdersBlock.visibility = View.VISIBLE
-        Toast.
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного

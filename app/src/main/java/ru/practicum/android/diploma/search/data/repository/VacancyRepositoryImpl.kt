@@ -6,12 +6,14 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyResponse
 import ru.practicum.android.diploma.common.data.model.NetResponse
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
+import ru.practicum.android.diploma.common.data.model.VacancyResponse
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
@@ -58,14 +60,31 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         }
             .flowOn(Dispatchers.IO)
 
-    override suspend fun getVacancyDetailsById(id: String): Vacancy {
+    override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
 
         val response = networkClient.doRequest(VacancyRequest(id))
-        when (response.resultCode) {
-            SUCCESS -> {
-                when(response){
-                    is VacancyRequest -> return Resource.Success(response.)
-                }
+        when (response) {
+            is VacancyResponse ->{
+                val vacancyDto = VacancyDto(
+                    addressDto = response.addressDto,
+                    areaDto = response.areaDto,
+                    contactsDto = response.contactsDto,
+                    description = response.description,
+                    employerDto = response.employerDto,
+                    employmentDto = response.employmentDto,
+                    experienceDto = response.experienceDto,
+                    id = response.id,
+                    industryDto = response.industryDto,
+                    name = response.name,
+                    salaryDto = response.salaryDto,
+                    scheduleDto = response.scheduleDto,
+                    skills = response.skills,
+                    url = response.url
+                )
+                val vacancy = VacancyMapper.mapFromVacancyDtoToVacancy(vacancyDto)
+                return Resource.Success(vacancy)
+            }
+            else -> return Resource.Error("Vacancy deleted")
         }
     }
 

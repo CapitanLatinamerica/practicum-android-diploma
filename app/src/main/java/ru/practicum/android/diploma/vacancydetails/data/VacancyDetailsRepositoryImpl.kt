@@ -11,8 +11,8 @@ class VacancyDetailsRepositoryImpl(
     private val searchVacancyDetailsByIdUseCase: SearchVacancyDetailsByIdUseCase
 ) : VacancyDetailsRepository {
 
-    override suspend fun getVacancyDetails(vacancyId: String): Resource<Vacancy> {
-        val resourceFlow = searchVacancyDetailsByIdUseCase.searchVacancies(query = vacancyId, page = 0)
+/*    override suspend fun getVacancyDetails(vacancyId: String): Resource<Vacancy> {
+        val resourceFlow = searchVacancyDetailsByIdUseCase.(query = vacancyId, page = 0)
         val resource = resourceFlow.first()  // Получаем первый результат из Flow
 
         return when (resource) {
@@ -29,6 +29,6 @@ class VacancyDetailsRepositoryImpl(
             }
             else -> Resource.Error("Loading state unsupported here")
         }
-    }
+    }*/
 }
 

@@ -25,6 +25,8 @@ import ru.practicum.android.diploma.search.data.repository.VacancyRepositoryImpl
 import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
+import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
+import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCaseImpl
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import java.util.concurrent.TimeUnit
@@ -98,6 +100,10 @@ val searchModule = module {
 
     single<SearchUseCase> {
         SearchUseCaseImpl(get())
+    }
+
+    single<SearchVacancyDetailsUseCase> {
+        SearchVacancyDetailsUseCaseImpl(get())
     }
 
     factory { VacancyToVacancyUiMapper() }

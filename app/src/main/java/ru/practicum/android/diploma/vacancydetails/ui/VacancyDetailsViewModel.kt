@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
+import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(
-    private val repository: VacancyDetailsRepository,
+    private val repository: VacancyRepository,
     private val vacancyId: String
 ) : ViewModel() {
 
@@ -35,7 +36,7 @@ class VacancyDetailsViewModel(
         viewModelScope.launch {
             _vacancyState.value = VacancyDetailsState.Loading
 
-            val resource = repository.getVacancyDetails(vacancyId)
+            val resource = repository.getVacancyDetailsById(vacancyId)
 
             when (resource) {
                 is Resource.Success -> {
