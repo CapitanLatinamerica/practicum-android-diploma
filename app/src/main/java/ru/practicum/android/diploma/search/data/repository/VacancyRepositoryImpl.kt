@@ -11,6 +11,8 @@ import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyResponse
 import ru.practicum.android.diploma.common.data.model.NetResponse
 import ru.practicum.android.diploma.common.data.model.NetworkClient
+import ru.practicum.android.diploma.common.data.model.VacancyRequest
+import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
 
@@ -55,6 +57,17 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
 
         }
             .flowOn(Dispatchers.IO)
+
+    override suspend fun getVacancyDetailsById(id: String): Vacancy {
+
+        val response = networkClient.doRequest(VacancyRequest(id))
+        when (response.resultCode) {
+            SUCCESS -> {
+                when(response){
+                    is VacancyRequest -> return Resource.Success(response.)
+                }
+        }
+    }
 
     private suspend fun FlowCollector<Resource<VacanciesPage>>.doOnSuccess(
         response: NetResponse

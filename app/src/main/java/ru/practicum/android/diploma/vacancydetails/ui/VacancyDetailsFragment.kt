@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -10,8 +11,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
@@ -122,20 +123,17 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     }
 
     // Отображение детальной информации о вакансии
-    private fun showVacancyDetails(vacancy: VacancyDetails) {
+    private fun showVacancyDetails(vacancy: Vacancy) {
         binding.detailsScrollView.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
-        binding.vacancyTitle.text = vacancy.title
-        binding.vacancySalary.text = vacancy.salary ?: getString(R.string.salary_not_specified)
-        binding.companyName.text = vacancy.companyName
-        binding.companyCity.text = vacancy.companyCity
+        binding.vacancyTitle.text = vacancy.name
+        binding.vacancySalary.text = "от ${vacancy.salaryFrom} до ${vacancy.salaryTo} ${vacancy.salaryCurrency}"
+        binding.companyName.text = vacancy.employer
+        binding.companyCity.text = vacancy.area
         binding.experienceLine.text = vacancy.experience
-        binding.responsibilitiesTextView.text = vacancy.responsibilities
-        binding.requirementsTextView.text = vacancy.requirements
-        binding.conditionsTextView.text = vacancy.conditions
-        binding.skillsTextView.text = vacancy.skills
+        binding.responsibilitiesTextView.text = vacancy.description
 
         // Форматируем текстовые поля
         formatAllTextViews()
@@ -145,6 +143,8 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private fun showError(message: String) {
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
+        binding.placeholdersBlock.visibility = View.VISIBLE
+        Toast.
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного

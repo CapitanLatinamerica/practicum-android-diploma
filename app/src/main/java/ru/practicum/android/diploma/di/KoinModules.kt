@@ -116,7 +116,7 @@ val vacancyDetailsModule = module {
         VacancyDetailsViewModel(get(), vacancyId)
     }
     single<VacancyDetailsRepository> {
-        VacancyDetailsRepositoryImpl()
+        VacancyDetailsRepositoryImpl(get())
     }
 }
 
