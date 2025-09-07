@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.VacancyDetailsResource
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetails
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
+import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(
     private val repository: VacancyDetailsRepository,
@@ -17,8 +17,8 @@ class VacancyDetailsViewModel(
 ) : ViewModel() {
 
     // Состояние загрузки данных о вакансии
-    private val _vacancyState = MutableStateFlow<VacancyDetailsResource>(VacancyDetailsResource.Loading)
-    val vacancyState: StateFlow<VacancyDetailsResource> = _vacancyState.asStateFlow()
+    private val _vacancyState = MutableStateFlow<VacancyDetailsState>(VacancyDetailsState.Loading)
+    val vacancyState: StateFlow<VacancyDetailsState> = _vacancyState.asStateFlow()
 
     // Состояние избранного (лайк/нелайк)
     private val _isLiked = MutableStateFlow(false)
@@ -32,10 +32,10 @@ class VacancyDetailsViewModel(
     // Загрузка детальной информации о вакансии из репозитория
     internal fun loadVacancyDetails() {
         viewModelScope.launch {
-            _vacancyState.value = VacancyDetailsResource.Loading
+            _vacancyState.value = VacancyDetailsState.Loading
             delay(MY_AWESOME_DELAY) // искусственная задержка 1.5 секунды для показа ProgressBar
             val vacancyDetails = repository.getVacancyDetails(vacancyId)
-            _vacancyState.value = VacancyDetailsResource.Content(vacancyDetails)
+            _vacancyState.value = VacancyDetailsState.Content(vacancyDetails)
 //            _isLiked.value = repository.isVacancyFavorite(vacancyId)
         }
     }
