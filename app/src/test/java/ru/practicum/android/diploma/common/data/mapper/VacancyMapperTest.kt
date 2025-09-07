@@ -2,23 +2,23 @@ package ru.practicum.android.diploma.common.data.mapper
 
 import org.junit.Assert.*
 import org.junit.Test
-import ru.practicum.android.diploma.common.data.domain.api.Address
+import ru.practicum.android.diploma.common.data.domain.api.AddressDto
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
-import ru.practicum.android.diploma.common.data.domain.api.Contacts
-import ru.practicum.android.diploma.common.data.domain.api.Employer
-import ru.practicum.android.diploma.common.data.domain.api.Employment
-import ru.practicum.android.diploma.common.data.domain.api.Experience
+import ru.practicum.android.diploma.common.data.domain.api.ContactsDto
+import ru.practicum.android.diploma.common.data.domain.api.EmployerDto
+import ru.practicum.android.diploma.common.data.domain.api.EmploymentDto
+import ru.practicum.android.diploma.common.data.domain.api.ExperienceDto
 import ru.practicum.android.diploma.common.data.domain.api.IndustryDto
-import ru.practicum.android.diploma.common.data.domain.api.Phone
-import ru.practicum.android.diploma.common.data.domain.api.Salary
-import ru.practicum.android.diploma.common.data.domain.api.Schedule
+import ru.practicum.android.diploma.common.data.domain.api.PhoneDto
+import ru.practicum.android.diploma.common.data.domain.api.SalaryDto
+import ru.practicum.android.diploma.common.data.domain.api.ScheduleDto
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 
 class VacancyMapperTest {
     @Test
     fun should_map_VacancyDto_to_Vacancy() {
         val vacancyDto = VacancyDto(
-            address = Address(
+            addressDto = AddressDto(
                 building = "7",
                 city = "Челябинск",
                 id = "6",
@@ -38,26 +38,26 @@ class VacancyMapperTest {
                 name = "Узян",
                 parentId = null
             ),
-            contacts = Contacts(
+            contactsDto = ContactsDto(
                 email = "123@gmail.com",
                 id = "0",
                 name = "Смирнов Алексей Иванович",
-                phones = listOf(
-                    Phone(comment = null, formatted = "+7 (999) 456-78-90"),
-                    Phone(comment = null, formatted = "+7 (999) 654-32-10")
+                phoneDtos = listOf(
+                    PhoneDto(comment = null, formatted = "+7 (999) 456-78-90"),
+                    PhoneDto(comment = null, formatted = "+7 (999) 654-32-10")
                 )
             ),
             description = "Описание",
-            employer = Employer(
+            employerDto = EmployerDto(
                 id = "1",
                 logo = "https://picsum.photos/200/300",
                 name = "Google"
             ),
-            employment = Employment(
+            employmentDto = EmploymentDto(
                 id = "full",
                 name = "Полная занятость"
             ),
-            experience = Experience(
+            experienceDto = ExperienceDto(
                 id = "noExperience",
                 name = "Нет опыта"
             ),
@@ -67,13 +67,13 @@ class VacancyMapperTest {
                 name = "Услуги для населения"
             ),
             name = "DevOps Engineer в Google",
-            salary = Salary(
+            salaryDto = SalaryDto(
                 currency = "AUD",
                 from = 1300,
                 id = "8",
                 to = 2300
             ),
-            schedule = Schedule(
+            scheduleDto = ScheduleDto(
                 id = "fullDay",
                 name = "Полный день"
             ),

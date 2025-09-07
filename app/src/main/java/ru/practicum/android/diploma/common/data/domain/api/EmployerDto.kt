@@ -3,8 +3,9 @@ package ru.practicum.android.diploma.common.data.domain.api
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class IndustryDto(
+data class EmployerDto(
     @SerializedName("id") val id: String,
+    @SerializedName("logo") val logo: String,
     @SerializedName("name") val name: String
 ) : Serializable {
     companion object {
