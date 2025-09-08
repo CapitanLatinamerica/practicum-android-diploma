@@ -23,8 +23,8 @@ class FavouritesFragment : Fragment() {
     private var _binding: FragmentFavouritesBinding? = null
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
-    private lateinit var adapter: VacanciesAdapter
-    private lateinit var debouncedClick: (String) -> Unit
+    private var adapter: VacanciesAdapter? = null
+    private var debouncedClick: ((String) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,7 @@ class FavouritesFragment : Fragment() {
         }
 
         adapter = VacanciesAdapter { vacancyUi ->
-            debouncedClick(vacancyUi.id)
+            debouncedClick?.invoke(vacancyUi.id)
         }
 
         binding.favoritesRecyclerView.adapter = adapter
@@ -67,6 +67,8 @@ class FavouritesFragment : Fragment() {
 
     override fun onDestroyView() {
         binding.favoritesRecyclerView.adapter = null
+        adapter = null
+        debouncedClick = null
         super.onDestroyView()
         _binding = null
     }
@@ -84,7 +86,7 @@ class FavouritesFragment : Fragment() {
                 val vacancyUiList = favouritesState.favouritesList.map { vacancy ->
                     vacancyMapper.mapToUi(vacancy)
                 }
-                adapter.updateData(vacancyUiList)
+                adapter?.updateData(vacancyUiList)
                 binding.emptyListTextView.visibility = View.GONE
                 binding.placeholderImage.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE

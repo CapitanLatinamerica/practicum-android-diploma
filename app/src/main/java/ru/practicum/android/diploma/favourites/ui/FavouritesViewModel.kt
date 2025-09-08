@@ -12,7 +12,6 @@ class FavouritesViewModel(private val favouritesInteractor: FavouritesInteractor
     private val _favouritesState = MutableLiveData<FavouritesState>()
     val favouritesState: LiveData<FavouritesState> get() = _favouritesState
 
-
     init {
         viewModelScope.launch {
             getFavourites()
