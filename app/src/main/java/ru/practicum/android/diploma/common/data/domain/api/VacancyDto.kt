@@ -10,7 +10,7 @@ data class VacancyDto(
     @SerializedName("description") val description: String?,
     @SerializedName("employer") val employerDto: EmployerDto?,
     @SerializedName("employment") val employmentDto: EmploymentDto?,
-    @SerializedName("experienc") val experienceDto: ExperienceDto?,
+    @SerializedName("experience") val experienceDto: ExperienceDto?,
     @SerializedName("id") val id: String?,
     @SerializedName("industry") val industryDto: IndustryDto?,
     @SerializedName("name") val name: String?,
