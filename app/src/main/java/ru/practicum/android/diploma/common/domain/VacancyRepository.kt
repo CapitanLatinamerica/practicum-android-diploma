@@ -18,7 +18,7 @@ interface VacancyRepository {
     fun searchVacanciesWithFilter(filteredVacancyParameters: FilteredVacancyParameters): List<Vacancy>
 
     // Получение детальной информации о вакансии по ID, возвращает Resource с Vacancy
-    suspend fun getVacancyDetailsById(id: String) : Resource<Vacancy>
+    suspend fun getVacancyDetailsById(id: String): Resource<Vacancy>
 
     fun deleteById(id: String): Boolean
 
