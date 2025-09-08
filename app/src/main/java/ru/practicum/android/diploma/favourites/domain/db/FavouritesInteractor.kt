@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.common.domain.db
+package ru.practicum.android.diploma.favourites.domain.db
 
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
