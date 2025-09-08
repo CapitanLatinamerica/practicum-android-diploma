@@ -74,10 +74,9 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     // Получение детали вакансии по ID — делает сетевой вызов через NetworkClient
     // преобразует полученный ответ в VacancyDto, мапит в Vacancy и возвращает Resource
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
-
         val response = networkClient.doRequest(VacancyRequest(id))
         when (response) {
-            is VacancyResponse ->{
+            is VacancyResponse -> {
                 val vacancyDto = VacancyDto(
                     addressDto = response.addressDto,
                     areaDto = response.areaDto,
@@ -102,19 +101,21 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     }
 
     override fun deleteById(id: String): Boolean {
-        TODO("Not yet implemented")
+        TODO("Not implemented deleteById")
     }
 
     override fun getIndustries(): List<Industry> {
-        TODO("Not yet implemented")
+        // Временно
+        return emptyList()
     }
 
     override fun getAreas(): List<AreaDto> {
-        TODO("Not yet implemented")
+        // Временно
+        return emptyList()
     }
 
     override fun deleteVacancyFromFavorites(id: String) {
-        TODO("Not yet implemented")
+        TODO("Not implemented deleteVacancyFromFavorites")
     }
 
     private suspend fun FlowCollector<Resource<VacanciesPage>>.doOnSuccess(

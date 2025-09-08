@@ -52,7 +52,6 @@ class VacancyDetailsViewModel(
         }
     }
 
-
     // Переключение статуса избранного для вакансии
     fun toggleFavorite(vacancyId: String, vacancyDetails: Vacancy?) {
         viewModelScope.launch {

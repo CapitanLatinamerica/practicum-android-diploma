@@ -50,7 +50,7 @@ class MainFragment : Fragment() {
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
-        ) {vacancy->
+        ) {vacancy ->
             val action = MainFragmentDirections.actionMainFragmentToVacancyDetailsFragment(vacancy.id)
             findNavController().navigate(action)
         }
