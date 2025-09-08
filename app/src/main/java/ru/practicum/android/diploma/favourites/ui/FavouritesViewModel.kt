@@ -22,10 +22,14 @@ class FavouritesViewModel(private val favouritesInteractor: FavouritesInteractor
     private fun getFavourites() {
         viewModelScope.launch {
             favouritesInteractor.getAllVacancies().collect { favouriteList ->
-                _favouritesState.value = if (favouriteList.isEmpty()) {
-                    FavouritesState.Empty
-                } else {
-                    FavouritesState.Content(favouriteList)
+                runCatching {
+                    if (favouriteList.isEmpty()) {
+                        _favouritesState.value = FavouritesState.Empty
+                    } else {
+                        _favouritesState.value = FavouritesState.Content(favouriteList)
+                    }
+                }.onFailure {
+                    _favouritesState.value = FavouritesState.Error
                 }
             }
         }

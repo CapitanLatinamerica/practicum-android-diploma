@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
 import ru.practicum.android.diploma.search.ui.VacanciesAdapter
@@ -83,6 +84,14 @@ class FavouritesFragment : Fragment() {
                 binding.emptyListTextView.visibility = View.GONE
                 binding.placeholderImage.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE
+            }
+
+            is FavouritesState.Error -> {
+                binding.emptyListTextView.visibility = View.VISIBLE
+                binding.emptyListTextView.setText(R.string.nothing_found)
+                binding.placeholderImage.visibility = View.VISIBLE
+                binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
+                binding.favoritesRecyclerView.visibility = View.GONE
             }
         }
     }
