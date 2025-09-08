@@ -56,9 +56,8 @@
     <!-- RecyclerView (по умолчанию скрыт) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRecyclerView"
-        android:layout_width="@dimen/zero_dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"
-        android:visibility="gone"
         android:paddingStart="@dimen/padding_16"
         android:paddingEnd="@dimen/padding_16"
         app:layout_constraintTop_toBottomOf="@id/toolbar"

@@ -19,7 +19,7 @@ class FavouritesViewModel(private val favouritesInteractor: FavouritesInteractor
         }
     }
 
-    private fun getFavourites() {
+    fun getFavourites() {
         viewModelScope.launch {
             favouritesInteractor.getAllVacancies().collect { favouriteList ->
                 runCatching {

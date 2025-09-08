@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -50,10 +51,13 @@ class FavouritesFragment : Fragment() {
         }
 
         binding.favoritesRecyclerView.adapter = adapter
+        binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         favouritesViewModel.favouritesState.observe(viewLifecycleOwner) { state ->
             updateUI(state)
         }
+
+        favouritesViewModel.getFavourites()
     }
 
     private fun navigateToVacancyDetails(vacancyId: String) {

@@ -118,7 +118,7 @@ val searchModule = module {
 val vacancyDetailsModule = module {
 
     viewModel { (vacancyId: String) ->
-        VacancyDetailsViewModel(get(), vacancyId)
+        VacancyDetailsViewModel(get(), get(), vacancyId)
     }
 }
 
