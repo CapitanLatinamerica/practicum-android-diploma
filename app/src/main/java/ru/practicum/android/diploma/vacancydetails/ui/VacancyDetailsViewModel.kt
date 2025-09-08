@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(

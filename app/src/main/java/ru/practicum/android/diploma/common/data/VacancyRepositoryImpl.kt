@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.data.repository
+package ru.practicum.android.diploma.common.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +60,8 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         }
             .flowOn(Dispatchers.IO)
 
+    // Получение детали вакансии по ID — делает сетевой вызов через NetworkClient
+    // преобразует полученный ответ в VacancyDto, мапит в Vacancy и возвращает Resource
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
 
         val response = networkClient.doRequest(VacancyRequest(id))
