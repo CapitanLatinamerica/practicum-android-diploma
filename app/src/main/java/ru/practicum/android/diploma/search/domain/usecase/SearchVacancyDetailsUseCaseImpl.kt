@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.search.domain.usecase
 
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
-import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
 
 class SearchVacancyDetailsUseCaseImpl(
     private val vacancyRepository: VacancyRepository

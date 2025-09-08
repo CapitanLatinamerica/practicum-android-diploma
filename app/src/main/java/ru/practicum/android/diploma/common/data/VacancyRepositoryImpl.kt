@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
@@ -14,9 +15,11 @@ import ru.practicum.android.diploma.common.data.model.NetResponse
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
+import ru.practicum.android.diploma.common.domain.VacancyRepository
+import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
+import ru.practicum.android.diploma.common.domain.entity.Industry
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
-import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
 
 class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyRepository {
 
@@ -60,6 +63,14 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         }
             .flowOn(Dispatchers.IO)
 
+    override fun searchAllVacancies(): List<Vacancy> {
+        TODO("Not yet implemented")
+    }
+
+    override fun searchVacanciesWithFilter(filteredVacancyParameters: FilteredVacancyParameters): List<Vacancy> {
+        TODO("Not yet implemented")
+    }
+
     // Получение детали вакансии по ID — делает сетевой вызов через NetworkClient
     // преобразует полученный ответ в VacancyDto, мапит в Vacancy и возвращает Resource
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
@@ -88,6 +99,22 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
             }
             else -> return Resource.Error("Vacancy deleted")
         }
+    }
+
+    override fun deleteById(id: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getIndustries(): List<Industry> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAreas(): List<AreaDto> {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteVacancyFromFavorites(id: String) {
+        TODO("Not yet implemented")
     }
 
     private suspend fun FlowCollector<Resource<VacanciesPage>>.doOnSuccess(

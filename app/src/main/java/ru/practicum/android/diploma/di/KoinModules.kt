@@ -22,7 +22,7 @@ import ru.practicum.android.diploma.common.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.common.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.common.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
-import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
+import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
 import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
