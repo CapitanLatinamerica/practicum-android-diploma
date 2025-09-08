@@ -64,9 +64,9 @@
             <TextView
                 android:id="@+id/vacancyTitle"
                 style="@style/TextBold32"
-                android:layout_marginTop="@dimen/padding_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_24"
                 android:text="@string/vacancy_name_default" />
 
             <!-- Зарплата -->
@@ -245,39 +245,36 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/detailsPlaceholder"
-        android:layout_width="@dimen/zero_dp"
-        android:layout_height="@dimen/zero_dp"
+        android:id="@+id/placeholdersBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <LinearLayout
-            android:id="@+id/placeholdersBlock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/exatclyPlaceholder"
+            android:layout_width="328dp"
+            android:layout_height="@dimen/fav_ph_height"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:ignore="UselessParent">
+            android:contentDescription="@string/image_view_details_descr"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/no_vacancy_placeholder" />
 
-            <ImageView
-                android:id="@+id/exatclyPlaceholder"
-                android:layout_width="328dp"
-                android:layout_height="@dimen/fav_ph_height"
-                android:layout_gravity="center"
-                android:contentDescription="@string/image_view_details_descr"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/no_vacancy_placeholder" />
+        <TextView
+            style="@style/TextMedium22"
+            android:layout_width="@dimen/ph_text_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="center"
+            android:text="@string/vacancy_denied">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        </TextView>
 
-            </TextView>
-        </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

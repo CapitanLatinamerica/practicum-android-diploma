@@ -21,15 +21,15 @@ import ru.practicum.android.diploma.common.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.common.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.common.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.common.domain.impl.FavouritesInteractorImpl
-import ru.practicum.android.diploma.search.data.repository.VacancyRepositoryImpl
-import ru.practicum.android.diploma.search.domain.repository.VacancyRepository
+import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
+import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
+import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
+import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCaseImpl
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import java.util.concurrent.TimeUnit
-import ru.practicum.android.diploma.vacancydetails.data.VacancyDetailsRepositoryImpl
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsRepository
 import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
@@ -100,6 +100,10 @@ val searchModule = module {
         SearchUseCaseImpl(get())
     }
 
+    single<SearchVacancyDetailsUseCase> {
+        SearchVacancyDetailsUseCaseImpl(get())
+    }
+
     factory { VacancyToVacancyUiMapper() }
 
     single<ErrorMessageProvider> {
@@ -114,9 +118,6 @@ val vacancyDetailsModule = module {
 
     viewModel { (vacancyId: String) ->
         VacancyDetailsViewModel(get(), vacancyId)
-    }
-    single<VacancyDetailsRepository> {
-        VacancyDetailsRepositoryImpl()
     }
 }
 

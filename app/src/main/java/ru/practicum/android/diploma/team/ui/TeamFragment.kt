@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentTeamBinding
 
 class TeamFragment : Fragment() {
@@ -25,12 +24,6 @@ class TeamFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Обработчик клика по временной кнопке
-        binding.goToDetailsButton.setOnClickListener {
-            val action = TeamFragmentDirections.actionTeamFragmentToVacancyDetailsFragment("123")
-            findNavController().navigate(action)
-        }
     }
 
     override fun onDestroyView() {
