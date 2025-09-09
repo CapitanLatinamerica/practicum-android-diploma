@@ -71,10 +71,10 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         TODO("Not yet implemented")
     }
 
-    // Получение детали вакансии по ID — делает сетевой вызов через NetworkClient
-    // преобразует полученный ответ в VacancyDto, мапит в Vacancy и возвращает Resource
+    // Получение детали вакансии по ID
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
         val response = networkClient.doRequest(VacancyRequest(id))
+
         when (response) {
             is VacancyResponse -> {
                 val vacancyDto = VacancyDto(
@@ -93,10 +93,14 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
                     skills = response.skills,
                     url = response.url
                 )
+
                 val vacancy = VacancyMapper.mapFromVacancyDtoToVacancy(vacancyDto)
+
                 return Resource.Success(vacancy)
             }
-            else -> return Resource.Error("Vacancy deleted")
+            else -> {
+                return Resource.Error("Unexpected response type")
+            }
         }
     }
 
