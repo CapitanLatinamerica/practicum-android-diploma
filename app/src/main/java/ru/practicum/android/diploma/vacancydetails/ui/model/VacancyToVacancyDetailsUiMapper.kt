@@ -7,7 +7,7 @@ class VacancyToVacancyDetailsUiMapper {
     fun mapToUi(vacancy: Vacancy): VacancyDetailsUi {
         return VacancyDetailsUi(
             id = vacancy.id,
-            name = vacancy.name ?: "Название не указано",
+            name = vacancy.name,
             salaryText = buildSalaryText(vacancy),
             logoUrl = vacancy.logo,
             area = vacancy.area ?: "Регион не указан",
@@ -19,28 +19,7 @@ class VacancyToVacancyDetailsUiMapper {
         )
     }
 
-    private fun formatSalary(from: Int?, to: Int?, currency: String?): String {
-        fun format(salary: Int): String {
-            val symbols = java.text.DecimalFormatSymbols.getInstance(java.util.Locale.getDefault()).apply {
-                groupingSeparator = '\u00A0'
-                decimalSeparator = ','
-            }
-            val decimalFormat = java.text.DecimalFormat("#,###", symbols)
-            return decimalFormat.format(salary)
-        }
-
-        val symbol = currencySymbol(currency)
-        return when {
-            from == null && to == null -> "Зарплата не указана"
-            from != null && to != null && from == to -> "${format(from)} $symbol"
-            from != null && to != null -> "от ${format(from)} до ${format(to)} $symbol"
-            from != null -> "от ${format(from)} $symbol"
-            to != null -> "${format(to)} $symbol"
-            else -> "Зарплата не указана"
-        }
-    }
-
-    private fun currencySymbol(currency: String?): String {
+    fun currencySymbol(currency: String?): String {
         val symbols = mapOf(
             "RUB" to "₽",
             "BYR" to "ꀷ",
@@ -56,15 +35,17 @@ class VacancyToVacancyDetailsUiMapper {
     }
 
     private fun buildSalaryText(vacancy: Vacancy): String {
+        val currencySymbol = currencySymbol(vacancy.salaryCurrency)
+
         return when {
             vacancy.salaryFrom != null && vacancy.salaryTo != null -> {
-                "от ${vacancy.salaryFrom} до ${vacancy.salaryTo} ${vacancy.salaryCurrency ?: ""}"
+                "от ${vacancy.salaryFrom} до ${vacancy.salaryTo} $currencySymbol"
             }
             vacancy.salaryFrom != null -> {
-                "от ${vacancy.salaryFrom} ${vacancy.salaryCurrency ?: ""}"
+                "от ${vacancy.salaryFrom} $currencySymbol"
             }
             vacancy.salaryTo != null -> {
-                "до ${vacancy.salaryTo} ${vacancy.salaryCurrency ?: ""}"
+                "до ${vacancy.salaryTo} $currencySymbol"
             }
             else -> "Зарплата не указана"
         }.trim()

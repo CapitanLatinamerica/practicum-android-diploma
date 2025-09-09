@@ -100,6 +100,7 @@
                         android:layout_width="@dimen/vacancy_icon_shape_size"
                         android:layout_height="@dimen/vacancy_icon_shape_size"
                         app:cardElevation="@dimen/zero_dp"
+                        app:cardBackgroundColor="@color/primary"
                         app:shapeAppearance="@style/RoundedCorners12dp">
 
                         <ImageView
@@ -107,7 +108,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:contentDescription="@string/image_view_details_descr"
-                            android:scaleType="centerCrop"
                             app:srcCompat="@drawable/placeholder_vacancy" />
                     </com.google.android.material.card.MaterialCardView>
 

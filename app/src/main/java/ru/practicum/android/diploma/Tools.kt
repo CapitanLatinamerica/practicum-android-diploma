@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.widget.TextView
 import android.text.TextPaint
 import android.text.style.TextAppearanceSpan
 
@@ -166,26 +165,32 @@ object Tools {
         }
     }
 
-    fun formatTextWithStylesAndWrapping(
-        context: Context,
-        rawText: String,
+    // Метод для форматирования описания (без префикса для сплошного текста)
+    fun formatDescriptionTextWithPaint(
+        context: Context, // Добавляем контекст как параметр
+        text: String,
         paint: TextPaint,
-        availableWidth: Int,
-        prefix: String = " • "
+        availableWidth: Int
     ): SpannableStringBuilder {
         val spannable = SpannableStringBuilder()
-        val lines = rawText.lines()
+        val lines = text.lines()
+        var previousLineWasHeader = false
 
         lines.forEachIndexed { index, originalLine ->
             val line = originalLine.trim()
 
             if (line.isBlank()) return@forEachIndexed
 
+            // Добавляем дополнительный перенос перед заголовком
+            if (line.endsWith(":") && index > 0 && !previousLineWasHeader) {
+                spannable.append("\n")
+            }
+
             if (index > 0) spannable.append("\n")
 
             when {
                 line.endsWith(":") -> {
-                    // Заголовок с двоеточием
+                    // Заголовок с двоеточием - жирный стиль
                     val start = spannable.length
                     spannable.append(line)
                     val end = spannable.length
@@ -195,67 +200,46 @@ object Tools {
                         end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
+                    previousLineWasHeader = true
                 }
 
                 line.startsWith("- ") -> {
                     // Элемент списка - убираем дефис, добавляем точку
                     val cleanLine = line.removePrefix("- ")
-                    formatAndWrapText(
-                        context = context,
-                        spannable = spannable,
+                    val formattedText = autoFormatTextWithPaint(
                         text = cleanLine,
                         paint = paint,
                         availableWidth = availableWidth,
-                        prefix = prefix,
-                        style = null // обычный стиль
+                        prefix = " • " // Добавляем точку только для списков
                     )
+                    spannable.append(formattedText)
+                    previousLineWasHeader = false
                 }
 
                 else -> {
-                    // Обычный текст
-                    formatAndWrapText(
-                        context = context,
-                        spannable = spannable,
+                    // Обычный текст БЕЗ префикса
+                    val formattedText = autoFormatTextWithPaint(
                         text = line,
                         paint = paint,
                         availableWidth = availableWidth,
-                        prefix = prefix,
-                        style = null
+                        prefix = "" // Без префикса для сплошного текста
                     )
+                    spannable.append(formattedText)
+                    previousLineWasHeader = false
                 }
             }
         }
         return spannable
     }
 
-    private fun formatAndWrapText(
-        context: Context,
-        spannable: SpannableStringBuilder,
+    // Метод для форматирования навыков (всегда с префиксом)
+    fun formatSkillsTextWithPaint(
         text: String,
         paint: TextPaint,
         availableWidth: Int,
-        prefix: String,
-        style: Int?
-    ) {
-        val formattedText = autoFormatTextWithPaint(
-            text = text,
-            paint = paint,
-            availableWidth = availableWidth,
-            prefix = prefix
-        )
-
-        val start = spannable.length
-        spannable.append(formattedText)
-
-        style?.let {
-            val end = spannable.length
-            spannable.setSpan(
-                TextAppearanceSpan(context, it),
-                start,
-                end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
+        prefix: String = " • "
+    ): String {
+        return autoFormatTextWithPaint(text, paint, availableWidth, prefix)
     }
 }
 

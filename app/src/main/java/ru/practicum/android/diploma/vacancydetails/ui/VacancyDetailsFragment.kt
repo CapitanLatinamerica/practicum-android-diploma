@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -94,8 +95,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         val uiModel = detailsUiMapper.mapToUi(vacancy)
 
-
-
         binding.detailsScrollView.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
 
@@ -108,15 +107,19 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.companyName.text = vacancy.employer
         binding.companyCity.text = vacancy.area
         binding.experienceLine.text = vacancy.experience
+        binding.skillsTextView.text = vacancy.skills.toString()
 
         Glide.with(this)
-            .load(uiModel.logoUrl)
+            .load(vacancy.logo)
+            .fitCenter() // Масштабирование с сохранением пропорций
             .placeholder(R.drawable.placeholder_vacancy)
             .into(binding.innerLogo)
 
-        // Форматируем текстовые поля
-        formatAllTextViews()
+        // Форматируем описание с стилями и переносами
+        formatVacancyDescription(vacancy.description ?: "")
 
+        // Обычное форматирование для skills
+        formatSkillsTextView()
     }
 
     // Показать состояние ошибки
@@ -143,24 +146,36 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         }
     }
 
-    // Метод для форматирования сплошного текста в соответствие макету
-    private fun formatAllTextViews() {
-        val widthLeft = binding.skillsTextView.paddingLeft
-        val widthRight = binding.skillsTextView.paddingRight
+    private fun formatVacancyDescription(description: String) {
+        binding.vacancyDescriptionTextView.post {
+            val widthLeft = binding.vacancyDescriptionTextView.paddingLeft
+            val widthRight = binding.vacancyDescriptionTextView.paddingRight
+            val availableWidth = binding.vacancyDescriptionTextView.width - widthLeft - widthRight
 
-        listOf(
-            binding.vacancyDescriptionTextView,
-            binding.skillsTextView
-        ).forEach { textView ->
-            textView.post {
-                val text = textView.text?.toString()
-                if (!text.isNullOrBlank()) {
-                    textView.text = Tools.autoFormatTextWithPaint(
-                        text,
-                        textView.paint,
-                        textView.width - widthLeft - widthRight
-                    )
-                }
+            val spannable = Tools.formatDescriptionTextWithPaint(
+                context = requireContext(), // Передаем контекст
+                text = description,
+                paint = binding.vacancyDescriptionTextView.paint,
+                availableWidth = availableWidth
+            )
+
+            binding.vacancyDescriptionTextView.setText(spannable, TextView.BufferType.SPANNABLE)
+        }
+    }
+
+    private fun formatSkillsTextView() {
+        binding.skillsTextView.post {
+            val text = binding.skillsTextView.text?.toString()
+            if (!text.isNullOrBlank()) {
+                val widthLeft = binding.skillsTextView.paddingLeft
+                val widthRight = binding.skillsTextView.paddingRight
+                val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
+
+                binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
+                    text,
+                    binding.skillsTextView.paint,
+                    availableWidth
+                )
             }
         }
     }
@@ -168,6 +183,10 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        const val ICON_SIZE = 500
     }
 
 }

@@ -18,7 +18,8 @@ object VacancyMapper {
             experience = vacancyDto.experienceDto?.name,
             employment = vacancyDto.employmentDto?.name,
             schedule = vacancyDto.scheduleDto?.name,
-            description = vacancyDto.description
+            description = vacancyDto.description,
+            skills = vacancyDto.skills?.joinToString("\n") ?: ""
         )
     }
 
@@ -35,7 +36,8 @@ object VacancyMapper {
             experience = vacancy.experience,
             employment = vacancy.employment,
             schedule = vacancy.schedule,
-            description = vacancy.description
+            description = vacancy.description,
+            skills = vacancy.skills
         )
     }
 
@@ -52,7 +54,8 @@ object VacancyMapper {
             experience = vacancyEntity.experience,
             employment = vacancyEntity.employment,
             schedule = vacancyEntity.schedule,
-            description = vacancyEntity.description
+            description = vacancyEntity.description,
+            skills = vacancyEntity.skills
         )
     }
 }
