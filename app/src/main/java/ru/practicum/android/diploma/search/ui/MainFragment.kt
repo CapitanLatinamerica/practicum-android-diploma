@@ -81,17 +81,12 @@ class MainFragment : Fragment() {
                 } else {
                     viewModel.searchDebounce(text)
                 }
-                updatePlaceholderForInput()
             }
 
             override fun afterTextChanged(s: Editable?) {
                 // Для многоуважаемого детекта
             }
         })
-
-        binding.editText.setOnFocusChangeListener { _, _ ->
-            updatePlaceholderForInput()
-        }
 
         binding.btnEditAction.setOnClickListener {
             val text = binding.editText.text?.toString().orEmpty()
@@ -120,7 +115,7 @@ class MainFragment : Fragment() {
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
-            updatePlaceholderForInput()
+            placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
         }
@@ -171,16 +166,6 @@ class MainFragment : Fragment() {
             placeholderText.text = errorMessage
             countVacancies.visibility = View.GONE
         }
-    }
-
-    private fun updatePlaceholderForInput() {
-        val inputText = binding.editText.text?.toString().orEmpty()
-        if (inputText.isNotEmpty()) {
-            binding.placeholderMainScreen.visibility = View.GONE
-            return
-        }
-        binding.placeholderMainScreen.visibility = View.VISIBLE
-        binding.placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
     }
 
     private fun updateEditActionIcon(hasText: Boolean) {
