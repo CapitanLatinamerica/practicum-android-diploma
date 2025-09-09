@@ -3,12 +3,15 @@ package ru.practicum.android.diploma
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.widget.TextView
 import android.text.TextPaint
+import android.text.style.TextAppearanceSpan
 
 object Tools {
 
@@ -54,16 +57,31 @@ object Tools {
     ): String {
         val indent = " ".repeat(prefix.length)
         val formattingContext = FormattingContext(prefix, indent, paint, availableWidth)
-
         return buildString {
-            text.lines().forEachIndexed { lineIndex, line ->
+            text.lines().forEachIndexed { lineIndex, origLine ->
+                val line = origLine.trim()
                 if (line.isNotBlank()) {
                     if (lineIndex > 0) append("\n")
-                    processLine(line.trim(), formattingContext)
+
+                    // Новые правила:
+                    if (line.endsWith(":")) {
+                        // Если строка заканчивается двоеточием,
+                        // НЕ добавляем префикс, а применяем стиль TextMedium16 (нужно будет во фрагменте)
+                        append(line)
+                    } else if (line.startsWith("- ")) {
+                        // Если строка начинается с "- ", убираем "- " и добавляем префикс (точка-разделитель)
+                        val modifiedLine = line.removePrefix("- ")
+                        // форматируем эту строку с префиксом
+                        processLine(modifiedLine, formattingContext)
+                    } else {
+                        // Иначе обычный процесс с префиксом
+                        processLine(line, formattingContext)
+                    }
                 }
             }
         }
     }
+
 
     private fun StringBuilder.processLine(
         line: String,
@@ -148,7 +166,97 @@ object Tools {
         }
     }
 
+    fun formatTextWithStylesAndWrapping(
+        context: Context,
+        rawText: String,
+        paint: TextPaint,
+        availableWidth: Int,
+        prefix: String = " • "
+    ): SpannableStringBuilder {
+        val spannable = SpannableStringBuilder()
+        val lines = rawText.lines()
 
+        lines.forEachIndexed { index, originalLine ->
+            val line = originalLine.trim()
+
+            if (line.isBlank()) return@forEachIndexed
+
+            if (index > 0) spannable.append("\n")
+
+            when {
+                line.endsWith(":") -> {
+                    // Заголовок с двоеточием
+                    val start = spannable.length
+                    spannable.append(line)
+                    val end = spannable.length
+                    spannable.setSpan(
+                        TextAppearanceSpan(context, R.style.TextMedium16),
+                        start,
+                        end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+
+                line.startsWith("- ") -> {
+                    // Элемент списка - убираем дефис, добавляем точку
+                    val cleanLine = line.removePrefix("- ")
+                    formatAndWrapText(
+                        context = context,
+                        spannable = spannable,
+                        text = cleanLine,
+                        paint = paint,
+                        availableWidth = availableWidth,
+                        prefix = prefix,
+                        style = null // обычный стиль
+                    )
+                }
+
+                else -> {
+                    // Обычный текст
+                    formatAndWrapText(
+                        context = context,
+                        spannable = spannable,
+                        text = line,
+                        paint = paint,
+                        availableWidth = availableWidth,
+                        prefix = prefix,
+                        style = null
+                    )
+                }
+            }
+        }
+        return spannable
+    }
+
+    private fun formatAndWrapText(
+        context: Context,
+        spannable: SpannableStringBuilder,
+        text: String,
+        paint: TextPaint,
+        availableWidth: Int,
+        prefix: String,
+        style: Int?
+    ) {
+        val formattedText = autoFormatTextWithPaint(
+            text = text,
+            paint = paint,
+            availableWidth = availableWidth,
+            prefix = prefix
+        )
+
+        val start = spannable.length
+        spannable.append(formattedText)
+
+        style?.let {
+            val end = spannable.length
+            spannable.setSpan(
+                TextAppearanceSpan(context, it),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
 }
 
 // Data class для группировки параметров форматирования

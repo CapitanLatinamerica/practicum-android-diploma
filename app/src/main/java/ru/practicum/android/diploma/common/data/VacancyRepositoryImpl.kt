@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.common.data
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -75,10 +74,12 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     // Получение детали вакансии по ID — делает сетевой вызов через NetworkClient
     // преобразует полученный ответ в VacancyDto, мапит в Vacancy и возвращает Resource
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
+
         val response = networkClient.doRequest(VacancyRequest(id))
-        Log.d("VacancyRepository", "VacancyResponse: $response")
+
         when (response) {
             is VacancyResponse -> {
+
                 val vacancyDto = VacancyDto(
                     addressDto = response.addressDto,
                     areaDto = response.areaDto,
@@ -95,14 +96,13 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
                     skills = response.skills,
                     url = response.url
                 )
-                Log.d("VacancyRepository", "VacancyDto: $vacancyDto")
+
                 val vacancy = VacancyMapper.mapFromVacancyDtoToVacancy(vacancyDto)
-                Log.d("VacancyRepository", "Mapped Vacancy: $vacancy")
+
                 return Resource.Success(vacancy)
             }
             else -> {
-                Log.e("VacancyRepository", "VacancyResponse is not of expected type")
-                return Resource.Error("Vacancy deleted or invalid response")
+                return Resource.Error("Unexpected response type")
             }
         }
     }

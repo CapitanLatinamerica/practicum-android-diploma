@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -39,41 +38,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         setupObservers()
         setupToolbar()
-    }
-
-    // Метод для форматирования сплошного текста в соответствие макету
-    private fun formatAllTextViews() {
-        val widthLeft = binding.responsibilitiesTextView.paddingLeft
-        val widthRight = binding.responsibilitiesTextView.paddingRight
-
-        binding.responsibilitiesTextView.post {
-            binding.responsibilitiesTextView.text = Tools.autoFormatTextWithPaint(
-                binding.responsibilitiesTextView.text.toString(),
-                binding.responsibilitiesTextView.paint,
-                binding.responsibilitiesTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.requirementsTextView.post {
-            binding.requirementsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.requirementsTextView.text.toString(),
-                binding.requirementsTextView.paint,
-                binding.requirementsTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.conditionsTextView.post {
-            binding.conditionsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.conditionsTextView.text.toString(),
-                binding.conditionsTextView.paint,
-                binding.conditionsTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.skillsTextView.post {
-            binding.skillsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.skillsTextView.text.toString(),
-                binding.skillsTextView.paint,
-                binding.skillsTextView.width - widthLeft - widthRight
-            )
-        }
     }
 
     // Настройка observers для наблюдения за состоянием ViewModel
@@ -128,48 +92,31 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     // Отображение детальной информации о вакансии
     private fun showVacancyDetails(vacancy: Vacancy) {
 
-        Log.d(TAG, "Vacancy details received: $vacancy")
-
         val uiModel = detailsUiMapper.mapToUi(vacancy)
 
-        Log.d(TAG, "Mapped UI Model: $uiModel")
+
 
         binding.detailsScrollView.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
         binding.vacancyTitle.text = vacancy.name
-        binding.vacancySalary.text = uiModel.salaryText
-        binding.companyName.text = uiModel.employer
-        binding.companyCity.text = uiModel.area
         binding.experienceLine.text = vacancy.experience
-        binding.responsibilitiesTextView.text = vacancy.description
+        binding.scheduleTextView.text = vacancy.schedule
+        binding.vacancySalary.text = uiModel.salaryText
+        binding.vacancyDescriptionTextView.text = vacancy.description
+        binding.companyName.text = vacancy.employer
+        binding.companyCity.text = vacancy.area
+        binding.experienceLine.text = vacancy.experience
 
-        // Формируем текст со всеми основными данными
-        val allText = buildString {
-            append("ID: ${vacancy.id}\n")
-            append("Название вакансии: ${vacancy.name}\n")
-            append("Currency: ${vacancy.salaryCurrency.toString()}\n")
-            append("Зарплата от: ${vacancy.salaryFrom.toString()}\n")
-            append("Зарплата до: ${vacancy.salaryTo.toString()}\n")
-            append("Лого: ${vacancy.logo.toString()}\n")
-            append("Area: ${vacancy.area}\n")
-            append("Компания: ${vacancy.employer}\n")
-            append("Опыт: ${vacancy.experience}\n")
-            append("Employment: ${vacancy.employment}\n")
-            append("Расписание: ${vacancy.schedule}\n")
-            append("Описание: ${vacancy.description}\n")
-        }
         Glide.with(this)
             .load(uiModel.logoUrl)
             .placeholder(R.drawable.placeholder_vacancy)
             .into(binding.innerLogo)
 
-        binding.skillsTextView.text = allText
-
-
         // Форматируем текстовые поля
-//        formatAllTextViews()
+        formatAllTextViews()
+
     }
 
     // Показать состояние ошибки
@@ -196,13 +143,31 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         }
     }
 
+    // Метод для форматирования сплошного текста в соответствие макету
+    private fun formatAllTextViews() {
+        val widthLeft = binding.skillsTextView.paddingLeft
+        val widthRight = binding.skillsTextView.paddingRight
+
+        listOf(
+            binding.vacancyDescriptionTextView,
+            binding.skillsTextView
+        ).forEach { textView ->
+            textView.post {
+                val text = textView.text?.toString()
+                if (!text.isNullOrBlank()) {
+                    textView.text = Tools.autoFormatTextWithPaint(
+                        text,
+                        textView.paint,
+                        textView.width - widthLeft - widthRight
+                    )
+                }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val TAG = "VacancyDetailsFragment"
     }
 
 }

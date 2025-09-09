@@ -7,15 +7,15 @@ class VacancyToVacancyDetailsUiMapper {
     fun mapToUi(vacancy: Vacancy): VacancyDetailsUi {
         return VacancyDetailsUi(
             id = vacancy.id,
-            name = vacancy.name,
-            salaryText = formatSalary(vacancy.salaryFrom, vacancy.salaryTo, vacancy.salaryCurrency),
+            name = vacancy.name ?: "Название не указано",
+            salaryText = buildSalaryText(vacancy),
             logoUrl = vacancy.logo,
-            area = vacancy.area,
-            employer = vacancy.employer,
-            experience = vacancy.experience,
-            employment = vacancy.employment,
-            schedule = vacancy.schedule,
-            description = vacancy.description
+            area = vacancy.area ?: "Регион не указан",
+            employer = vacancy.employer ?: "Компания не указана",
+            experience = vacancy.experience ?: "Опыт не указан",
+            employment = vacancy.employment ?: "Тип занятости не указан",
+            schedule = vacancy.schedule ?: "График не указан",
+            description = vacancy.description ?: "Описание отсутствует"
         )
     }
 
@@ -53,5 +53,20 @@ class VacancyToVacancyDetailsUiMapper {
             "KGT" to "⃀",
         )
         return symbols[currency] ?: currency.orEmpty()
+    }
+
+    private fun buildSalaryText(vacancy: Vacancy): String {
+        return when {
+            vacancy.salaryFrom != null && vacancy.salaryTo != null -> {
+                "от ${vacancy.salaryFrom} до ${vacancy.salaryTo} ${vacancy.salaryCurrency ?: ""}"
+            }
+            vacancy.salaryFrom != null -> {
+                "от ${vacancy.salaryFrom} ${vacancy.salaryCurrency ?: ""}"
+            }
+            vacancy.salaryTo != null -> {
+                "до ${vacancy.salaryTo} ${vacancy.salaryCurrency ?: ""}"
+            }
+            else -> "Зарплата не указана"
+        }.trim()
     }
 }
