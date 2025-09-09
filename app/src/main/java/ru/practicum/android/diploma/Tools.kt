@@ -175,53 +175,8 @@ object Tools {
             val line = originalLine.trim()
 
             if (line.isNotBlank()) {
-                // Добавляем дополнительный перенос перед заголовком
-                if (line.endsWith(":") && index > 0 && !previousLineWasHeader) {
-                    spannable.append("\n")
-                }
-
-                if (index > 0) spannable.append("\n")
-
-                when {
-                    line.endsWith(":") -> {
-                        // Заголовок с двоеточием - жирный стиль
-                        val start = spannable.length
-                        spannable.append(line)
-                        val end = spannable.length
-                        spannable.setSpan(
-                            TextAppearanceSpan(context, R.style.TextMedium16),
-                            start,
-                            end,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        previousLineWasHeader = true
-                    }
-
-                    line.startsWith("- ") -> {
-                        // Элемент списка - убираем дефис, добавляем точку
-                        val cleanLine = line.removePrefix("- ")
-                        val formattedText = autoFormatTextWithPaint(
-                            text = cleanLine,
-                            paint = paint,
-                            availableWidth = availableWidth,
-                            prefix = " • " // Добавляем точку только для списков
-                        )
-                        spannable.append(formattedText)
-                        previousLineWasHeader = false
-                    }
-
-                    else -> {
-                        // Обычный текст БЕЗ префикса
-                        val formattedText = autoFormatTextWithPaint(
-                            text = line,
-                            paint = paint,
-                            availableWidth = availableWidth,
-                            prefix = "" // Без префикса для сплошного текста
-                        )
-                        spannable.append(formattedText)
-                        previousLineWasHeader = false
-                    }
-                }
+                processLine(context, spannable, line, index, paint, availableWidth, previousLineWasHeader)
+                previousLineWasHeader = line.endsWith(":")
             }
         }
         return spannable
@@ -235,6 +190,85 @@ object Tools {
         prefix: String = " • "
     ): String {
         return autoFormatTextWithPaint(text, paint, availableWidth, prefix)
+    }
+
+    private fun processLine(
+        context: Context,
+        spannable: SpannableStringBuilder,
+        line: String,
+        index: Int,
+        paint: TextPaint,
+        availableWidth: Int,
+        previousLineWasHeader: Boolean
+    ) {
+        addExtraNewlineIfNeeded(spannable, line, index, previousLineWasHeader)
+
+        when {
+            line.endsWith(":") -> processHeaderLine(context, spannable, line)
+            line.startsWith("- ") -> processListItem(spannable, line, paint, availableWidth)
+            else -> processRegularLine(spannable, line, paint, availableWidth)
+        }
+    }
+
+    private fun addExtraNewlineIfNeeded(
+        spannable: SpannableStringBuilder,
+        line: String,
+        index: Int,
+        previousLineWasHeader: Boolean
+    ) {
+        if (line.endsWith(":") && index > 0 && !previousLineWasHeader) {
+            spannable.append("\n")
+        }
+        if (index > 0) {
+            spannable.append("\n")
+        }
+    }
+
+    private fun processHeaderLine(
+        context: Context,
+        spannable: SpannableStringBuilder,
+        line: String
+    ) {
+        val start = spannable.length
+        spannable.append(line)
+        val end = spannable.length
+        spannable.setSpan(
+            TextAppearanceSpan(context, R.style.TextMedium16),
+            start,
+            end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+
+    private fun processListItem(
+        spannable: SpannableStringBuilder,
+        line: String,
+        paint: TextPaint,
+        availableWidth: Int
+    ) {
+        val cleanLine = line.removePrefix("- ")
+        val formattedText = autoFormatTextWithPaint(
+            text = cleanLine,
+            paint = paint,
+            availableWidth = availableWidth,
+            prefix = " • "
+        )
+        spannable.append(formattedText)
+    }
+
+    private fun processRegularLine(
+        spannable: SpannableStringBuilder,
+        line: String,
+        paint: TextPaint,
+        availableWidth: Int
+    ) {
+        val formattedText = autoFormatTextWithPaint(
+            text = line,
+            paint = paint,
+            availableWidth = availableWidth,
+            prefix = ""
+        )
+        spannable.append(formattedText)
     }
 }
 
