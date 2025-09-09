@@ -101,6 +101,10 @@ class MainFragment : Fragment() {
             }
         }
 
+        viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
+            adapter?.showLoadingFooter(loading)
+        }
+
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
