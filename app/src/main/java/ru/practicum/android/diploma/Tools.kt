@@ -175,7 +175,17 @@ object Tools {
             val line = originalLine.trim()
 
             if (line.isNotBlank()) {
-                processLine(context, spannable, line, index, paint, availableWidth, previousLineWasHeader)
+                processLine(
+                    LineProcessingParams(
+                        context = context,
+                        spannable = spannable,
+                        line = line,
+                        index = index,
+                        paint = paint,
+                        availableWidth = availableWidth,
+                        previousLineWasHeader = previousLineWasHeader
+                    )
+                )
                 previousLineWasHeader = line.endsWith(":")
             }
         }
@@ -192,21 +202,32 @@ object Tools {
         return autoFormatTextWithPaint(text, paint, availableWidth, prefix)
     }
 
-    private fun processLine(
-        context: Context,
-        spannable: SpannableStringBuilder,
-        line: String,
-        index: Int,
-        paint: TextPaint,
-        availableWidth: Int,
-        previousLineWasHeader: Boolean
-    ) {
-        addExtraNewlineIfNeeded(spannable, line, index, previousLineWasHeader)
+    private fun processLine(params: LineProcessingParams) {
+        addExtraNewlineIfNeeded(
+            spannable = params.spannable,
+            line = params.line,
+            index = params.index,
+            previousLineWasHeader = params.previousLineWasHeader
+        )
 
         when {
-            line.endsWith(":") -> processHeaderLine(context, spannable, line)
-            line.startsWith("- ") -> processListItem(spannable, line, paint, availableWidth)
-            else -> processRegularLine(spannable, line, paint, availableWidth)
+            params.line.endsWith(":") -> processHeaderLine(
+                context = params.context,
+                spannable = params.spannable,
+                line = params.line
+            )
+            params.line.startsWith("- ") -> processListItem(
+                spannable = params.spannable,
+                line = params.line,
+                paint = params.paint,
+                availableWidth = params.availableWidth
+            )
+            else -> processRegularLine(
+                spannable = params.spannable,
+                line = params.line,
+                paint = params.paint,
+                availableWidth = params.availableWidth
+            )
         }
     }
 
@@ -278,4 +299,14 @@ private data class FormattingContext(
     val indent: String,
     val paint: TextPaint,
     val availableWidth: Int
+)
+
+private data class LineProcessingParams(
+    val context: Context,
+    val spannable: SpannableStringBuilder,
+    val line: String,
+    val index: Int,
+    val paint: TextPaint,
+    val availableWidth: Int,
+    val previousLineWasHeader: Boolean
 )
