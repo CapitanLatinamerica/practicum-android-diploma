@@ -61,14 +61,10 @@ object Tools {
                 val line = origLine.trim()
                 if (line.isNotBlank()) {
                     if (lineIndex > 0) append("\n")
-
-                    // Новые правила:
-                    if (line.endsWith(":")) {
-                        // Если строка заканчивается двоеточием,
-                        // НЕ добавляем префикс, а применяем стиль TextMedium16 (нужно будет во фрагменте)
-                        append(line)
+                    if (line.endsWith(":")) { // Если строка заканчивается двоеточием
+                        append(line) // НЕ добавляем префикс, а применяем стиль TextMedium16
                     } else if (line.startsWith("- ")) {
-                        // Если строка начинается с "- ", убираем "- " и добавляем префикс (точка-разделитель)
+                        // Если строка начинается с "- ", убираем и добавляем префикс
                         val modifiedLine = line.removePrefix("- ")
                         // форматируем эту строку с префиксом
                         processLine(modifiedLine, formattingContext)
@@ -80,7 +76,6 @@ object Tools {
             }
         }
     }
-
 
     private fun StringBuilder.processLine(
         line: String,
@@ -167,7 +162,7 @@ object Tools {
 
     // Метод для форматирования описания (без префикса для сплошного текста)
     fun formatDescriptionTextWithPaint(
-        context: Context, // Добавляем контекст как параметр
+        context: Context,
         text: String,
         paint: TextPaint,
         availableWidth: Int
@@ -179,53 +174,53 @@ object Tools {
         lines.forEachIndexed { index, originalLine ->
             val line = originalLine.trim()
 
-            if (line.isBlank()) return@forEachIndexed
-
-            // Добавляем дополнительный перенос перед заголовком
-            if (line.endsWith(":") && index > 0 && !previousLineWasHeader) {
-                spannable.append("\n")
-            }
-
-            if (index > 0) spannable.append("\n")
-
-            when {
-                line.endsWith(":") -> {
-                    // Заголовок с двоеточием - жирный стиль
-                    val start = spannable.length
-                    spannable.append(line)
-                    val end = spannable.length
-                    spannable.setSpan(
-                        TextAppearanceSpan(context, R.style.TextMedium16),
-                        start,
-                        end,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    previousLineWasHeader = true
+            if (line.isNotBlank()) {
+                // Добавляем дополнительный перенос перед заголовком
+                if (line.endsWith(":") && index > 0 && !previousLineWasHeader) {
+                    spannable.append("\n")
                 }
 
-                line.startsWith("- ") -> {
-                    // Элемент списка - убираем дефис, добавляем точку
-                    val cleanLine = line.removePrefix("- ")
-                    val formattedText = autoFormatTextWithPaint(
-                        text = cleanLine,
-                        paint = paint,
-                        availableWidth = availableWidth,
-                        prefix = " • " // Добавляем точку только для списков
-                    )
-                    spannable.append(formattedText)
-                    previousLineWasHeader = false
-                }
+                if (index > 0) spannable.append("\n")
 
-                else -> {
-                    // Обычный текст БЕЗ префикса
-                    val formattedText = autoFormatTextWithPaint(
-                        text = line,
-                        paint = paint,
-                        availableWidth = availableWidth,
-                        prefix = "" // Без префикса для сплошного текста
-                    )
-                    spannable.append(formattedText)
-                    previousLineWasHeader = false
+                when {
+                    line.endsWith(":") -> {
+                        // Заголовок с двоеточием - жирный стиль
+                        val start = spannable.length
+                        spannable.append(line)
+                        val end = spannable.length
+                        spannable.setSpan(
+                            TextAppearanceSpan(context, R.style.TextMedium16),
+                            start,
+                            end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        previousLineWasHeader = true
+                    }
+
+                    line.startsWith("- ") -> {
+                        // Элемент списка - убираем дефис, добавляем точку
+                        val cleanLine = line.removePrefix("- ")
+                        val formattedText = autoFormatTextWithPaint(
+                            text = cleanLine,
+                            paint = paint,
+                            availableWidth = availableWidth,
+                            prefix = " • " // Добавляем точку только для списков
+                        )
+                        spannable.append(formattedText)
+                        previousLineWasHeader = false
+                    }
+
+                    else -> {
+                        // Обычный текст БЕЗ префикса
+                        val formattedText = autoFormatTextWithPaint(
+                            text = line,
+                            paint = paint,
+                            availableWidth = availableWidth,
+                            prefix = "" // Без префикса для сплошного текста
+                        )
+                        spannable.append(formattedText)
+                        previousLineWasHeader = false
+                    }
                 }
             }
         }

@@ -92,7 +92,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
     // Отображение детальной информации о вакансии
     private fun showVacancyDetails(vacancy: Vacancy) {
-
         val uiModel = detailsUiMapper.mapToUi(vacancy)
 
         binding.detailsScrollView.visibility = View.VISIBLE
@@ -183,10 +182,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object{
-        const val ICON_SIZE = 500
     }
 
 }
