@@ -126,10 +126,10 @@ class VacancyRepositoryImpl(
     }
 
     private suspend fun getVacancyFromDatabase(id: String): Vacancy? {
-            val entity = dataBase.vacancyDao().getVacancyById(id)
-            return entity?.let {
-                mapper.mapFromEntityToVacancy(entity)
-            }
+        val entity = dataBase.vacancyDao().getVacancyById(id)
+        return entity?.let {
+            mapper.mapFromEntityToVacancy(entity)
+        }
     }
 
     override fun deleteById(id: String): Boolean {
