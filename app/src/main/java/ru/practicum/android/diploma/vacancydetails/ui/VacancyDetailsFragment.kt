@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.ToolsText
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
@@ -151,7 +151,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             val widthRight = binding.vacancyDescriptionTextView.paddingRight
             val availableWidth = binding.vacancyDescriptionTextView.width - widthLeft - widthRight
 
-            val spannable = Tools.formatDescriptionTextWithPaint(
+            val spannable = ToolsText.formatDescriptionTextWithPaint(
                 context = requireContext(), // Передаем контекст
                 text = description,
                 paint = binding.vacancyDescriptionTextView.paint,
@@ -170,7 +170,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 val widthRight = binding.skillsTextView.paddingRight
                 val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
 
-                binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
+                binding.skillsTextView.text = ToolsText.formatSkillsTextWithPaint(
                     text,
                     binding.skillsTextView.paint,
                     availableWidth

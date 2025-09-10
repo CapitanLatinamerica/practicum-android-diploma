@@ -74,15 +74,7 @@ class MainFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = s?.toString().orEmpty().trim()
-                updateEditActionIcon(text.isNotEmpty())
-                if (text.isBlank()) {
-                    adapter?.updateData(emptyList())
-                    binding.countVacancies.visibility = View.GONE
-                    viewModel.clearSearch()
-                } else {
-                    viewModel.searchDebounce(text)
-                }
+                extracted(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -91,15 +83,7 @@ class MainFragment : Fragment() {
         })
 
         binding.btnEditAction.setOnClickListener {
-            val text = binding.editText.text?.toString().orEmpty()
-            if (text.isNotEmpty()) {
-                binding.editText.setText("")
-                viewModel.clearSearch()
-                updateEditActionIcon(false)
-            } else {
-                binding.editText.requestFocus()
-                showKeyboard(binding.editText)
-            }
+            extracted1()
         }
 
         viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
@@ -124,6 +108,30 @@ class MainFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun extracted1() {
+        val text = binding.editText.text?.toString().orEmpty()
+        if (text.isNotEmpty()) {
+            binding.editText.setText("")
+            viewModel.clearSearch()
+            updateEditActionIcon(false)
+        } else {
+            binding.editText.requestFocus()
+            showKeyboard(binding.editText)
+        }
+    }
+
+    private fun extracted(s: CharSequence?) {
+        val text = s?.toString().orEmpty().trim()
+        updateEditActionIcon(text.isNotEmpty())
+        if (text.isBlank()) {
+            adapter?.updateData(emptyList())
+            binding.countVacancies.visibility = View.GONE
+            viewModel.clearSearch()
+        } else {
+            viewModel.searchDebounce(text)
+        }
     }
 
     private fun renderState(state: SearchState) {

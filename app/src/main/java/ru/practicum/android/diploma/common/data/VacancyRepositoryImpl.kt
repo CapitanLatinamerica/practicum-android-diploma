@@ -83,34 +83,7 @@ class VacancyRepositoryImpl(
 
         return when (response.resultCode) {
             SUCCESS -> {
-                when (response) {
-                    is VacancyResponse -> {
-                        val vacancyDto = VacancyDto(
-                            addressDto = response.addressDto,
-                            areaDto = response.areaDto,
-                            contactsDto = response.contactsDto,
-                            description = response.description,
-                            employerDto = response.employerDto,
-                            employmentDto = response.employmentDto,
-                            experienceDto = response.experienceDto,
-                            id = response.id,
-                            industryDto = response.industryDto,
-                            name = response.name,
-                            salaryDto = response.salaryDto,
-                            scheduleDto = response.scheduleDto,
-                            skills = response.skills,
-                            url = response.url
-                        )
-
-                        val vacancy = mapper.mapFromVacancyDtoToVacancy(vacancyDto)
-
-                        Resource.Success(vacancy)
-                    }
-
-                    else -> {
-                        Resource.Error("Unexpected response type")
-                    }
-                }
+                resource(response)
             }
 
             INTERNET_ERROR -> {
@@ -121,6 +94,37 @@ class VacancyRepositoryImpl(
 
             else -> {
                 Resource.Error("Ошибка: код ${response.resultCode}")
+            }
+        }
+    }
+
+    private fun resource(response: NetResponse): Resource<Vacancy> {
+        return when (response) {
+            is VacancyResponse -> {
+                val vacancyDto = VacancyDto(
+                    addressDto = response.addressDto,
+                    areaDto = response.areaDto,
+                    contactsDto = response.contactsDto,
+                    description = response.description,
+                    employerDto = response.employerDto,
+                    employmentDto = response.employmentDto,
+                    experienceDto = response.experienceDto,
+                    id = response.id,
+                    industryDto = response.industryDto,
+                    name = response.name,
+                    salaryDto = response.salaryDto,
+                    scheduleDto = response.scheduleDto,
+                    skills = response.skills,
+                    url = response.url
+                )
+
+                val vacancy = mapper.mapFromVacancyDtoToVacancy(vacancyDto)
+
+                Resource.Success(vacancy)
+            }
+
+            else -> {
+                Resource.Error("Unexpected response type")
             }
         }
     }
