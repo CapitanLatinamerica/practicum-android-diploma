@@ -94,7 +94,7 @@ val searchModule = module {
 
     // Repository / UseCase / Mapper / ViewModel
     single<VacancyRepository> {
-        VacancyRepositoryImpl(get())
+        VacancyRepositoryImpl(get(), get(), get())
     }
 
     single<SearchUseCase> {

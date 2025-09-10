@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.data.db.AppDataBase
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
@@ -21,11 +22,16 @@ import ru.practicum.android.diploma.common.domain.entity.Industry
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 
-class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyRepository {
+class VacancyRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val mapper: VacancyMapper,
+    private val dataBase: AppDataBase
+) : VacancyRepository {
 
     companion object {
         private const val SUCCESS = 200
         private const val ERROR = 500
+        private const val INTERNET_ERROR = -1
     }
 
     override fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>> =
@@ -43,7 +49,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
             val response = networkClient.doRequest(request)
 
             when (response.resultCode) {
-                -1 -> {
+                INTERNET_ERROR -> {
                     emit(Resource.Error("Проверьте подключение к интернету"))
                 }
 
@@ -75,32 +81,58 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
         val response = networkClient.doRequest(VacancyRequest(id))
 
-        when (response) {
-            is VacancyResponse -> {
-                val vacancyDto = VacancyDto(
-                    addressDto = response.addressDto,
-                    areaDto = response.areaDto,
-                    contactsDto = response.contactsDto,
-                    description = response.description,
-                    employerDto = response.employerDto,
-                    employmentDto = response.employmentDto,
-                    experienceDto = response.experienceDto,
-                    id = response.id,
-                    industryDto = response.industryDto,
-                    name = response.name,
-                    salaryDto = response.salaryDto,
-                    scheduleDto = response.scheduleDto,
-                    skills = response.skills,
-                    url = response.url
-                )
+        return when (response.resultCode) {
+            SUCCESS -> {
+                when (response) {
+                    is VacancyResponse -> {
+                        val vacancyDto = VacancyDto(
+                            addressDto = response.addressDto,
+                            areaDto = response.areaDto,
+                            contactsDto = response.contactsDto,
+                            description = response.description,
+                            employerDto = response.employerDto,
+                            employmentDto = response.employmentDto,
+                            experienceDto = response.experienceDto,
+                            id = response.id,
+                            industryDto = response.industryDto,
+                            name = response.name,
+                            salaryDto = response.salaryDto,
+                            scheduleDto = response.scheduleDto,
+                            skills = response.skills,
+                            url = response.url
+                        )
 
-                val vacancy = VacancyMapper.mapFromVacancyDtoToVacancy(vacancyDto)
+                        val vacancy = mapper.mapFromVacancyDtoToVacancy(vacancyDto)
 
-                return Resource.Success(vacancy)
+                        Resource.Success(vacancy)
+                    }
+
+                    else -> {
+                        Resource.Error("Unexpected response type")
+                    }
+                }
             }
+
+            INTERNET_ERROR -> {
+                getVacancyFromDatabase(id)?.let { vacancy ->
+                    Resource.Success(vacancy)
+                } ?: Resource.Error("Нет интернета")
+            }
+
             else -> {
-                return Resource.Error("Unexpected response type")
+                Resource.Error("Ошибка: код ${response.resultCode}")
             }
+        }
+    }
+
+    private suspend fun getVacancyFromDatabase(id: String): Vacancy? {
+        return try {
+            val entity = dataBase.vacancyDao().getVacancyById(id)
+            entity?.let {
+                mapper.mapFromEntityToVacancy(entity)
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 
