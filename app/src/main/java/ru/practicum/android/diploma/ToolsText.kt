@@ -74,53 +74,6 @@ object ToolsText {
         }
     }
 
-    private fun shouldBreakLine(
-        currentLineWidth: Float,
-        wordWidth: Float,
-        context: FormattingContext,
-        currentLine: StringBuilder
-    ): Boolean {
-        return currentLineWidth + wordWidth > context.availableWidth &&
-            currentLine.length > context.prefix.length
-    }
-
-    private fun StringBuilder.breakLine(
-        currentLine: StringBuilder,
-        word: String,
-        context: FormattingContext
-    ) {
-        append(currentLine.toString())
-        append("\n")
-        currentLine.clear()
-        currentLine.append(context.indent).append(word)
-    }
-
-    private fun addWordToCurrentLine(
-        word: String,
-        currentLine: StringBuilder,
-        currentLineWidth: Float,
-        paint: TextPaint
-    ): Float {
-        var newLineWidth = currentLineWidth
-
-        if (currentLine.length > " • ".length) {
-            currentLine.append(" ")
-            newLineWidth += paint.measureText(" ")
-        }
-
-        currentLine.append(word)
-        newLineWidth += paint.measureText(word)
-
-        return newLineWidth
-    }
-
-    private fun StringBuilder.appendCurrentLineIfNotEmpty(currentLine: StringBuilder) {
-        if (currentLine.isNotEmpty()) {
-            append(currentLine.toString())
-        }
-    }
-
-    // Метод для форматирования описания (без префикса для сплошного текста)
     fun formatDescriptionTextWithPaint(
         context: Context,
         text: String,
@@ -257,6 +210,7 @@ object ToolsText {
     // Data class для группировки параметров форматирования
 
 }
+
 private data class FormattingContext(
     val prefix: String,
     val indent: String,
@@ -273,3 +227,46 @@ private data class LineProcessingParams(
     val availableWidth: Int,
     val previousLineWasHeader: Boolean
 )
+
+private fun shouldBreakLine(
+    currentLineWidth: Float,
+    wordWidth: Float,
+    context: FormattingContext,
+    currentLine: StringBuilder
+): Boolean {
+    return currentLineWidth + wordWidth > context.availableWidth &&
+        currentLine.length > context.prefix.length
+}
+
+private fun addWordToCurrentLine(
+    word: String,
+    currentLine: StringBuilder,
+    currentLineWidth: Float,
+    paint: TextPaint
+): Float {
+    var newLineWidth = currentLineWidth
+    if (currentLine.length > " • ".length) {
+        currentLine.append(" ")
+        newLineWidth += paint.measureText(" ")
+    }
+    currentLine.append(word)
+    newLineWidth += paint.measureText(word)
+    return newLineWidth
+}
+
+private fun StringBuilder.appendCurrentLineIfNotEmpty(currentLine: StringBuilder) {
+    if (currentLine.isNotEmpty()) {
+        append(currentLine.toString())
+    }
+}
+
+private fun StringBuilder.breakLine(
+    currentLine: StringBuilder,
+    word: String,
+    context: FormattingContext
+) {
+    append(currentLine.toString())
+    append("\n")
+    currentLine.clear()
+    currentLine.append(context.indent).append(word)
+}
