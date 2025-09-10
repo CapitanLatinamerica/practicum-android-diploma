@@ -14,4 +14,9 @@ class ErrorMessageProviderImpl(private val context: Context) : ErrorMessageProvi
     override fun noInternet(): String {
         return context.getString(R.string.no_internet)
     }
+
+    override fun vacancyDenied(): String {
+        return context.getString(R.string.vacancy_denied)
+    }
+
 }

@@ -266,6 +266,7 @@
             app:srcCompat="@drawable/no_vacancy_placeholder" />
 
         <TextView
+            android:id="@+id/placeholderText"
             style="@style/TextMedium22"
             android:layout_width="@dimen/ph_text_width"
             android:layout_height="wrap_content"

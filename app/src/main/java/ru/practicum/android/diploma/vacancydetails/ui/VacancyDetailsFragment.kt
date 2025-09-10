@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
@@ -33,7 +34,11 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Получение ID вакансии из аргументов навигации
         vacancyId = arguments?.getString("vacancyId") ?: run {
-            showError("Vacancy ID is required")
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Vacancy ID is required",
+                android.widget.Toast.LENGTH_LONG
+            ).show()
             return
         }
 
@@ -48,7 +53,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 when (state) {
                     is VacancyDetailsState.Loading -> showLoading()
                     is VacancyDetailsState.Content -> showVacancyDetails(state.vacancy)
-                    is VacancyDetailsState.Error -> showError(state.message)
+                    is VacancyDetailsState.Error -> showError(state.errorType, state.message)
                 }
             }
         }
@@ -122,17 +127,16 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     }
 
     // Показать состояние ошибки
-    private fun showError(message: String) {
+    private fun showError(errorType: ErrorType, message: String) {
+        val placeholderImage = when (errorType) {
+            ErrorType.DENIED_VACANCY -> R.drawable.no_vacancy_placeholder
+            else -> R.drawable.server_error_placeholder_vac_det
+        }
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
         binding.placeholdersBlock.visibility = View.VISIBLE
-
-        // Покажем тост с сообщением об ошибке
-        android.widget.Toast.makeText(
-            requireContext(),
-            message,
-            android.widget.Toast.LENGTH_LONG
-        ).show()
+        binding.exatclyPlaceholder.setImageResource(placeholderImage)
+        binding.placeholderText.text = message
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного
