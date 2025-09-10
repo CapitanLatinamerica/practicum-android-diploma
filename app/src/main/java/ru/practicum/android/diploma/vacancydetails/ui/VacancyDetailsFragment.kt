@@ -1,14 +1,12 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -22,7 +20,6 @@ import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
-import androidx.core.net.toUri
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
@@ -283,10 +280,10 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         }
 
         binding.emailTextView.text = buildString {
-        append(getString(R.string.email_icon))
-        append("   ")
-        append(email)
-    }
+            append(getString(R.string.email_icon))
+            append("   ")
+            append(email)
+        }
         binding.emailTextView.visibility = View.VISIBLE
 
         // Делаем кликабельным
