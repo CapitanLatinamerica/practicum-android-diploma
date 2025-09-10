@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.ErrorMessageProvider
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
@@ -18,7 +20,8 @@ class VacancyDetailsViewModel(
     private val sharingInteractor: SharingInteractor,
     private val repository: VacancyRepository,
     private val favouritesInteractor: FavouritesInteractor,
-    private val vacancyId: String
+    private val vacancyId: String,
+    private val errorMessageProvider: ErrorMessageProvider
 ) : ViewModel() {
 
     // Состояние загрузки данных о вакансии
@@ -50,11 +53,7 @@ class VacancyDetailsViewModel(
                 }
 
                 is Resource.Error -> {
-                    _vacancyState.value = VacancyDetailsState.Error(resource.message ?: "Unknown error")
-                }
-
-                else -> {
-                    _vacancyState.value = VacancyDetailsState.Error("Unexpected resource state")
+                    handleRequestError(resource.message.orEmpty())
                 }
             }
         }
@@ -81,6 +80,18 @@ class VacancyDetailsViewModel(
         } ?: run {
             // Если вакансия еще не загружена, используем дефолтный текст
             sharingInteractor.shareVacancy(context, null)
+        }
+    }
+
+    private fun handleRequestError(message: String) {
+        val (errorType, displayMessage) = mapErrorMessage(message)
+        _vacancyState.value = VacancyDetailsState.Error(errorType, displayMessage)
+    }
+
+    private fun mapErrorMessage(errMsg: String?): Pair<ErrorType, String> {
+        return when (errMsg) {
+            "Вакансия не найдена или удалена" -> ErrorType.DENIED_VACANCY to errorMessageProvider.vacancyDenied()
+            else -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
         }
     }
 }

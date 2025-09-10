@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.ErrorMessageProvider
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Event
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
@@ -144,9 +145,9 @@ class SearchViewModel(
     }
 
     private fun handleRequestError(page: Int, message: String) {
-        val displayMessage = mapErrorMessage(message)
+        val (errorType, displayMessage) = mapErrorMessage(message)
         if (page == 1) {
-            _searchState.postValue(SearchState.Error(displayMessage))
+            _searchState.postValue(SearchState.Error(errorType, displayMessage))
         } else {
             _toastMessage.postValue(Event(displayMessage))
         }
@@ -166,11 +167,11 @@ class SearchViewModel(
         vacanciesList.clear()
     }
 
-    private fun mapErrorMessage(errMsg: String?): String {
+    private fun mapErrorMessage(errMsg: String?): Pair<ErrorType, String> {
         return when (errMsg) {
-            "Проверьте подключение к интернету" -> errorMessageProvider.noInternet()
-            "Ошибка сервера" -> errorMessageProvider.serverError()
-            else -> errorMessageProvider.serverError()
+            "Проверьте подключение к интернету" -> ErrorType.NO_INTERNET to errorMessageProvider.noInternet()
+            "Ошибка сервера" -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
+            else -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
         }
     }
 }

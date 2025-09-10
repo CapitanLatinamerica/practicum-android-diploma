@@ -125,7 +125,7 @@ val vacancyDetailsModule = module {
     single<SharingInteractor> { SharingInteractorImpl(get()) }
 
     viewModel { (vacancyId: String) ->
-        VacancyDetailsViewModel(get(), get(), get(), vacancyId)
+        VacancyDetailsViewModel(get(), get(), get(), vacancyId, get())
     }
 }
 
