@@ -2,9 +2,11 @@ package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -13,9 +15,11 @@ import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
+import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
+    private val detailsUiMapper = VacancyToVacancyDetailsUiMapper()
     private var _binding: FragmentVacancyDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -37,44 +41,9 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         setupToolbar()
     }
 
-    // Метод для форматирования сплошного текста в соответствие макету
-    private fun formatAllTextViews() {
-        val widthLeft = binding.responsibilitiesTextView.paddingLeft
-        val widthRight = binding.responsibilitiesTextView.paddingRight
-
-        binding.responsibilitiesTextView.post {
-            binding.responsibilitiesTextView.text = Tools.autoFormatTextWithPaint(
-                binding.responsibilitiesTextView.text.toString(),
-                binding.responsibilitiesTextView.paint,
-                binding.responsibilitiesTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.requirementsTextView.post {
-            binding.requirementsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.requirementsTextView.text.toString(),
-                binding.requirementsTextView.paint,
-                binding.requirementsTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.conditionsTextView.post {
-            binding.conditionsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.conditionsTextView.text.toString(),
-                binding.conditionsTextView.paint,
-                binding.conditionsTextView.width - widthLeft - widthRight
-            )
-        }
-        binding.skillsTextView.post {
-            binding.skillsTextView.text = Tools.autoFormatTextWithPaint(
-                binding.skillsTextView.text.toString(),
-                binding.skillsTextView.paint,
-                binding.skillsTextView.width - widthLeft - widthRight
-            )
-        }
-    }
-
     // Настройка observers для наблюдения за состоянием ViewModel
     private fun setupObservers() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.vacancyState.collect { state ->
                 when (state) {
                     is VacancyDetailsState.Loading -> showLoading()
@@ -96,7 +65,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.like_btn -> {
-                    vacancyId?.let { id ->
+                    vacancyId.let { id ->
                         val currentState = viewModel.vacancyState.value
                         val vacancyDetails = (currentState as? VacancyDetailsState.Content)?.vacancy
                         viewModel.toggleFavorite(id, vacancyDetails)
@@ -123,19 +92,33 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
     // Отображение детальной информации о вакансии
     private fun showVacancyDetails(vacancy: Vacancy) {
+        val uiModel = detailsUiMapper.mapToUi(vacancy)
+
         binding.detailsScrollView.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
         binding.vacancyTitle.text = vacancy.name
-        binding.vacancySalary.text = "от ${vacancy.salaryFrom} до ${vacancy.salaryTo} ${vacancy.salaryCurrency}"
+        binding.experienceLine.text = vacancy.experience
+        binding.scheduleTextView.text = vacancy.schedule
+        binding.vacancySalary.text = uiModel.salaryText
+        binding.vacancyDescriptionTextView.text = vacancy.description
         binding.companyName.text = vacancy.employer
         binding.companyCity.text = vacancy.area
         binding.experienceLine.text = vacancy.experience
-        binding.responsibilitiesTextView.text = vacancy.description
+        binding.skillsTextView.text = vacancy.skills.toString()
 
-        // Форматируем текстовые поля
-        formatAllTextViews()
+        Glide.with(this)
+            .load(vacancy.logo)
+            .fitCenter() // Масштабирование с сохранением пропорций
+            .placeholder(R.drawable.placeholder_vacancy)
+            .into(binding.innerLogo)
+
+        // Форматируем описание с стилями и переносами
+        formatVacancyDescription(vacancy.description ?: "")
+
+        // Обычное форматирование для skills
+        formatSkillsTextView()
     }
 
     // Показать состояние ошибки
@@ -143,6 +126,13 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
         binding.placeholdersBlock.visibility = View.VISIBLE
+
+        // Покажем тост с сообщением об ошибке
+        android.widget.Toast.makeText(
+            requireContext(),
+            message,
+            android.widget.Toast.LENGTH_LONG
+        ).show()
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного
@@ -155,8 +145,43 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         }
     }
 
+    private fun formatVacancyDescription(description: String) {
+        binding.vacancyDescriptionTextView.post {
+            val widthLeft = binding.vacancyDescriptionTextView.paddingLeft
+            val widthRight = binding.vacancyDescriptionTextView.paddingRight
+            val availableWidth = binding.vacancyDescriptionTextView.width - widthLeft - widthRight
+
+            val spannable = Tools.formatDescriptionTextWithPaint(
+                context = requireContext(), // Передаем контекст
+                text = description,
+                paint = binding.vacancyDescriptionTextView.paint,
+                availableWidth = availableWidth
+            )
+
+            binding.vacancyDescriptionTextView.setText(spannable, TextView.BufferType.SPANNABLE)
+        }
+    }
+
+    private fun formatSkillsTextView() {
+        binding.skillsTextView.post {
+            val text = binding.skillsTextView.text?.toString()
+            if (!text.isNullOrBlank()) {
+                val widthLeft = binding.skillsTextView.paddingLeft
+                val widthRight = binding.skillsTextView.paddingRight
+                val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
+
+                binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
+                    text,
+                    binding.skillsTextView.paint,
+                    availableWidth
+                )
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }

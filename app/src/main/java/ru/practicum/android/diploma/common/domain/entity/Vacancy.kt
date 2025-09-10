@@ -12,5 +12,6 @@ data class Vacancy(
     val experience: String?,
     val employment: String?,
     val schedule: String?,
-    val description: String?
+    val description: String?,
+    val skills: String?
 )
