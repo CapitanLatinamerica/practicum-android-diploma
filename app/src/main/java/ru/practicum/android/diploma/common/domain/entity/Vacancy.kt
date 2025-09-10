@@ -14,9 +14,10 @@ data class Vacancy(
     val schedule: String?,
     val description: String?,
     val skills: String?,
-    val contactEmail: String? = null,
-    val contactPhones: List<Phone>? = null,
-    val contactPerson: String? = null
+    val contactEmail: String?,
+    val contactPhones: List<Phone>?,
+    val contactPerson: String?,
+    val vacancyUrl: String?
 )
 
 data class Phone(

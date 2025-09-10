@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
+import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -15,10 +17,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.common.domain.entity.Phone
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
+import androidx.core.net.toUri
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
@@ -122,7 +126,16 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Обычное форматирование для skills
         formatSkillsTextView()
-//        setupContacts(vacancy)
+
+        formatContactsTextViews()
+
+        // Отображаем контакты
+        setupContacts(vacancy)
+
+        // Обработчик кнопки поделиться
+        view?.findViewById<TextView>(R.id.share_btn)?.setOnClickListener {
+            viewModel.shareVacancy(requireContext())
+        }
     }
 
     // Показать состояние ошибки
@@ -130,13 +143,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
         binding.placeholdersBlock.visibility = View.VISIBLE
-
-        // Покажем тост с сообщением об ошибке
-        android.widget.Toast.makeText(
-            requireContext(),
-            message,
-            android.widget.Toast.LENGTH_LONG
-        ).show()
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного
@@ -169,82 +175,156 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private fun formatSkillsTextView() {
         binding.skillsTextView.post {
             val text = binding.skillsTextView.text?.toString()
-            if (!text.isNullOrBlank()) {
-                val widthLeft = binding.skillsTextView.paddingLeft
-                val widthRight = binding.skillsTextView.paddingRight
-                val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
+            val phones = binding.phoneTextView.text?.toString()
+            val email = binding.emailTextView.text?.toString()
+            val widthLeft = binding.skillsTextView.paddingLeft
+            val widthRight = binding.skillsTextView.paddingRight
+            val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
 
+            if (!text.isNullOrBlank()) {
                 binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
                     text,
                     binding.skillsTextView.paint,
                     availableWidth
                 )
             }
-        }
 
-        // Обработчик кнопки поделиться
-        view?.findViewById<TextView>(R.id.share_btn)?.setOnClickListener {
-            viewModel.shareVacancy(requireContext())
+            if (!phones.isNullOrBlank()) {
+                binding.phoneTextView.text = Tools.formatSkillsTextWithPaint(
+                    phones,
+                    binding.phoneTextView.paint,
+                    availableWidth
+                )
+            }
+
+            if (!email.isNullOrBlank()) {
+                binding.emailTextView.text = Tools.formatSkillsTextWithPaint(
+                    email,
+                    binding.emailTextView.paint,
+                    availableWidth
+                )
+            }
         }
     }
 
-/*    private fun setupContacts(vacancy: Vacancy) {
-        // Email
-        vacancy.contactEmail?.let { email ->
-            binding.contactEmailTextView.text = email
-            binding.contactEmailTextView.visibility = View.VISIBLE
-            binding.contactEmailTextView.setOnClickListener {
-                openEmailClient(email)
+    private fun formatContactsTextViews() {
+        listOf(binding.phoneTextView, binding.emailTextView).forEach { textView ->
+            textView.post {
+                val text = textView.text?.toString()
+                if (!text.isNullOrBlank()) {
+                    val widthLeft = textView.paddingLeft
+                    val widthRight = textView.paddingRight
+                    val availableWidth = textView.width - widthLeft - widthRight
+
+                    val formattedText = Tools.autoFormatTextWithPaint(
+                        text,
+                        textView.paint,
+                        availableWidth,
+                        prefix = "" // Без префиксов для контактов
+                    )
+                    textView.text = formattedText
+                }
             }
-        } ?: run {
-            binding.contactEmailTextView.visibility = View.GONE
+        }
+    }
+
+    private fun setupContacts(vacancy: Vacancy) {
+        // Настройка телефонов
+        setupPhones(vacancy.contactPhones)
+
+        // Настройка email
+        setupEmail(vacancy.contactEmail)
+
+        // Скрываем секцию контактов если нет данных
+        if (vacancy.contactPhones.isNullOrEmpty() && vacancy.contactEmail.isNullOrBlank()) {
+            binding.vacancyContacts.visibility = View.GONE
+            binding.phoneTextView.visibility = View.GONE
+            binding.emailTextView.visibility = View.GONE
+        } else {
+            binding.vacancyContacts.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setupPhones(phones: List<Phone>?) {
+        if (phones.isNullOrEmpty()) {
+            binding.phoneTextView.visibility = View.GONE
+            return
         }
 
-        // Телефоны
-        vacancy.contactPhones?.let { phones ->
-            if (phones.isNotEmpty()) {
-                binding.contactsSection.visibility = View.VISIBLE
-                setupPhones(phones)
+        val phonesText = buildString {
+            phones.forEachIndexed { index, phone ->
+                if (index > 0) append("\n")
+                append("📞 ${phone.number}")
+                if (!phone.comment.isNullOrBlank()) {
+                    append(" (${phone.comment})")
+                }
+            }
+        }
+
+        binding.phoneTextView.text = phonesText
+        binding.phoneTextView.visibility = View.VISIBLE
+
+        // Делаем кликабельным
+        binding.phoneTextView.setOnClickListener {
+            if (phones.size == 1) {
+                // Если один номер - сразу звоним
+                makePhoneCall(phones.first().number)
             } else {
-                binding.contactsSection.visibility = View.GONE
+                // Если несколько номеров - показываем диалог выбора
+                showPhoneSelectionDialog(phones)
             }
-        } ?: run {
-            binding.contactsSection.visibility = View.GONE
+        }
+    }
+
+    private fun setupEmail(email: String?) {
+        if (email.isNullOrBlank()) {
+            binding.emailTextView.visibility = View.GONE
+            return
         }
 
-        // Контактное лицо
-        vacancy.contactPerson?.let { person ->
-            binding.contactPersonTextView.text = person
-            binding.contactPersonTextView.visibility = View.VISIBLE
-        } ?: run {
-            binding.contactPersonTextView.visibility = View.GONE
+        binding.emailTextView.text = buildString {
+        append(getString(R.string.email_icon))
+        append("   ")
+        append(email)
+    }
+        binding.emailTextView.visibility = View.VISIBLE
+
+        // Делаем кликабельным
+        binding.emailTextView.setOnClickListener {
+            openEmailClient(email)
         }
+    }
+
+    private fun showPhoneSelectionDialog(phones: List<Phone>) {
+        val items = phones.map { phone ->
+            "${phone.number} ${phone.comment?.let { "($it)" }}"
+        }.toTypedArray()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.choose_phone_number)
+            .setItems(items) { dialog, which ->
+                makePhoneCall(phones[which].number)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun openEmailClient(email: String) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            data = "mailto:$email".toUri()
         }
-
-        if (intent.resolveActivity(requireContext().packageManager) != null) {
-            startActivity(Intent.createChooser(intent, getString(R.string.choose_email_app)))
-        } else {
-            Toast.makeText(requireContext(), R.string.no_email_app, Toast.LENGTH_SHORT).show()
-        }
+        startActivity(Intent.createChooser(intent, getString(R.string.choose_email_app)))
     }
 
     private fun makePhoneCall(phoneNumber: String) {
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = Uri.parse("tel:${phoneNumber.filter { it.isDigit() }}")
+            data = "tel:${phoneNumber.filter { it.isDigit() }}".toUri()
         }
-
-        if (intent.resolveActivity(requireContext().packageManager) != null) {
-            startActivity(intent)
-        } else {
-            Toast.makeText(requireContext(), R.string.no_phone_app, Toast.LENGTH_SHORT).show()
-        }
-    }*/
+        startActivity(intent)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

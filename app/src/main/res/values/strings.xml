@@ -78,4 +78,10 @@
     <string name="choose_email_app">Выберите почтовое приложение</string>
     <string name="no_email_app">Почтовое приложение не найдено</string>
     <string name="no_phone_app">Приложение для звонков не найдено</string>
+    <string name="contacts_default_text">+7 999 999 99 99\n+593 151 153 96 65</string>
+    <string name="vacancy_contacts">Контакты</string>
+    <string name="email_default_text">my.awesome.email@gmail.com\njust-another-fkng-email@gmail.com</string>
+    <string name="choose_phone_number">Выберите номер телефона</string>
+    <string name="cancel">Отмена</string>
+    <string name="email_icon">"📧 "</string>
 </resources>
