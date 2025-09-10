@@ -13,7 +13,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
-import ru.practicum.android.diploma.search.ui.VacanciesAdapter
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 
 class FavouritesFragment : Fragment() {
@@ -23,7 +22,7 @@ class FavouritesFragment : Fragment() {
     private var _binding: FragmentFavouritesBinding? = null
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
-    private var adapter: VacanciesAdapter? = null
+    private var adapter: FavouritesAdapter? = null
     private var debouncedClick: ((String) -> Unit)? = null
 
     override fun onCreateView(
@@ -46,7 +45,7 @@ class FavouritesFragment : Fragment() {
             navigateToVacancyDetails(vacancyId)
         }
 
-        adapter = VacanciesAdapter { vacancyUi ->
+        adapter = FavouritesAdapter() { vacancyUi ->
             debouncedClick?.invoke(vacancyUi.id)
         }
 
