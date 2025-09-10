@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools.debounce
@@ -81,17 +83,12 @@ class MainFragment : Fragment() {
                 } else {
                     viewModel.searchDebounce(text)
                 }
-                updatePlaceholderForInput()
             }
 
             override fun afterTextChanged(s: Editable?) {
                 // Для многоуважаемого детекта
             }
         })
-
-        binding.editText.setOnFocusChangeListener { _, _ ->
-            updatePlaceholderForInput()
-        }
 
         binding.btnEditAction.setOnClickListener {
             val text = binding.editText.text?.toString().orEmpty()
@@ -104,6 +101,29 @@ class MainFragment : Fragment() {
                 showKeyboard(binding.editText)
             }
         }
+
+        viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
+            adapter?.showLoadingFooter(loading)
+        }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { toastMessage ->
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return
+                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val lastVisible = lm.findLastVisibleItemPosition()
+                val itemCount = adapter?.itemCount ?: 0
+                if (lastVisible >= itemCount - 1) {
+                    viewModel.onLastItemReached()
+                }
+            }
+        })
     }
 
     private fun renderState(state: SearchState) {
@@ -120,7 +140,7 @@ class MainFragment : Fragment() {
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
-            updatePlaceholderForInput()
+            placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
         }
@@ -171,16 +191,6 @@ class MainFragment : Fragment() {
             placeholderText.text = errorMessage
             countVacancies.visibility = View.GONE
         }
-    }
-
-    private fun updatePlaceholderForInput() {
-        val inputText = binding.editText.text?.toString().orEmpty()
-        if (inputText.isNotEmpty()) {
-            binding.placeholderMainScreen.visibility = View.GONE
-            return
-        }
-        binding.placeholderMainScreen.visibility = View.VISIBLE
-        binding.placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
     }
 
     private fun updateEditActionIcon(hasText: Boolean) {

@@ -89,7 +89,7 @@ val searchModule = module {
     // NetworkClient
     single<NetworkClient> {
         val token = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
-        RetrofitNetworkClient(get(), token)
+        RetrofitNetworkClient(get(), token, androidContext())
     }
 
     // Repository / UseCase / Mapper / ViewModel
