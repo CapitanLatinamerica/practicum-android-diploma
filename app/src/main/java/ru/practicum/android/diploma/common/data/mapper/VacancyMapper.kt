@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.common.data.mapper
 
 import ru.practicum.android.diploma.common.data.db.entity.VacancyEntity
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
+import ru.practicum.android.diploma.common.domain.entity.Phone
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 
 object VacancyMapper {
@@ -19,7 +20,12 @@ object VacancyMapper {
             employment = vacancyDto.employmentDto?.name,
             schedule = vacancyDto.scheduleDto?.name,
             description = vacancyDto.description,
-            skills = vacancyDto.skills?.joinToString("\n") ?: ""
+            skills = vacancyDto.skills?.joinToString("\n") ?: "",
+            contactEmail = vacancyDto.contactsDto?.email,
+            contactPhones = vacancyDto.contactsDto?.phoneDtos?.map {
+                Phone(it.formatted, it.comment.toString())
+            },
+            contactPerson = vacancyDto.contactsDto?.name
         )
     }
 

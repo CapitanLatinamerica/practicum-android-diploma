@@ -60,6 +60,7 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="no_vacancies_title">Таких вакансий нет</string>
     <string name="no_salary">Зарплата не указана</string>
+    <string name="share_vacancy">Поделиться вакансией</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
@@ -71,4 +72,10 @@
     <string name="skills_text">Верстать экраны\nПить чай без сахара</string>
     <string name="vacancy_denied">Вакансия не найдена или удалена</string>
     <string name="salary_not_specified">Зарплата не указана</string>
+
+    <string name="share_vacancy_title">Интересная вакансия</string>
+    <string name="share_vacancy_default">Посмотрите эту интересную вакансию!</string>
+    <string name="choose_email_app">Выберите почтовое приложение</string>
+    <string name="no_email_app">Почтовое приложение не найдено</string>
+    <string name="no_phone_app">Приложение для звонков не найдено</string>
 </resources>

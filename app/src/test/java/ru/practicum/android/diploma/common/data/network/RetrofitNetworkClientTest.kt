@@ -29,7 +29,8 @@ class RetrofitNetworkClientTest {
 
     val networkClient = RetrofitNetworkClient(
         headHunterApi = api,
-        token
+        token,
+        context = TODO()
     )
 
     @Test

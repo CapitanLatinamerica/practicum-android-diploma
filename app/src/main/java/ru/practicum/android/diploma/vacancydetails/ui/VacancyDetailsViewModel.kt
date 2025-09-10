@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,9 +11,11 @@ import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
+import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(
+    private val sharingInteractor: SharingInteractor,
     private val repository: VacancyRepository,
     private val favouritesInteractor: FavouritesInteractor,
     private val vacancyId: String
@@ -21,6 +24,7 @@ class VacancyDetailsViewModel(
     // Состояние загрузки данных о вакансии
     private val _vacancyState = MutableStateFlow<VacancyDetailsState>(VacancyDetailsState.Loading)
     val vacancyState: StateFlow<VacancyDetailsState> = _vacancyState.asStateFlow()
+    private var currentVacancy: Vacancy? = null
 
     // Состояние избранного (лайк/нелайк)
     private val _isLiked = MutableStateFlow(false)
@@ -40,6 +44,7 @@ class VacancyDetailsViewModel(
 
             when (resource) {
                 is Resource.Success -> {
+                    currentVacancy = resource.data // сохраняем вакансию
                     _vacancyState.value = VacancyDetailsState.Content(resource.data!!)
                     _isLiked.value = favouritesInteractor.isFavourite(vacancyId)
                 }
@@ -67,6 +72,15 @@ class VacancyDetailsViewModel(
                 favouritesInteractor.deleteVacancyById(vacancyId)
             }
             _isLiked.value = newIsLiked
+        }
+    }
+
+    fun shareVacancy(context: Context) {
+        currentVacancy?.let { vacancy ->
+            sharingInteractor.shareVacancy(context, vacancy.contactEmail)
+        } ?: run {
+            // Если вакансия еще не загружена, используем дефолтный текст
+            sharingInteractor.shareVacancy(context, null)
         }
     }
 }

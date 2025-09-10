@@ -1,8 +1,11 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -119,6 +122,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Обычное форматирование для skills
         formatSkillsTextView()
+//        setupContacts(vacancy)
     }
 
     // Показать состояние ошибки
@@ -177,7 +181,70 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 )
             }
         }
+
+        // Обработчик кнопки поделиться
+        view?.findViewById<TextView>(R.id.share_btn)?.setOnClickListener {
+            viewModel.shareVacancy(requireContext())
+        }
     }
+
+/*    private fun setupContacts(vacancy: Vacancy) {
+        // Email
+        vacancy.contactEmail?.let { email ->
+            binding.contactEmailTextView.text = email
+            binding.contactEmailTextView.visibility = View.VISIBLE
+            binding.contactEmailTextView.setOnClickListener {
+                openEmailClient(email)
+            }
+        } ?: run {
+            binding.contactEmailTextView.visibility = View.GONE
+        }
+
+        // Телефоны
+        vacancy.contactPhones?.let { phones ->
+            if (phones.isNotEmpty()) {
+                binding.contactsSection.visibility = View.VISIBLE
+                setupPhones(phones)
+            } else {
+                binding.contactsSection.visibility = View.GONE
+            }
+        } ?: run {
+            binding.contactsSection.visibility = View.GONE
+        }
+
+        // Контактное лицо
+        vacancy.contactPerson?.let { person ->
+            binding.contactPersonTextView.text = person
+            binding.contactPersonTextView.visibility = View.VISIBLE
+        } ?: run {
+            binding.contactPersonTextView.visibility = View.GONE
+        }
+    }
+
+    private fun openEmailClient(email: String) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+        }
+
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(Intent.createChooser(intent, getString(R.string.choose_email_app)))
+        } else {
+            Toast.makeText(requireContext(), R.string.no_email_app, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun makePhoneCall(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:${phoneNumber.filter { it.isDigit() }}")
+        }
+
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(intent)
+        } else {
+            Toast.makeText(requireContext(), R.string.no_phone_app, Toast.LENGTH_SHORT).show()
+        }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
