@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -103,6 +104,12 @@ class MainFragment : Fragment() {
 
         viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
             adapter?.showLoadingFooter(loading)
+        }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { toastMessage ->
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
