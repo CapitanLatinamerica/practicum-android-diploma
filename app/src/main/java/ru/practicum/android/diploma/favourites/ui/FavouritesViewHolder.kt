@@ -6,7 +6,8 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.search.ui.model.VacancyUi
 
-class FavouritesViewHolder( private val binding: VacancyItemBinding
+class FavouritesViewHolder(
+    private val binding: VacancyItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: VacancyUi) {
