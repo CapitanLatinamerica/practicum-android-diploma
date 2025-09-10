@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class PhoneDto(
-    @SerializedName("comment") val comment: Any?,
+    @SerializedName("comment") val comment: String?,
     @SerializedName("formatted") val formatted: String
 ) : Serializable {
     companion object {
