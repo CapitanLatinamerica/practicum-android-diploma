@@ -107,4 +107,27 @@
         app:layout_constraintTop_toTopOf="@id/salaryEditText"
         app:tint="@color/black_universal" />
 
+    <TextView
+        android:id="@+id/onlyWithSalary"
+        style="@style/TextRegular16"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/height_60"
+        android:layout_marginTop="@dimen/padding_24"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:text="@string/only_with_salary"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/salaryEditText" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/salaryCheckBox"
+        android:layout_width="@dimen/padding_24"
+        android:layout_height="@dimen/padding_24"
+        android:gravity="center_vertical"
+        app:buttonTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="@id/onlyWithSalary"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintTop_toTopOf="@id/onlyWithSalary" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

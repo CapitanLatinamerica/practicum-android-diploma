@@ -65,6 +65,7 @@
     <string name="industry">Отрасль</string>
     <string name="salary_input">Введите сумму</string>
     <string name="salary_hint">Ожидаемая зарплата</string>
+    <string name="only_with_salary">Не показывать без зарплаты</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
