@@ -18,7 +18,6 @@ import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
-import ru.practicum.android.diploma.common.domain.entity.Industry
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 
@@ -138,11 +137,6 @@ class VacancyRepositoryImpl(
 
     override fun deleteById(id: String): Boolean {
         TODO("Not implemented deleteById")
-    }
-
-    override fun getIndustries(): List<Industry> {
-        // Временно
-        return emptyList()
     }
 
     override fun getAreas(): List<AreaDto> {

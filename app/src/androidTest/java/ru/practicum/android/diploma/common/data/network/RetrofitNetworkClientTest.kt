@@ -1,8 +1,11 @@
 package ru.practicum.android.diploma.common.data.network
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
@@ -15,6 +18,7 @@ import ru.practicum.android.diploma.common.data.model.VacanciesResponse
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
 
+@RunWith(AndroidJUnit4::class)
 class RetrofitNetworkClientTest {
 
     val token = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
@@ -27,9 +31,12 @@ class RetrofitNetworkClientTest {
 
     val api = retrofit.create(HeadHunterApi::class.java)
 
+    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
     val networkClient = RetrofitNetworkClient(
         headHunterApi = api,
-        token
+        token,
+        context = appContext
     )
 
     @Test
