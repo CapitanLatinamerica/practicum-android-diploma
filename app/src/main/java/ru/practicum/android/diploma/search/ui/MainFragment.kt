@@ -103,6 +103,16 @@ class MainFragment : Fragment() {
             }
         }
 
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.filter -> {
+                    findNavController().navigate(R.id.action_mainFragment_to_filteringFragment)
+                    true
+                }
+                else -> false
+            }
+        }
+
         viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
             adapter?.showLoadingFooter(loading)
         }
