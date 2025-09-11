@@ -44,9 +44,23 @@
             android:id="@+id/workplaceEdit"
             style="@style/TextInputEditTextStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="false"
-            tools:text="Hjccbz" />
+            android:layout_height="match_parent"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/industry"
+        style="@style/TextInputLayoutStyle"
+        android:layout_width="match_parent"
+        android:hint="@string/industry"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/workplace">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/industryEdit"
+            style="@style/TextInputEditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
