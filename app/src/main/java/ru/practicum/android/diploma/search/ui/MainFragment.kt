@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools.debounce
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
@@ -140,7 +141,7 @@ class MainFragment : Fragment() {
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
-            is SearchState.Error -> showError(state.errorMessage)
+            is SearchState.Error -> showError(state.errorType, state.errorMessage)
         }
     }
 
@@ -189,12 +190,16 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun showError(errorMessage: String) {
+    private fun showError(errorType: ErrorType, errorMessage: String) {
+        val placeholderImage = when (errorType) {
+            ErrorType.NO_INTERNET -> R.drawable.no_internet_placeholder
+            else -> R.drawable.server_error_placeholder
+        }
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
             placeholderMainScreen.visibility = View.VISIBLE
-            placeholderMainScreen.setImageResource(R.drawable.no_internet_placeholder)
+            placeholderMainScreen.setImageResource(placeholderImage)
             placeholderText.visibility = View.VISIBLE
             placeholderText.text = errorMessage
             countVacancies.visibility = View.GONE

@@ -1,11 +1,8 @@
 package ru.practicum.android.diploma.common.data.network
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Test
-import org.junit.runner.RunWith
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
@@ -36,7 +33,7 @@ class RetrofitNetworkClientTest {
     val networkClient = RetrofitNetworkClient(
         headHunterApi = api,
         token,
-        context = appContext
+        appContext
     )
 
     @Test

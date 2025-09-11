@@ -18,5 +18,9 @@ data class VacancyEntity(
     val employment: String?,
     val schedule: String?,
     val description: String?,
-    val skills: String?
+    val skills: String?,
+    val contactEmail: String?,
+    val contactPhonesJson: String?,
+    val contactPerson: String?,
+    val vacancyUrl: String?
 )

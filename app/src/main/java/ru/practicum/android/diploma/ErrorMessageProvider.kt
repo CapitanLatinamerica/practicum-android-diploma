@@ -4,4 +4,5 @@ interface ErrorMessageProvider {
     fun serverError(): String
     fun nothingFound(): String
     fun noInternet(): String
+    fun vacancyDenied(): String
 }

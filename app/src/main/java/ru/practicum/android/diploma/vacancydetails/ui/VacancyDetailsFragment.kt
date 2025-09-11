@@ -1,17 +1,23 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.ToolsText
+import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.common.domain.entity.Phone
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
@@ -33,7 +39,11 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Получение ID вакансии из аргументов навигации
         vacancyId = arguments?.getString("vacancyId") ?: run {
-            showError("Vacancy ID is required")
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Vacancy ID is required",
+                android.widget.Toast.LENGTH_LONG
+            ).show()
             return
         }
 
@@ -151,7 +161,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             val widthRight = binding.vacancyDescriptionTextView.paddingRight
             val availableWidth = binding.vacancyDescriptionTextView.width - widthLeft - widthRight
 
-            val spannable = ToolsText.formatDescriptionTextWithPaint(
+            val spannable = Tools.formatDescriptionTextWithPaint(
                 context = requireContext(), // Передаем контекст
                 text = description,
                 paint = binding.vacancyDescriptionTextView.paint,
@@ -170,7 +180,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 val widthRight = binding.skillsTextView.paddingRight
                 val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
 
-                binding.skillsTextView.text = ToolsText.formatSkillsTextWithPaint(
+                binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
                     text,
                     binding.skillsTextView.paint,
                     availableWidth
