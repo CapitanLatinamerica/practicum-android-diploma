@@ -63,6 +63,8 @@
     <string name="share_vacancy">Поделиться вакансией</string>
     <string name="workplace">Место работы</string>
     <string name="industry">Отрасль</string>
+    <string name="salary_input">Введите сумму</string>
+    <string name="salary_hint">Ожидаемая зарплата</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
