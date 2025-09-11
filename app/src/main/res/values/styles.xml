@@ -7,6 +7,8 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">@color/onPrimary</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="fontWeight">400</item>
     </style>
 
     <!-- стиль текста Regular16-->
@@ -83,6 +85,25 @@
     <style name="RoundedCorners12dp" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="TextInputLayoutStyle">
+        <item name="android:layout_height">@dimen/height_60</item>
+        <item name="android:textColorHint">@color/onPrimary</item>
+        <item name="hintTextAppearance">@style/TextRegular12</item>
+        <item name="hintTextColor">@color/gray</item>
+        <item name="endIconDrawable">@drawable/ic_arrow_forward</item>
+        <item name="endIconMode">custom</item>
+        <item name="hintEnabled">true</item>
+    </style>
+
+    <style name="TextInputEditTextStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:clickable">false</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:enabled">false</item>
+        <item name="android:textAppearance">@style/TextRegular16</item>
+        <item name="android:textColor">@color/onPrimary</item>
     </style>
 
 </resources>

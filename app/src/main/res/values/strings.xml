@@ -61,6 +61,8 @@
     <string name="no_vacancies_title">Таких вакансий нет</string>
     <string name="no_salary">Зарплата не указана</string>
     <string name="share_vacancy">Поделиться вакансией</string>
+    <string name="workplace">Место работы</string>
+    <string name="industry">Отрасль</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
