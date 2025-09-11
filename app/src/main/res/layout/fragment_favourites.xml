@@ -56,15 +56,15 @@
     <!-- RecyclerView (по умолчанию скрыт) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRecyclerView"
-        android:layout_width="@dimen/zero_dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"
-        android:visibility="gone"
         android:paddingStart="@dimen/padding_16"
         android:paddingEnd="@dimen/padding_16"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/padding_16" />
+        android:layout_marginTop="@dimen/padding_16"
+        tools:listitem="@layout/vacancy_item"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

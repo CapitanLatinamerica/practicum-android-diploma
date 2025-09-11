@@ -1,28 +1,29 @@
 package ru.practicum.android.diploma.common.data.model
 
-import ru.practicum.android.diploma.common.data.domain.api.Address
-import ru.practicum.android.diploma.common.data.domain.api.Area
-import ru.practicum.android.diploma.common.data.domain.api.Contacts
-import ru.practicum.android.diploma.common.data.domain.api.Employer
-import ru.practicum.android.diploma.common.data.domain.api.Employment
-import ru.practicum.android.diploma.common.data.domain.api.Experience
-import ru.practicum.android.diploma.common.data.domain.api.Industry
-import ru.practicum.android.diploma.common.data.domain.api.Salary
-import ru.practicum.android.diploma.common.data.domain.api.Schedule
+import com.google.gson.annotations.SerializedName
+import ru.practicum.android.diploma.common.data.domain.api.AddressDto
+import ru.practicum.android.diploma.common.data.domain.api.AreaDto
+import ru.practicum.android.diploma.common.data.domain.api.ContactsDto
+import ru.practicum.android.diploma.common.data.domain.api.EmployerDto
+import ru.practicum.android.diploma.common.data.domain.api.EmploymentDto
+import ru.practicum.android.diploma.common.data.domain.api.ExperienceDto
+import ru.practicum.android.diploma.common.data.domain.api.IndustryDto
+import ru.practicum.android.diploma.common.data.domain.api.SalaryDto
+import ru.practicum.android.diploma.common.data.domain.api.ScheduleDto
 
 data class VacancyResponse(
-    val address: Address,
-    val area: Area,
-    val contacts: Contacts,
-    val description: String,
-    val employer: Employer,
-    val employment: Employment,
-    val experience: Experience,
-    val id: String,
-    val industry: Industry,
-    val name: String,
-    val salary: Salary,
-    val schedule: Schedule,
-    val skills: List<String>,
-    val url: String
+    @SerializedName("address") val addressDto: AddressDto?,
+    @SerializedName("area") val areaDto: AreaDto?,
+    @SerializedName("contacts") val contactsDto: ContactsDto?,
+    @SerializedName("description") val description: String?,
+    @SerializedName("employer") val employerDto: EmployerDto?,
+    @SerializedName("employment") val employmentDto: EmploymentDto?,
+    @SerializedName("experience") val experienceDto: ExperienceDto?,
+    @SerializedName("id") val id: String?,
+    @SerializedName("industry") val industryDto: IndustryDto?,
+    @SerializedName("name") val name: String?,
+    @SerializedName("salary") val salaryDto: SalaryDto?,
+    @SerializedName("schedule") val scheduleDto: ScheduleDto?,
+    @SerializedName("skills") val skills: List<String>?,
+    @SerializedName("url") val url: String?
 ) : NetResponse()

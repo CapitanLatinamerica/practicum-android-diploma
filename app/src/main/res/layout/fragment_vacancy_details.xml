@@ -1,15 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".vacancydetails.ui.VacancyDetailsFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/name_vacancy_details"
-        android:textSize="30sp" />
+    <!-- Вертикальные Guideline слева и справа -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/padding_16" />
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/padding_16" />
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/OurCommonToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/details_menu"
+        app:title="@string/vacancy_details_header" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/search_progress_bar_diameter"
+        android:layout_height="@dimen/search_progress_bar_diameter"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="@color/light_gray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/detailsScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <!-- ScrollView с ограничениями и отступами -->
+    <ScrollView
+        android:id="@+id/detailsScrollView"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding_16">
+
+            <!-- Название вакансии -->
+            <TextView
+                android:id="@+id/vacancyTitle"
+                style="@style/TextBold32"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_24"
+                android:text="@string/vacancy_name_default" />
+
+            <!-- Зарплата -->
+            <TextView
+                android:id="@+id/vacancySalary"
+                style="@style/TextMedium22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_4"
+                android:text="@string/vacancy_salary_default" />
+
+            <!-- Карточка компании -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/companyInfoBlock"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shape_height"
+                android:layout_marginTop="@dimen/padding_16"
+                android:backgroundTint="@color/light_gray"
+                app:shapeAppearanceOverlay="@style/RoundedCorners12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_16">
+
+                    <!-- Логотип компании -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/companyLogoBlock"
+                        android:layout_width="@dimen/vacancy_icon_shape_size"
+                        android:layout_height="@dimen/vacancy_icon_shape_size"
+                        app:cardElevation="@dimen/zero_dp"
+                        app:cardBackgroundColor="@color/primary"
+                        app:shapeAppearance="@style/RoundedCorners12dp">
+
+                        <ImageView
+                            android:id="@+id/innerLogo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/image_view_details_descr"
+                            app:srcCompat="@drawable/placeholder_vacancy" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Текстовая информация о компании -->
+                    <LinearLayout
+                        android:id="@+id/companyInfoText"
+                        android:layout_width="@dimen/zero_dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_8"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        tools:ignore="InefficientWeight">
+
+                        <TextView
+                            android:id="@+id/companyName"
+                            style="@style/TextMedium22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/company_name" />
+
+                        <TextView
+                            android:id="@+id/companyCity"
+                            style="@style/TextRegular16"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/city" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Опыт работы -->
+            <TextView
+                android:id="@+id/experienceLabel"
+                style="@style/TextMedium16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:text="@string/experience_needed" />
+
+            <TextView
+                android:id="@+id/experienceLine"
+                style="@style/TextRegular16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_4"
+                android:text="@string/experience_sample" />
+
+            <TextView
+                android:id="@+id/scheduleTextView"
+                style="@style/TextRegular16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_8"
+                android:text="@string/experience_description_default" />
+
+            <!-- Описание вакансии -->
+            <TextView
+                android:id="@+id/vacancyDescription"
+                style="@style/TextMedium22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:text="@string/vacancy_descr" />
+
+            <!-- Обязанности
+            <TextView
+                android:id="@+id/responsibilities"
+                style="@style/TextMedium16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/responsibilities_title" /> -->
+
+            <TextView
+                android:id="@+id/vacancyDescriptionTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/responsibilities_text" />
+
+            <!-- Требования
+            <TextView
+                android:id="@+id/requirements"
+                style="@style/TextMedium16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/requirements_title" />
+
+            <TextView
+                android:id="@+id/requirementsTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/requirements_text" /> -->
+
+            <!-- Условия
+            <TextView
+                android:id="@+id/conditions"
+                style="@style/TextMedium16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/conditions_title" />
+
+            <TextView
+                android:id="@+id/conditionsTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/conditions_text" /> -->
+
+            <!-- Ключевые навыки -->
+            <TextView
+                android:id="@+id/vacancySkills"
+                style="@style/TextMedium22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:text="@string/vacancy_skills" />
+
+            <TextView
+                android:id="@+id/skillsTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/skills_text" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/placeholdersBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ImageView
+            android:id="@+id/exatclyPlaceholder"
+            android:layout_width="328dp"
+            android:layout_height="@dimen/fav_ph_height"
+            android:layout_gravity="center"
+            android:contentDescription="@string/image_view_details_descr"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/no_vacancy_placeholder" />
+
+        <TextView
+            style="@style/TextMedium22"
+            android:layout_width="@dimen/ph_text_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_16"
+            android:gravity="center"
+            android:text="@string/vacancy_denied">
+
+        </TextView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

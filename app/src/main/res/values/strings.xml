@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Общие и временные строки (для заглушек в ранних эпиках) -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name_filter_country">Экран фильтрации по стране</string>
     <string name="name_favourites">Экран избранного</string>
@@ -37,4 +38,37 @@
     <string name="empty_list">Список пуст</string>
     <string name="error_list">Не удалось получить список вакансий</string>
     <string name="favorites_placeholder">Favorites placeholder</string>
+    <string name="hint_edit_text">Введите запрос</string>
+    <string name="vacancy_name_default">Название вакансии длинное допустим ааа</string>
+    <string name="vacancy_salary_default">100 000</string>
+    <string name="experience_needed">Требуемый опыт</string>
+    <string name="experience_sample">Опыт 1</string>
+    <string name="experience_description_default">Полная занятость, Удалённая работа</string>
+    <string name="vacancy_descr">Описание вакансии</string>
+    <string name="responsibilities_title">Обязанности</string>
+    <string name="responsibilities_description_default">" • Разрабатывать новую функциональность приложения\n • Помогать с интеграцией нашего SDK в другие приложения"</string>
+    <string name="element_text_default">Разработка</string>
+    <string name="vacancy_Requirements">Требования</string>
+    <string name="vacancy_skills">Ключевые навыки</string>
+    <string name="requirements_title">Требования</string>
+    <string name="conditions_title">Условия</string>
+    <string name="company_name">Company Name</string>
+    <string name="city">City</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+    <string name="nothing_found">Не удалось получить\nсписок вакансий</string>
+    <string name="no_internet">Нет интернета</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="no_vacancies_title">Таких вакансий нет</string>
+    <string name="no_salary">Зарплата не указана</string>
+
+    <!-- Тексты для описаний блоков в разметках -->
+    <string name="image_view_details_descr">The same image as at the main screen</string>
+    <string name="liked_header">Добавление в избранное</string>
+    <string name="share_header">Поделиться</string>
+    <string name="responsibilities_text">Как будто здесь есть текст и его очень много прям вообще много, чтобы он на несколько строк расходился\nЕщё строка текста\nИ ещё одна</string>
+    <string name="requirements_text">Какие-то требования</string>
+    <string name="conditions_text">Какие-то условия\nУсловия номер два</string>
+    <string name="skills_text">Верстать экраны\nПить чай без сахара</string>
+    <string name="vacancy_denied">Вакансия не найдена или удалена</string>
+    <string name="salary_not_specified">Зарплата не указана</string>
 </resources>
