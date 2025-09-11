@@ -130,4 +130,34 @@
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintTop_toTopOf="@id/onlyWithSalary" />
 
+    <Button
+        android:id="@+id/applyButton"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/height_59"
+        android:layout_marginHorizontal="@dimen/padding_17"
+        android:layout_marginBottom="91dp"
+        android:backgroundTint="@color/blue"
+        android:text="@string/apply_button"
+        android:textAppearance="@style/TextMedium16"
+        android:textColor="@color/white_universal"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/height_59"
+        android:layout_marginHorizontal="@dimen/padding_17"
+        android:layout_marginBottom="@dimen/padding_24"
+        android:backgroundTint="@android:color/transparent"
+        android:text="@string/delete_button"
+        android:textAppearance="@style/TextMedium16"
+        android:textColor="@color/red"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
