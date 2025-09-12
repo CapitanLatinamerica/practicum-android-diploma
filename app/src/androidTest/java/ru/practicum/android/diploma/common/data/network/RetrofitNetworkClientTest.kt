@@ -15,6 +15,7 @@ import ru.practicum.android.diploma.common.data.model.VacanciesResponse
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
 
+@RunWith(AndroidJUnit4::class)
 class RetrofitNetworkClientTest {
 
     val token = "Bearer ${BuildConfig.API_ACCESS_TOKEN}"
@@ -27,10 +28,12 @@ class RetrofitNetworkClientTest {
 
     val api = retrofit.create(HeadHunterApi::class.java)
 
+    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
     val networkClient = RetrofitNetworkClient(
         headHunterApi = api,
         token,
-        context = TODO()
+        appContext
     )
 
     @Test

@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
-import ru.practicum.android.diploma.common.domain.entity.Industry
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 
@@ -21,8 +20,6 @@ interface VacancyRepository {
     suspend fun getVacancyDetailsById(id: String): Resource<Vacancy>
 
     fun deleteById(id: String): Boolean
-
-    fun getIndustries(): List<Industry>
 
     fun getAreas(): List<AreaDto>
 
