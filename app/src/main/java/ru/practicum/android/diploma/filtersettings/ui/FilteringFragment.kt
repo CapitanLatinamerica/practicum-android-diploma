@@ -135,7 +135,6 @@ class FilteringFragment : Fragment() {
         }
     }
 
-
     private fun updateClearButtonVisibility() {
         val hasText = binding.salaryEditText.text?.isNotEmpty() == true
         val hasFocus = binding.salaryEditText.isFocused
