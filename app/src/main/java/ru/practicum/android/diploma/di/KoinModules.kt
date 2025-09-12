@@ -32,6 +32,14 @@ import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 import java.util.concurrent.TimeUnit
+import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
+import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
+import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
+import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
+import ru.practicum.android.diploma.vacancydetails.data.SharingInteractorImpl
+import ru.practicum.android.diploma.vacancydetails.data.SharingRepositoryImpl
+import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
+import ru.practicum.android.diploma.vacancydetails.domain.SharingRepository
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
@@ -117,8 +125,11 @@ val searchModule = module {
 // Модуль для деталей вакансии
 val vacancyDetailsModule = module {
 
+    single<SharingRepository> { SharingRepositoryImpl(get()) }
+    single<SharingInteractor> { SharingInteractorImpl(get()) }
+
     viewModel { (vacancyId: String) ->
-        VacancyDetailsViewModel(get(), get(), vacancyId)
+        VacancyDetailsViewModel(get(), get(), get(), vacancyId, get())
     }
 }
 

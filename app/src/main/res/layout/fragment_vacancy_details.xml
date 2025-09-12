@@ -173,15 +173,6 @@
                 android:layout_marginTop="@dimen/padding_30"
                 android:text="@string/vacancy_descr" />
 
-            <!-- Обязанности
-            <TextView
-                android:id="@+id/responsibilities"
-                style="@style/TextMedium16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_16"
-                android:text="@string/responsibilities_title" /> -->
-
             <TextView
                 android:id="@+id/vacancyDescriptionTextView"
                 style="@style/TextRegular16"
@@ -189,40 +180,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_16"
                 android:text="@string/responsibilities_text" />
-
-            <!-- Требования
-            <TextView
-                android:id="@+id/requirements"
-                style="@style/TextMedium16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_16"
-                android:text="@string/requirements_title" />
-
-            <TextView
-                android:id="@+id/requirementsTextView"
-                style="@style/TextRegular16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_16"
-                android:text="@string/requirements_text" /> -->
-
-            <!-- Условия
-            <TextView
-                android:id="@+id/conditions"
-                style="@style/TextMedium16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_16"
-                android:text="@string/conditions_title" />
-
-            <TextView
-                android:id="@+id/conditionsTextView"
-                style="@style/TextRegular16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_16"
-                android:text="@string/conditions_text" /> -->
 
             <!-- Ключевые навыки -->
             <TextView
@@ -240,6 +197,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_16"
                 android:text="@string/skills_text" />
+
+            <!-- Контакты -->
+            <TextView
+                android:id="@+id/vacancyContacts"
+                style="@style/TextMedium22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_30"
+                android:text="@string/vacancy_contacts" />
+
+            <TextView
+                android:id="@+id/phoneTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/contacts_default_text" />
+
+            <TextView
+                android:id="@+id/emailTextView"
+                style="@style/TextRegular16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_16"
+                android:text="@string/email_default_text" />
 
         </LinearLayout>
     </ScrollView>
@@ -266,6 +248,7 @@
             app:srcCompat="@drawable/no_vacancy_placeholder" />
 
         <TextView
+            android:id="@+id/placeholderText"
             style="@style/TextMedium22"
             android:layout_width="@dimen/ph_text_width"
             android:layout_height="wrap_content"

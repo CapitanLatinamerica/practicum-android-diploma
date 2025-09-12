@@ -32,6 +32,7 @@ class VacancyRepositoryImpl(
         private const val SUCCESS = 200
         private const val ERROR = 500
         private const val INTERNET_ERROR = -1
+        private const val NOT_FOUND = 404
     }
 
     override fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>> =
@@ -90,6 +91,14 @@ class VacancyRepositoryImpl(
                 getVacancyFromDatabase(id)?.let { vacancy ->
                     Resource.Success(vacancy)
                 } ?: Resource.Error("Нет интернета")
+            }
+
+            ERROR -> {
+                Resource.Error("Ошибка сервера")
+            }
+
+            NOT_FOUND -> {
+                Resource.Error("Вакансия не найдена или удалена")
             }
 
             else -> {
