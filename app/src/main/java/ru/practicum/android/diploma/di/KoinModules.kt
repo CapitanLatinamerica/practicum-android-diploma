@@ -27,6 +27,10 @@ import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUs
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import java.util.concurrent.TimeUnit
+import ru.practicum.android.diploma.vacancydetails.data.SharingInteractorImpl
+import ru.practicum.android.diploma.vacancydetails.data.SharingRepositoryImpl
+import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
+import ru.practicum.android.diploma.vacancydetails.domain.SharingRepository
 import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
@@ -121,7 +125,7 @@ val vacancyDetailsModule = module {
     single<SharingInteractor> { SharingInteractorImpl(get()) }
 
     viewModel { (vacancyId: String) ->
-        VacancyDetailsViewModel(get(), get(), vacancyId)
+        VacancyDetailsViewModel(get(), get(), get(), vacancyId, get())
     }
 }
 

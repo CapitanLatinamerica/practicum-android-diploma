@@ -87,6 +87,16 @@ class MainFragment : Fragment() {
             extracted1()
         }
 
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.filter -> {
+                    findNavController().navigate(R.id.action_mainFragment_to_filteringFragment)
+                    true
+                }
+                else -> false
+            }
+        }
+
         viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
             adapter?.showLoadingFooter(loading)
         }
@@ -100,15 +110,19 @@ class MainFragment : Fragment() {
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
-                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                val lastVisible = lm.findLastVisibleItemPosition()
-                val itemCount = adapter?.itemCount ?: 0
-                if (lastVisible >= itemCount - 1) {
-                    viewModel.onLastItemReached()
-                }
+                onScroll(dy, recyclerView)
             }
         })
+    }
+
+    private fun onScroll(dy: Int, recyclerView: RecyclerView) {
+        if (dy <= 0) return
+        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+        val lastVisible = lm.findLastVisibleItemPosition()
+        val itemCount = adapter?.itemCount ?: 0
+        if (lastVisible >= itemCount - 1) {
+            viewModel.onLastItemReached()
+        }
     }
 
     private fun extracted1() {
