@@ -140,11 +140,11 @@
         android:text="@string/apply_button"
         android:textAppearance="@style/TextMedium16"
         android:textColor="@color/white_universal"
+        android:visibility="gone"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/deleteButton"
@@ -156,10 +156,10 @@
         android:text="@string/delete_button"
         android:textAppearance="@style/TextMedium16"
         android:textColor="@color/red"
+        android:visibility="gone"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
