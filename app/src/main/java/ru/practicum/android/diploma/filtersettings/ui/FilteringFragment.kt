@@ -83,6 +83,14 @@ class FilteringFragment : Fragment() {
             showSelectionDialog(isWorkplace = false)
         }
 
+        viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
+            handleVisibilityButtonsState(visible)
+        }
+
+        binding.salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onOnlyWithSalaryToggled(isChecked)
+        }
+
     }
 
     // Для проверки текстинуптов
@@ -179,6 +187,12 @@ class FilteringFragment : Fragment() {
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray))
             layout.setEndIconOnClickListener(null)
         }
+    }
+
+    private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {
+        val visibility = if (hasAnyChange) View.VISIBLE else View.GONE
+        binding.applyButton.visibility = visibility
+        binding.deleteButton.visibility = visibility
     }
 
     override fun onDestroyView() {
