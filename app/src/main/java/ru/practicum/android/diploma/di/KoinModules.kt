@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -12,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorMessageProviderImpl
+import ru.practicum.android.diploma.PREFERENCE_NAME
 import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.common.data.db.AppDataBase
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
@@ -42,6 +45,11 @@ private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 
 // Общие зависимости
 val appModule = module {
+    single<SharedPreferences> { provideSharedPreferences(androidContext()) }
+}
+
+// Общие зависимости
+val filteringModule = module {
 
 }
 
@@ -140,4 +148,8 @@ val favouritesModule = module {
     }
 
     viewModel { FavouritesViewModel(get()) }
+}
+
+fun provideSharedPreferences(context: Context): SharedPreferences {
+    return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
 }

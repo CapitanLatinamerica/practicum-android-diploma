@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilteringBinding
 
 class FilteringFragment : Fragment() {
@@ -30,6 +32,12 @@ class FilteringFragment : Fragment() {
             showWorkplaceDialog()
         }
 
+        binding.industryEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
+            }
+        }
+
     }
 
     // Для проверки текстинуптов
@@ -42,6 +50,10 @@ class FilteringFragment : Fragment() {
                 binding.workplaceEdit.setText(workplaces[which])
             }
             .show()
+    }
+
+    private fun navigateToIndustryFragment() {
+        findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
     }
 
     override fun onDestroyView() {

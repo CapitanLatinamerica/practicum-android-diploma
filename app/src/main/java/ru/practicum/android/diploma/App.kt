@@ -9,6 +9,8 @@ import ru.practicum.android.diploma.di.favouritesModule
 import ru.practicum.android.diploma.di.searchModule
 import ru.practicum.android.diploma.di.vacancyDetailsModule
 
+const val PREFERENCE_NAME = "user_preferences"
+
 class App : Application() {
 
     override fun onCreate() {
