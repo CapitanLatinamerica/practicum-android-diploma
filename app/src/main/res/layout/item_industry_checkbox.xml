@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/height_60"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/footerProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        style="@style/TextRegular16"
+        android:text="@string/item_industry_description"
+        android:gravity="center_vertical|start" />
+    <ImageView
+        android:id="@+id/rightArrowImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/checkbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center_vertical|end"
+        android:src="@drawable/ic_share"  />
+</LinearLayout>

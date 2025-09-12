@@ -94,4 +94,6 @@
     <string name="industry_input">Введите отрасль</string>
     <string name="choose_button">Выбрать</string>
     <string name="find_or_clean">find or clean</string>
+    <string name="checkbox">checkbox</string>
+    <string name="item_industry_description">IT</string>
 </resources>
