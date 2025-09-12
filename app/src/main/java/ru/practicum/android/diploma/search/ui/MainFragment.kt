@@ -110,15 +110,19 @@ class MainFragment : Fragment() {
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
-                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                val lastVisible = lm.findLastVisibleItemPosition()
-                val itemCount = adapter?.itemCount ?: 0
-                if (lastVisible >= itemCount - 1) {
-                    viewModel.onLastItemReached()
-                }
+                onScroll(dy, recyclerView)
             }
         })
+    }
+
+    private fun onScroll(dy: Int, recyclerView: RecyclerView) {
+        if (dy <= 0) return
+        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+        val lastVisible = lm.findLastVisibleItemPosition()
+        val itemCount = adapter?.itemCount ?: 0
+        if (lastVisible >= itemCount - 1) {
+            viewModel.onLastItemReached()
+        }
     }
 
     private fun extracted1() {

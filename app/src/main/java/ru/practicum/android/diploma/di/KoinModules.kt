@@ -30,16 +30,12 @@ import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUs
 import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCaseImpl
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
-import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
-import java.util.concurrent.TimeUnit
-import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
-import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
-import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
-import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
 import ru.practicum.android.diploma.vacancydetails.data.SharingInteractorImpl
 import ru.practicum.android.diploma.vacancydetails.data.SharingRepositoryImpl
 import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
 import ru.practicum.android.diploma.vacancydetails.domain.SharingRepository
+import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
+import java.util.concurrent.TimeUnit
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
