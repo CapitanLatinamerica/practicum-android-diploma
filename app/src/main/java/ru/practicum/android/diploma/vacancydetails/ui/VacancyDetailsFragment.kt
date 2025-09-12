@@ -15,11 +15,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.Tools
+import ru.practicum.android.diploma.ToolsText
 import ru.practicum.android.diploma.common.domain.entity.Phone
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
+import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyDetailsUi
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
@@ -107,15 +108,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
-        binding.vacancyTitle.text = vacancy.name
-        binding.experienceLine.text = vacancy.experience
-        binding.scheduleTextView.text = vacancy.schedule
-        binding.vacancySalary.text = uiModel.salaryText
-        binding.vacancyDescriptionTextView.text = vacancy.description
-        binding.companyName.text = vacancy.employer
-        binding.companyCity.text = vacancy.area
-        binding.experienceLine.text = vacancy.experience
-        binding.skillsTextView.text = vacancy.skills.toString()
+        fillData(vacancy, uiModel)
 
         Glide.with(this)
             .load(vacancy.logo)
@@ -138,6 +131,21 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         view?.findViewById<TextView>(R.id.share_btn)?.setOnClickListener {
             viewModel.shareVacancy(requireContext())
         }
+    }
+
+    private fun fillData(
+        vacancy: Vacancy,
+        uiModel: VacancyDetailsUi
+    ) {
+        binding.vacancyTitle.text = vacancy.name
+        binding.experienceLine.text = vacancy.experience
+        binding.scheduleTextView.text = vacancy.schedule
+        binding.vacancySalary.text = uiModel.salaryText
+        binding.vacancyDescriptionTextView.text = vacancy.description
+        binding.companyName.text = vacancy.employer
+        binding.companyCity.text = vacancy.area
+        binding.experienceLine.text = vacancy.experience
+        binding.skillsTextView.text = vacancy.skills.toString()
     }
 
     // Показать состояние ошибки
@@ -169,7 +177,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             val widthRight = binding.vacancyDescriptionTextView.paddingRight
             val availableWidth = binding.vacancyDescriptionTextView.width - widthLeft - widthRight
 
-            val spannable = Tools.formatDescriptionTextWithPaint(
+            val spannable = ToolsText.formatDescriptionTextWithPaint(
                 context = requireContext(), // Передаем контекст
                 text = description,
                 paint = binding.vacancyDescriptionTextView.paint,
@@ -190,7 +198,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
 
             if (!text.isNullOrBlank()) {
-                binding.skillsTextView.text = Tools.formatSkillsTextWithPaint(
+                binding.skillsTextView.text = ToolsText.formatSkillsTextWithPaint(
                     text,
                     binding.skillsTextView.paint,
                     availableWidth
@@ -198,7 +206,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             }
 
             if (!phones.isNullOrBlank()) {
-                binding.phoneTextView.text = Tools.formatSkillsTextWithPaint(
+                binding.phoneTextView.text = ToolsText.formatSkillsTextWithPaint(
                     phones,
                     binding.phoneTextView.paint,
                     availableWidth
@@ -206,7 +214,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             }
 
             if (!email.isNullOrBlank()) {
-                binding.emailTextView.text = Tools.formatSkillsTextWithPaint(
+                binding.emailTextView.text = ToolsText.formatSkillsTextWithPaint(
                     email,
                     binding.emailTextView.paint,
                     availableWidth
@@ -224,7 +232,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                     val widthRight = textView.paddingRight
                     val availableWidth = textView.width - widthLeft - widthRight
 
-                    val formattedText = Tools.autoFormatTextWithPaint(
+                    val formattedText = ToolsText.autoFormatTextWithPaint(
                         text,
                         textView.paint,
                         availableWidth,
