@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_60"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/industryTextView"
@@ -19,8 +19,8 @@
         android:id="@+id/industryRadioButton"
         android:layout_width="@dimen/padding_24"
         android:layout_height="@dimen/padding_24"
-        android:gravity="center_vertical|end"
         android:button="@drawable/radio_selector"
-        app:buttonTint="@null"/>
+        android:gravity="center_vertical|end"
+        app:buttonTint="@null" />
 
 </LinearLayout>
