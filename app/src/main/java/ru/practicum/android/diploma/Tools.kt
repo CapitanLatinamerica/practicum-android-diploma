@@ -5,12 +5,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.style.TextAppearanceSpan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.text.TextPaint
-import android.text.style.TextAppearanceSpan
 
 object Tools {
 
@@ -216,12 +216,14 @@ object Tools {
                 spannable = params.spannable,
                 line = params.line
             )
+
             params.line.startsWith("- ") -> processListItem(
                 spannable = params.spannable,
                 line = params.line,
                 paint = params.paint,
                 availableWidth = params.availableWidth
             )
+
             else -> processRegularLine(
                 spannable = params.spannable,
                 line = params.line,
