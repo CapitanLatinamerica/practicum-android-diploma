@@ -75,15 +75,7 @@ class MainFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = s?.toString().orEmpty().trim()
-                updateEditActionIcon(text.isNotEmpty())
-                if (text.isBlank()) {
-                    adapter?.updateData(emptyList())
-                    binding.countVacancies.visibility = View.GONE
-                    viewModel.clearSearch()
-                } else {
-                    viewModel.searchDebounce(text)
-                }
+                extracted(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -92,15 +84,7 @@ class MainFragment : Fragment() {
         })
 
         binding.btnEditAction.setOnClickListener {
-            val text = binding.editText.text?.toString().orEmpty()
-            if (text.isNotEmpty()) {
-                binding.editText.setText("")
-                viewModel.clearSearch()
-                updateEditActionIcon(false)
-            } else {
-                binding.editText.requestFocus()
-                showKeyboard(binding.editText)
-            }
+            extracted1()
         }
 
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
@@ -126,15 +110,43 @@ class MainFragment : Fragment() {
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
-                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                val lastVisible = lm.findLastVisibleItemPosition()
-                val itemCount = adapter?.itemCount ?: 0
-                if (lastVisible >= itemCount - 1) {
-                    viewModel.onLastItemReached()
-                }
+                onScroll(dy, recyclerView)
             }
         })
+    }
+
+    private fun onScroll(dy: Int, recyclerView: RecyclerView) {
+        if (dy <= 0) return
+        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+        val lastVisible = lm.findLastVisibleItemPosition()
+        val itemCount = adapter?.itemCount ?: 0
+        if (lastVisible >= itemCount - 1) {
+            viewModel.onLastItemReached()
+        }
+    }
+
+    private fun extracted1() {
+        val text = binding.editText.text?.toString().orEmpty()
+        if (text.isNotEmpty()) {
+            binding.editText.setText("")
+            viewModel.clearSearch()
+            updateEditActionIcon(false)
+        } else {
+            binding.editText.requestFocus()
+            showKeyboard(binding.editText)
+        }
+    }
+
+    private fun extracted(s: CharSequence?) {
+        val text = s?.toString().orEmpty().trim()
+        updateEditActionIcon(text.isNotEmpty())
+        if (text.isBlank()) {
+            adapter?.updateData(emptyList())
+            binding.countVacancies.visibility = View.GONE
+            viewModel.clearSearch()
+        } else {
+            viewModel.searchDebounce(text)
+        }
     }
 
     private fun renderState(state: SearchState) {
