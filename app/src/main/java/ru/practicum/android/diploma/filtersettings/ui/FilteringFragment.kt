@@ -14,10 +14,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import ru.practicum.android.diploma.R
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilteringBinding
 
 class FilteringFragment : Fragment() {
@@ -114,10 +114,6 @@ class FilteringFragment : Fragment() {
                 }
             }
             .show()
-    }
-
-    private fun navigateToIndustryFragment() {
-        findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
     }
 
     private fun renderState(state: FilterState) {
