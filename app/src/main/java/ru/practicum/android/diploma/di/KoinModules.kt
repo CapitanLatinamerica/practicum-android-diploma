@@ -24,6 +24,7 @@ import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
+import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
 import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
@@ -140,4 +141,10 @@ val favouritesModule = module {
     }
 
     viewModel { FavouritesViewModel(get()) }
+}
+
+// Модуль для экрана "фильтры"
+val filteringModule = module {
+
+    viewModel { FilteringViewModel() }
 }

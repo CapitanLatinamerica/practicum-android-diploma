@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.CheckableImageButton
+import com.google.android.material.textfield.TextInputLayout
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilteringBinding
 
@@ -22,6 +24,8 @@ class FilteringFragment : Fragment() {
     private var _binding: FragmentFilteringBinding? = null
     private val binding: FragmentFilteringBinding
         get() = _binding!!
+
+    private val viewModel: FilteringViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,10 +39,15 @@ class FilteringFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.filterState.observe(viewLifecycleOwner) { state ->
+            renderState(state)
+        }
+
         binding.salaryEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.onSalaryTextChanged(s?.toString() ?: "")
                 updateClearButtonVisibility()
                 handleSalaryHintColor()
             }
@@ -64,43 +73,64 @@ class FilteringFragment : Fragment() {
 
         binding.clearIcon.setOnClickListener {
             binding.salaryEditText.text?.clear()
+
         }
 
-        binding.workplaceEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateWorkplaceAppearance()
-            }
-
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
-
-        updateWorkplaceAppearance()
-
         binding.workplaceEdit.setOnClickListener {
-            showWorkplaceDialog()
+            showSelectionDialog(isWorkplace = true)
+        }
+        binding.industryEdit.setOnClickListener {
+            showSelectionDialog(isWorkplace = false)
         }
 
     }
 
     // Для проверки текстинуптов
-    private fun showWorkplaceDialog() {
-        // Здесь логика выбора места работы
-        val workplaces = listOf("Office", "Remote", "Hybrid")
+    private fun showSelectionDialog(isWorkplace: Boolean) {
+        val items = listOf("Office", "Remote", "Hybrid")
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Select Workplace")
-            .setItems(workplaces.toTypedArray()) { _, which ->
-                binding.workplaceEdit.setText(workplaces[which])
-                updateWorkplaceAppearance()
+            .setTitle(if (isWorkplace) "Select Workplace" else "Select Industry")
+            .setItems(items.toTypedArray()) { _, which ->
+                val selected = items[which]
+                if (isWorkplace) {
+                    viewModel.onWorkplaceSelected(selected)
+                } else {
+                    viewModel.onIndustrySelected(selected)
+                }
             }
             .show()
     }
 
+    private fun renderState(state: FilterState) {
+        if (!binding.salaryEditText.isFocused) {
+            val current = binding.salaryEditText.text?.toString() ?: ""
+            if (current != state.salary) {
+                binding.salaryEditText.setText(state.salary)
+            }
+        }
+
+        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
+        if (wpCurrent != state.workplace) {
+            binding.workplaceEdit.setText(state.workplace)
+        }
+
+        val indCurrent = binding.industryEdit.text?.toString() ?: ""
+        if (indCurrent != state.industry) {
+            binding.industryEdit.setText(state.industry)
+        }
+
+        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+            viewModel.clearWorkplace()
+        }
+        updateTextInputLayoutAppearance(binding.industry, state.industry) {
+            viewModel.clearIndustry()
+        }
+    }
+
+
     private fun updateClearButtonVisibility() {
         val hasText = binding.salaryEditText.text?.isNotEmpty() == true
         val hasFocus = binding.salaryEditText.isFocused
-
         binding.clearIcon.visibility = if (hasText && hasFocus) View.VISIBLE else View.GONE
     }
 
@@ -122,15 +152,19 @@ class FilteringFragment : Fragment() {
         }
     }
 
-    private fun updateWorkplaceAppearance() {
-        val hasText = binding.workplaceEdit.text?.isNotEmpty() == true
+    private fun updateTextInputLayoutAppearance(
+        layout: TextInputLayout,
+        text: String,
+        clearAction: () -> Unit
+    ) {
+        val hasText = text.isNotEmpty()
         if (hasText) {
-            binding.workplace.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear_button)
-            binding.workplace.defaultHintTextColor =
+            layout.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear_button)
+            layout.defaultHintTextColor =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.onPrimary))
 
             // Отключение ripple эффекта для endIcon
-            val endIconImageButton = binding.workplace.findViewById<CheckableImageButton>(
+            val endIconImageButton = layout.findViewById<CheckableImageButton>(
                 com.google.android.material.R.id.text_input_end_icon
             )
             endIconImageButton?.apply {
@@ -138,16 +172,12 @@ class FilteringFragment : Fragment() {
                 isClickable = true
                 isFocusable = false
             }
-
-            binding.workplace.setEndIconOnClickListener {
-                binding.workplaceEdit.text?.clear()
-            }
+            layout.setEndIconOnClickListener { clearAction() }
         } else {
-            binding.workplace.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)
-            binding.workplace.defaultHintTextColor =
+            layout.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_forward)
+            layout.defaultHintTextColor =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray))
-
-            binding.workplace.setEndIconOnClickListener(null)
+            layout.setEndIconOnClickListener(null)
         }
     }
 
