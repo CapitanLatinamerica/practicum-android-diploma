@@ -48,11 +48,6 @@ val appModule = module {
     single<SharedPreferences> { provideSharedPreferences(androidContext()) }
 }
 
-// Общие зависимости
-val filteringModule = module {
-
-}
-
 // Модуль для работы с Room
 val databaseModule = module {
     factory { VacancyMapper }
@@ -152,4 +147,10 @@ val favouritesModule = module {
 
 fun provideSharedPreferences(context: Context): SharedPreferences {
     return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+}
+
+// Модуль для экрана "фильтры"
+val filteringModule = module {
+
+    viewModel { FilteringViewModel() }
 }
