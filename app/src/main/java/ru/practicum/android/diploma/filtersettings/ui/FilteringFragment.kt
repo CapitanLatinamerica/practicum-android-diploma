@@ -110,7 +110,6 @@ class FilteringFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-
         // Обновляем состояние выбранной отрасли во ViewModel
         parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
             val selectedId = bundle.getString("selectedIndustryId")
