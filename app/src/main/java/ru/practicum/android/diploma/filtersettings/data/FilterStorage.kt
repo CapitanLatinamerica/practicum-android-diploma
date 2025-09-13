@@ -12,7 +12,6 @@ class FilterStorage(
         private const val FILTER_PARAMETERS_KEY = "filter_parameters"
     }
 
-
     fun save(params: FilterParameters) {
         val json = gson.toJson(params)
         sharedPreferences.edit()
