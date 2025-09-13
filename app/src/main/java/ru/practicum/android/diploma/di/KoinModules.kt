@@ -12,18 +12,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorMessageProviderImpl
+import ru.practicum.android.diploma.common.data.IndustryRepositoryImpl
 import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.common.data.db.AppDataBase
+import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
+import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCase
+import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCaseImpl
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.network.HeadHunterApi
 import ru.practicum.android.diploma.common.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.common.domain.IndustryRepository
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.favourites.data.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
+import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
 import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
@@ -151,4 +157,25 @@ val favouritesModule = module {
 val filteringModule = module {
 
     viewModel { FilteringViewModel() }
+}
+
+val industryModule = module {
+
+    factory { IndustryMapper }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(
+            networkClient = get(),
+            mapper = get()
+        )
+    }
+
+    single<GetIndustriesUseCase> {
+        GetIndustriesUseCaseImpl(get())
+    }
+
+    viewModel {
+        IndustryVIewModel(get())
+    }
+
 }

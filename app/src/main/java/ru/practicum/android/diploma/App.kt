@@ -6,10 +6,9 @@ import org.koin.core.context.startKoin
 import ru.practicum.android.diploma.di.databaseModule
 import ru.practicum.android.diploma.di.favouritesModule
 import ru.practicum.android.diploma.di.filteringModule
+import ru.practicum.android.diploma.di.industryModule
 import ru.practicum.android.diploma.di.searchModule
 import ru.practicum.android.diploma.di.vacancyDetailsModule
-
-// const val PREFERENCE_NAME = "user_preferences"
 
 class App : Application() {
 
@@ -18,8 +17,15 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(databaseModule, searchModule, vacancyDetailsModule, favouritesModule, filteringModule)
-            // appModule
+            modules(
+                databaseModule,
+                searchModule,
+                vacancyDetailsModule,
+                favouritesModule,
+                filteringModule,
+                industryModule
+                // appModule
+            )
         }
     }
 }
