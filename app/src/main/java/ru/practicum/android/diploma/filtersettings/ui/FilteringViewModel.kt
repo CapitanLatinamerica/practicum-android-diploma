@@ -16,74 +16,72 @@ class FilteringViewModel(
     private val _filterState = MutableLiveData(FilterState())
     val filterState: LiveData<FilterState> = _filterState
 
+    private val _buttonsVisibilityState = MutableLiveData(false)
+    val buttonsVisibilityState: LiveData<Boolean> = _buttonsVisibilityState
+
     private var initialState: FilterState = FilterState()
 
     private var initialized = false
-
-    val buttonsVisibilityState = MutableLiveData(false)
 
     init {
         viewModelScope.launch {
             val savedParams = filteringUseCase.loadParameters()
             val starting = if (savedParams != null) mapper.mapParamsToUi(savedParams) else FilterState()
             initialState = starting
+
             _filterState.postValue(starting)
-            buttonsVisibilityState.postValue(starting != initialState)
+            _buttonsVisibilityState.postValue(starting != initialState)
             initialized = true
         }
     }
 
     fun onWorkplaceSelected(value: String) {
-        val newParam = _filterState.value?.copy(workplace = value) ?: FilterState(workplace = value)
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(workplace = value) }
     }
 
     fun onIndustrySelected(value: String) {
-        val newParam = _filterState.value?.copy(industry = value) ?: FilterState(industry = value)
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(industry = value) }
     }
 
     fun onSalaryTextChanged(text: String) {
-        val newParam = _filterState.value?.copy(salary = text) ?: FilterState(salary = text)
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(salary = text) }
     }
 
     fun onOnlyWithSalaryToggled(isChecked: Boolean) {
-        val newParam = _filterState.value?.copy(onlyWithSalary = isChecked) ?: FilterState(onlyWithSalary = isChecked)
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(onlyWithSalary = isChecked) }
     }
 
     fun clearWorkplace() {
-        val newParam = _filterState.value?.copy(workplace = "") ?: FilterState(workplace = "")
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(workplace = "") }
     }
 
     fun clearIndustry() {
-        val newParam = _filterState.value?.copy(industry = "") ?: FilterState(industry = "")
-        _filterState.value = newParam
-        saveFilteringParam(newParam)
+        updateAndSave { it.copy(industry = "") }
     }
 
-    private fun saveFilteringParam(state: FilterState) {
+    private fun updateAndSave(transform: (FilterState) -> FilterState) {
+        val currentState = _filterState.value ?: FilterState()
+        val newState = transform(currentState)
+
+        if (newState == currentState) return
+        _filterState.value = newState
+
         if (!initialized) return
-        buttonsVisibilityState.postValue(state != initialState)
+
+        _buttonsVisibilityState.postValue(newState != initialState)
         viewModelScope.launch {
-            filteringUseCase.saveParameters(mapper.mapParamsToDomain(state))
+            filteringUseCase.saveParameters(mapper.mapParamsToDomain(newState))
         }
     }
 
     fun clearAllParams() {
         val newParams = FilterState()
         _filterState.value = newParams
+
         viewModelScope.launch {
             filteringUseCase.clearParameters()
         }
-        buttonsVisibilityState.value = newParams != initialState
+        _buttonsVisibilityState.value = newParams != initialState
     }
 
 }

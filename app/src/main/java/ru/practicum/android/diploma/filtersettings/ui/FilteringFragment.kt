@@ -122,8 +122,6 @@ class FilteringFragment : Fragment() {
 
         handleCheckBoxSalaryState(state)
 
-        handleCheckBoxSalaryState(state)
-
     }
 
     private fun updateClearButtonVisibility() {
