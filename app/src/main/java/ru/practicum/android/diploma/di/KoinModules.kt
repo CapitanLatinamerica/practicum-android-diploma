@@ -159,7 +159,8 @@ val industryModule = module {
 
     single<IndustryRepository> {
         IndustryRepositoryImpl(
-            networkClient = get(), mapper = get()
+            networkClient = get(),
+            mapper = get()
         )
     }
 

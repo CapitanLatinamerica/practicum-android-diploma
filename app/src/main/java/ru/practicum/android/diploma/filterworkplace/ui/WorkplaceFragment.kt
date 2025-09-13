@@ -82,7 +82,6 @@ class WorkplaceFragment : Fragment() {
 //    }
 
     private fun renderState(state: WorkplaceState) {
-
         val countryCurrent = binding.countryEdit.text?.toString() ?: ""
         if (countryCurrent != state.country) {
             binding.countryEdit.setText(state.country)
