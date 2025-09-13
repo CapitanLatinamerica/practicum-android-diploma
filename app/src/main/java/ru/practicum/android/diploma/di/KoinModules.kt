@@ -31,6 +31,7 @@ import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorI
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
 import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
 import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
+import ru.practicum.android.diploma.filterworkplace.ui.WorkplaceViewModel
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
 import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
@@ -58,8 +59,7 @@ val databaseModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db")
-            .fallbackToDestructiveMigration(false)
-            .build()
+            .fallbackToDestructiveMigration(false).build()
     }
 }
 
@@ -71,13 +71,10 @@ val searchModule = module {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
-        OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
+        OkHttpClient.Builder().retryOnConnectionFailure(true)
             .connectTimeout(NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .addInterceptor(logging)
-            .build()
+            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS).addInterceptor(logging).build()
     }
 
     // Gson
@@ -87,11 +84,8 @@ val searchModule = module {
 
     // Retrofit
     single {
-        Retrofit.Builder()
-            .baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/")
-            .client(get())
-            .addConverterFactory(GsonConverterFactory.create(get()))
-            .build()
+        Retrofit.Builder().baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/").client(get())
+            .addConverterFactory(GsonConverterFactory.create(get())).build()
     }
 
     // API
@@ -165,8 +159,7 @@ val industryModule = module {
 
     single<IndustryRepository> {
         IndustryRepositoryImpl(
-            networkClient = get(),
-            mapper = get()
+            networkClient = get(), mapper = get()
         )
     }
 
@@ -177,5 +170,8 @@ val industryModule = module {
     viewModel {
         IndustryVIewModel(get())
     }
+}
 
+val workplaceModule = module {
+    viewModel { WorkplaceViewModel() }
 }
