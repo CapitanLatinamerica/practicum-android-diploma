@@ -15,7 +15,8 @@ class IndustryAdapter(
     internal var selectedIndustryId: String? = null
 
     inner class IndustryViewHolder(
-        private val binding: ItemIndustryCheckboxBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val binding: ItemIndustryCheckboxBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(industry: Industry, isSelected: Boolean) {
             binding.industryTextView.text = industry.name
             binding.industryRadioButton.isChecked = isSelected
@@ -62,6 +63,9 @@ class IndustryAdapter(
         }
         notifyDataSetChanged()
     }
+
+    fun getSelectedIndustry(): Industry? =
+        items.find { it.id.toString() == selectedIndustryId }
 
     fun hasSelection(): Boolean = selectedIndustryId != null
 }

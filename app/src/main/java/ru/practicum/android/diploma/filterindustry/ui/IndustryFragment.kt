@@ -81,11 +81,19 @@ class IndustryFragment : Fragment() {
         }
 
         binding.applyButton.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "Выбрана отрасль: ${adapter.selectedIndustryId}",
-                Toast.LENGTH_SHORT).show()
+            val selectedIndustry = adapter.getSelectedIndustry()
+            if (selectedIndustry != null) {
+                parentFragmentManager.setFragmentResult("selectedIndustryKey", Bundle().apply {
+                    putString("selectedIndustryId", selectedIndustry.id.toString())
+                    putString("selectedIndustryName", selectedIndustry.name)
+                })
+                parentFragmentManager.popBackStack()
+            } else {
+                Toast.makeText(requireContext(), "Выберите отрасль", Toast.LENGTH_SHORT).show()
+            }
         }
+
+
 
         updateApplyButtonVisibility()
     }
