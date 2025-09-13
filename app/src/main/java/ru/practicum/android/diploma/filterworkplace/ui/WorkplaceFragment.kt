@@ -59,6 +59,10 @@ class WorkplaceFragment : Fragment() {
             }
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
     }
 
 //    // Для проверки текстинуптов
