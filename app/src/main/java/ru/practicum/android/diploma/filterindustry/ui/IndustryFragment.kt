@@ -13,6 +13,11 @@ class IndustryFragment : Fragment() {
     private var _binding: FragmentIndustryBinding? = null
     private val binding: FragmentIndustryBinding
         get() = _binding!!
+    private val adapter = IndustryAdapter(onItemClick = { industry ->
+        // Обработка клика по элементу
+        Toast.makeText(requireContext(), "Выбрана отрасль: ${industry.name}", Toast.LENGTH_SHORT).show()
+        // При необходимости передать выбор в FilteringFragment или закрыть фрагмент
+    })
 
     private val viewModel: IndustryVIewModel by viewModel()
 
@@ -38,6 +43,15 @@ class IndustryFragment : Fragment() {
                 IndustryState.Error -> {
                     Toast.makeText(requireActivity(), "$state", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+
+        binding.industryRecyclerView.adapter = adapter
+        viewModel.industryState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is IndustryState.Content -> adapter.updateItems(state.industryList, selectedId = null)
+                is IndustryState.Error ->
+                    Toast.makeText(requireContext(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
             }
         }
 
