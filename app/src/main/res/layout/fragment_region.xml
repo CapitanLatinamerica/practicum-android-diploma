@@ -73,7 +73,7 @@
         android:layout_width="@dimen/zero_dp"
         android:layout_height="223dp"
         android:src="@drawable/fav_error_cat_meme"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
@@ -87,7 +87,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/no_region"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
