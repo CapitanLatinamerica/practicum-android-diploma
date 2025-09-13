@@ -15,7 +15,9 @@ class CountryFragment : Fragment() {
         get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCountryBinding.inflate(inflater, container, false)
         return binding.root

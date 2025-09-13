@@ -23,7 +23,9 @@ class WorkplaceFragment : Fragment() {
     private val viewModel: WorkplaceViewModel by viewModel()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWorkplaceBinding.inflate(inflater, container, false)
         return binding.root
