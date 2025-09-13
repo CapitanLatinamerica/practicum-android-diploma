@@ -6,4 +6,6 @@ interface FilteringUseCase {
     suspend fun saveParameters(params: FilterParameters)
 
     suspend fun loadParameters(): FilterParameters?
+
+    suspend fun clearParameters()
 }

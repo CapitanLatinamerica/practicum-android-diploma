@@ -91,6 +91,10 @@ class FilteringFragment : Fragment() {
             viewModel.onOnlyWithSalaryToggled(isChecked)
         }
 
+        binding.deleteButton.setOnClickListener {
+            viewModel.clearAllParams()
+        }
+
     }
 
     // Для проверки текстинуптов
@@ -110,29 +114,16 @@ class FilteringFragment : Fragment() {
     }
 
     private fun renderState(state: FilterState) {
-        if (!binding.salaryEditText.isFocused) {
-            val current = binding.salaryEditText.text?.toString() ?: ""
-            if (current != state.salary) {
-                binding.salaryEditText.setText(state.salary)
-            }
-        }
+        handleWorkplaceState(state)
 
-        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
-        if (wpCurrent != state.workplace) {
-            binding.workplaceEdit.setText(state.workplace)
-        }
+        handleIndustryState(state)
 
-        val indCurrent = binding.industryEdit.text?.toString() ?: ""
-        if (indCurrent != state.industry) {
-            binding.industryEdit.setText(state.industry)
-        }
+        handleSalaryState(state)
 
-        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
-            viewModel.clearWorkplace()
-        }
-        updateTextInputLayoutAppearance(binding.industry, state.industry) {
-            viewModel.clearIndustry()
-        }
+        handleCheckBoxSalaryState(state)
+
+        handleCheckBoxSalaryState(state)
+
     }
 
     private fun updateClearButtonVisibility() {
@@ -197,5 +188,44 @@ class FilteringFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun handleWorkplaceState(state: FilterState) {
+        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
+        if (wpCurrent != state.workplace) {
+            binding.workplaceEdit.setText(state.workplace)
+        }
+        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+            viewModel.clearWorkplace()
+        }
+    }
+
+    private fun handleIndustryState(state: FilterState) {
+        val indCurrent = binding.industryEdit.text?.toString() ?: ""
+        if (indCurrent != state.industry) {
+            binding.industryEdit.setText(state.industry)
+        }
+        updateTextInputLayoutAppearance(binding.industry, state.industry) {
+            viewModel.clearIndustry()
+        }
+    }
+
+    private fun handleSalaryState(state: FilterState) {
+        if (!binding.salaryEditText.isFocused) {
+            val current = binding.salaryEditText.text?.toString() ?: ""
+            if (current != state.salary) {
+                binding.salaryEditText.setText(state.salary)
+            }
+        }
+    }
+
+    private fun handleCheckBoxSalaryState(state: FilterState) {
+        with(binding) {
+            salaryCheckBox.setOnCheckedChangeListener(null)
+            salaryCheckBox.isChecked = state.onlyWithSalary
+            salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onOnlyWithSalaryToggled(isChecked)
+            }
+        }
     }
 }

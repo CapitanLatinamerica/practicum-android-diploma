@@ -24,4 +24,10 @@ class FilterStorage(
         val json = sharedPreferences.getString(FILTER_PARAMETERS_KEY, null) ?: return null
         return kotlin.runCatching { gson.fromJson(json, FilterParameters::class.java) }.getOrNull()
     }
+
+    fun clear() {
+        sharedPreferences.edit()
+            .remove(FILTER_PARAMETERS_KEY)
+            .apply()
+    }
 }

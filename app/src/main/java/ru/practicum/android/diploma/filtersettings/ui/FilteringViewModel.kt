@@ -77,4 +77,13 @@ class FilteringViewModel(
         }
     }
 
+    fun clearAllParams() {
+        val newParams = FilterState()
+        _filterState.value = newParams
+        viewModelScope.launch {
+            filteringUseCase.clearParameters()
+        }
+        buttonsVisibilityState.value = newParams != initialState
+    }
+
 }

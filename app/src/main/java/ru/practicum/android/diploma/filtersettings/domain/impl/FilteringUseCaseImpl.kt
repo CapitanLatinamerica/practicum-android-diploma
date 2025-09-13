@@ -14,4 +14,8 @@ class FilteringUseCaseImpl(
     override suspend fun loadParameters(): FilterParameters? {
         return repository.loadParameters()
     }
+
+    override suspend fun clearParameters() {
+        repository.clearParameters()
+    }
 }

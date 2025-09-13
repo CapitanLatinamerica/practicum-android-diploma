@@ -18,4 +18,10 @@ class FilteringRepositoryImpl(
     override suspend fun loadParameters(): FilterParameters? {
         return storage.load()
     }
+
+    override suspend fun clearParameters() {
+        withContext(Dispatchers.IO) {
+            storage.clear()
+        }
+    }
 }
