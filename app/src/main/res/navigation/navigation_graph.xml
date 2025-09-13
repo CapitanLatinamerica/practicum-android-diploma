@@ -79,5 +79,11 @@
         android:id="@+id/industryFragment"
         android:name="ru.practicum.android.diploma.filterindustry.ui.IndustryFragment"
         android:label="fragment_industry"
-        tools:layout="@layout/fragment_industry" />
+        tools:layout="@layout/fragment_industry" >
+
+        <argument
+            android:name="selectedIndustryId"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
 </navigation>

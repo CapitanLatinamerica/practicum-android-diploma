@@ -16,6 +16,9 @@ class FilteringViewModel : ViewModel() {
         current != initialState
     }
 
+    val selectedIndustryId: String?
+        get() = _filterState.value?.industry.takeIf { !it.isNullOrEmpty() }
+
     fun onSalaryTextChanged(text: String) {
         _filterState.value = _filterState.value?.copy(salary = text)
     }

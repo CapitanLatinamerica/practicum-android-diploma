@@ -94,7 +94,9 @@ class FilteringFragment : Fragment() {
 
         binding.industryEdit.apply {
             setOnClickListener {
-                findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
+                val selectedIndustryId = viewModel.selectedIndustryId ?: ""
+                val action = FilteringFragmentDirections.actionFilteringFragmentToIndustryFragment(selectedIndustryId)
+                findNavController().navigate(action)
             }
         }
 
