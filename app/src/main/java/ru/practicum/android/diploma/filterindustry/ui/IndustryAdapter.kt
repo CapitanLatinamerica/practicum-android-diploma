@@ -11,6 +11,9 @@ class IndustryAdapter(
     private val onItemClick: (Industry) -> Unit
 ) : RecyclerView.Adapter<IndustryAdapter.IndustryViewHolder>() {
 
+    private var filteredItems: List<Industry> = items.toList()
+    internal var selectedIndustryId: String? = null
+
     inner class IndustryViewHolder(
         private val binding: ItemIndustryCheckboxBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(industry: Industry, isSelected: Boolean) {
@@ -26,8 +29,6 @@ class IndustryAdapter(
         }
     }
 
-    internal var selectedIndustryId: String? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndustryViewHolder {
         val binding = ItemIndustryCheckboxBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IndustryViewHolder(binding)
@@ -39,16 +40,26 @@ class IndustryAdapter(
         holder.bind(industry, isSelected)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = filteredItems.size
 
     fun updateItems(newItems: List<Industry>, selectedId: String?) {
         items = newItems
         selectedIndustryId = selectedId
+        filteredItems = items.toList()
         notifyDataSetChanged()
     }
 
     fun selectIndustry(industry: Industry) {
         selectedIndustryId = industry.id.toString()
+        notifyDataSetChanged()
+    }
+
+    fun filter(query: String) {
+        filteredItems = if (query.isBlank()) {
+            items.toList()
+        } else {
+            items.filter { it.name.contains(query, ignoreCase = true) }
+        }
         notifyDataSetChanged()
     }
 

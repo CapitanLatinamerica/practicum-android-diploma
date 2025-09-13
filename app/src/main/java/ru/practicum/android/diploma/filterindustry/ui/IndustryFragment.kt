@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
@@ -53,8 +54,18 @@ class IndustryFragment : Fragment() {
         }
         viewModel.getIndustries()
 
+        binding.industryEditText.addTextChangedListener { editable ->
+            val query = editable?.toString() ?: ""
+            adapter.filter(query)
+            updateApplyButtonVisibility()
+        }
+
+
         binding.applyButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Выбрана отрасль: ${adapter.selectedIndustryId}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Выбрана отрасль: ${adapter.selectedIndustryId}",
+                Toast.LENGTH_SHORT).show()
         }
 
         updateApplyButtonVisibility()
