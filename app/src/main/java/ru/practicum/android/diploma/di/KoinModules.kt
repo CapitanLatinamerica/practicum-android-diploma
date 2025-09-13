@@ -14,18 +14,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorMessageProviderImpl
+import ru.practicum.android.diploma.common.data.IndustryRepositoryImpl
 import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.common.data.db.AppDataBase
+import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
+import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCase
+import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCaseImpl
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.network.HeadHunterApi
 import ru.practicum.android.diploma.common.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.common.domain.IndustryRepository
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.favourites.data.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
+import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
 import ru.practicum.android.diploma.filtersettings.data.FilterStorage
 import ru.practicum.android.diploma.filtersettings.data.impl.FilteringRepositoryImpl
 import ru.practicum.android.diploma.filtersettings.domain.FilteringRepository
@@ -33,6 +39,7 @@ import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 import ru.practicum.android.diploma.filtersettings.domain.impl.FilteringUseCaseImpl
 import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
 import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
+import ru.practicum.android.diploma.filterworkplace.ui.WorkplaceViewModel
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
 import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
@@ -50,9 +57,9 @@ private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 
 // Общие зависимости
-val appModule = module {
-
-}
+// val appModule = module {
+//    single<SharedPreferences> { provideSharedPreferences(androidContext()) }
+// }
 
 // Модуль для работы с Room
 val databaseModule = module {
@@ -60,8 +67,7 @@ val databaseModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db")
-            .fallbackToDestructiveMigration(false)
-            .build()
+            .fallbackToDestructiveMigration(false).build()
     }
 }
 
@@ -73,13 +79,10 @@ val searchModule = module {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
-        OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
+        OkHttpClient.Builder().retryOnConnectionFailure(true)
             .connectTimeout(NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .addInterceptor(logging)
-            .build()
+            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS).addInterceptor(logging).build()
     }
 
     // Gson
@@ -89,11 +92,8 @@ val searchModule = module {
 
     // Retrofit
     single {
-        Retrofit.Builder()
-            .baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/")
-            .client(get())
-            .addConverterFactory(GsonConverterFactory.create(get()))
-            .build()
+        Retrofit.Builder().baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/").client(get())
+            .addConverterFactory(GsonConverterFactory.create(get())).build()
     }
 
     // API
@@ -151,6 +151,10 @@ val favouritesModule = module {
     viewModel { FavouritesViewModel(get()) }
 }
 
+// fun provideSharedPreferences(context: Context): SharedPreferences {
+//    return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+// }
+
 // Модуль для экрана "фильтры"
 val filteringModule = module {
 
@@ -174,4 +178,28 @@ val filteringModule = module {
     factory<FilterParametersMapper> { FilterParametersMapper() }
 
     viewModel { FilteringViewModel(get(), get()) }
+}
+
+val industryModule = module {
+
+    factory { IndustryMapper }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(
+            networkClient = get(),
+            mapper = get()
+        )
+    }
+
+    single<GetIndustriesUseCase> {
+        GetIndustriesUseCaseImpl(get())
+    }
+
+    viewModel {
+        IndustryVIewModel(get())
+    }
+}
+
+val workplaceModule = module {
+    viewModel { WorkplaceViewModel() }
 }

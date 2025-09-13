@@ -81,5 +81,6 @@ unitTests-junit = "junit:junit:4.13.2"
 uiTests-junitExt = "androidx.test.ext:junit:1.1.5"
 uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+[plugins]
 
 [bundles]

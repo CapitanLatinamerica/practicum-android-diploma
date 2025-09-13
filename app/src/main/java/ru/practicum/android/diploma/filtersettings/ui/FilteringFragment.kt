@@ -12,7 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,11 +76,16 @@ class FilteringFragment : Fragment() {
 
         }
 
-        binding.workplaceEdit.setOnClickListener {
-            showSelectionDialog(isWorkplace = true)
+        binding.workplaceEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
+            }
         }
-        binding.industryEdit.setOnClickListener {
-            showSelectionDialog(isWorkplace = false)
+
+        binding.industryEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
+            }
         }
 
         viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
@@ -95,22 +100,10 @@ class FilteringFragment : Fragment() {
             viewModel.clearAllParams()
         }
 
-    }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
-    // Для проверки текстинуптов
-    private fun showSelectionDialog(isWorkplace: Boolean) {
-        val items = listOf("Office", "Remote", "Hybrid")
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(if (isWorkplace) "Select Workplace" else "Select Industry")
-            .setItems(items.toTypedArray()) { _, which ->
-                val selected = items[which]
-                if (isWorkplace) {
-                    viewModel.onWorkplaceSelected(selected)
-                } else {
-                    viewModel.onIndustrySelected(selected)
-                }
-            }
-            .show()
     }
 
     private fun renderState(state: FilterState) {

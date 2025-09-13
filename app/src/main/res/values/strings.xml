@@ -68,6 +68,12 @@
     <string name="only_with_salary">Не показывать без зарплаты</string>
     <string name="apply_button">Применить</string>
     <string name="delete_button">Сбросить</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
+    <string name="choose">Выбрать</string>
+    <string name="edit_region">Введите регион</string>
+    <string name="no_region">Такого региона нет</string>
+    <string name="error_region">Не удалось получить список</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
@@ -91,4 +97,9 @@
     <string name="choose_phone_number">Выберите номер телефона</string>
     <string name="cancel">Отмена</string>
     <string name="email_icon">"📧 "</string>
+    <string name="industry_input">Введите отрасль</string>
+    <string name="choose_button">Выбрать</string>
+    <string name="find_or_clean">find or clean</string>
+    <string name="checkbox">checkbox</string>
+    <string name="item_industry_description">IT</string>
 </resources>
