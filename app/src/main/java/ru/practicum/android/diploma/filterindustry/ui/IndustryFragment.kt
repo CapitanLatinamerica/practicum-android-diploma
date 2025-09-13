@@ -13,7 +13,7 @@ class IndustryFragment : Fragment() {
     private var _binding: FragmentIndustryBinding? = null
     private val binding: FragmentIndustryBinding
         get() = _binding!!
-    private val adapter = IndustryAdapter(onItemClick = { industry ->
+    private var adapter = IndustryAdapter(onItemClick = { industry ->
         // Обработка клика по элементу
         Toast.makeText(requireContext(), "Выбрана отрасль: ${industry.name}", Toast.LENGTH_SHORT).show()
         // При необходимости передать выбор в FilteringFragment или закрыть фрагмент
@@ -34,28 +34,30 @@ class IndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter = IndustryAdapter { selectedIndustry ->
+            adapter.selectIndustry(selectedIndustry)
+            updateApplyButtonVisibility()
+        }
+        binding.industryRecyclerView.adapter = adapter
+
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustryState.Content -> {
-                    Toast.makeText(requireActivity(), "${state.industryList}", Toast.LENGTH_SHORT).show()
+                    adapter.updateItems(state.industryList, selectedId = null)
+                    updateApplyButtonVisibility()
                 }
-
                 IndustryState.Error -> {
-                    Toast.makeText(requireActivity(), "$state", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+        viewModel.getIndustries()
 
-        binding.industryRecyclerView.adapter = adapter
-        viewModel.industryState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is IndustryState.Content -> adapter.updateItems(state.industryList, selectedId = null)
-                is IndustryState.Error ->
-                    Toast.makeText(requireContext(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
-            }
+        binding.applyButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Выбрана отрасль: ${adapter.selectedIndustryId}", Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.getIndustries()
+        updateApplyButtonVisibility()
     }
 
     private fun setupToolbar() {
@@ -63,6 +65,10 @@ class IndustryFragment : Fragment() {
             // Возврат на предыдущий экран
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun updateApplyButtonVisibility() {
+        binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
