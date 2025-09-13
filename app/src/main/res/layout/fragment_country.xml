@@ -41,4 +41,28 @@
         app:layout_constraintStart_toEndOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:listitem="@layout/country_item" />
+
+    <ImageView
+        android:id="@+id/placeholderImage"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="223dp"
+        android:src="@drawable/error_region"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/placeholderText"
+        style="@style/TextMedium22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/error_region"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>
