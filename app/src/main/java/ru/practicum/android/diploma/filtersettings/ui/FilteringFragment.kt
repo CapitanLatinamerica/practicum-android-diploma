@@ -104,6 +104,10 @@ class FilteringFragment : Fragment() {
             }
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
     }
 
     // Для проверки текстинуптов
