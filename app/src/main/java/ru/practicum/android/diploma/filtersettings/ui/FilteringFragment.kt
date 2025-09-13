@@ -98,6 +98,16 @@ class FilteringFragment : Fragment() {
             }
         }
 
+        binding.workplaceEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
+            }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
     }
 
     // Для проверки текстинуптов
