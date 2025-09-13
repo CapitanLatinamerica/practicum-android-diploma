@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
@@ -89,6 +90,12 @@ class FilteringFragment : Fragment() {
 
         binding.salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onOnlyWithSalaryToggled(isChecked)
+        }
+
+        binding.industryEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
+            }
         }
 
     }
