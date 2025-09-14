@@ -47,6 +47,11 @@ class RetrofitNetworkClientTest {
         )
     }
 
+    @Before
+    fun shutDownServer() {
+        server.shutdown()
+    }
+
     @Test
     fun should_get_vacancies() = runBlocking {
         val responseBody = JsonApiMock.getResponseFromFile("vacancies.json")
