@@ -102,4 +102,6 @@
     <string name="find_or_clean">find or clean</string>
     <string name="checkbox">checkbox</string>
     <string name="item_industry_description">IT</string>
+    <string name="no_list_of_industries">Не удалось получить список</string>
+    <string name="industries_does_nt_exist">When a list of industries does\'nt exist</string>
 </resources>

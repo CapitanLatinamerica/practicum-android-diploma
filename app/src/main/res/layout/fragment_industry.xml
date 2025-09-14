@@ -63,12 +63,13 @@
     <ScrollView
         android:id="@+id/industryScrolls"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/zero_dp"
         android:layout_marginTop="@dimen/padding_16"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/industryEditText">
+        app:layout_constraintTop_toBottomOf="@id/industryEditText"
+        app:layout_constraintBottom_toTopOf="@id/applyButton">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/industryRecyclerView"
@@ -87,9 +88,35 @@
         android:text="@string/choose_button"
         android:textAppearance="@style/TextMedium16"
         android:textColor="@color/white_universal"
+        android:visibility="gone"
         app:cornerRadius="@dimen/radius_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/placeholderImage"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/fav_ph_height"
+        android:contentDescription="@string/industries_does_nt_exist"
+        android:src="@drawable/error_region"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/placeholderText"
+        style="@style/TextMedium22"
+        android:layout_width="@dimen/ph_text_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_16"
+        android:gravity="center"
+        android:text="@string/no_list_of_industries"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

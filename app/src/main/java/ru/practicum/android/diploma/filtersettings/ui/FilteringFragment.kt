@@ -98,12 +98,35 @@ class FilteringFragment : Fragment() {
 
         binding.deleteButton.setOnClickListener {
             viewModel.clearAllParams()
+
         }
+//        binding.industryEdit.apply {
+//            setOnClickListener {
+//                val selectedIndustryId = viewModel.selectedIndustryId ?: ""
+//                val action = FilteringFragmentDirections.actionFilteringFragmentToIndustryFragment(selectedIndustryId)
+//                findNavController().navigate(action)
+//            }
+//        }
+//
+//        binding.workplaceEdit.apply {
+//            setOnClickListener {
+//                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
+//            }
+//        }
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
+//        Обновляем состояние выбранной отрасли во ViewModel
+//        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
+//            val selectedId = bundle.getString("selectedIndustryId")
+//            val selectedName = bundle.getString("selectedIndustryName")
+//
+//            if (!selectedId.isNullOrEmpty() && !selectedName.isNullOrEmpty()) {
+//                viewModel.onIndustrySelected(selectedName)
+//            }
+//        }
     }
 
     private fun renderState(state: FilterState) {

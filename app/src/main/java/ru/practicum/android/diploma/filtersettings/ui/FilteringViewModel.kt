@@ -34,6 +34,16 @@ class FilteringViewModel(
             initialized = true
         }
     }
+//    val selectedIndustryId: String?
+//        get() = _filterState.value?.industry.takeIf { !it.isNullOrEmpty() }
+//
+//    fun onSalaryTextChanged(text: String) {
+//        _filterState.value = _filterState.value?.copy(salary = text)
+//    }
+//
+//    fun onOnlyWithSalaryToggled(isChecked: Boolean) {
+//        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
+//    }
 
     fun onWorkplaceSelected(value: String) {
         updateAndSave { it.copy(workplace = value) }
