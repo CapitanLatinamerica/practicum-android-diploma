@@ -118,7 +118,7 @@ class FilteringFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-//        // Обновляем состояние выбранной отрасли во ViewModel
+//        Обновляем состояние выбранной отрасли во ViewModel
 //        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
 //            val selectedId = bundle.getString("selectedIndustryId")
 //            val selectedName = bundle.getString("selectedIndustryName")
@@ -127,8 +127,7 @@ class FilteringFragment : Fragment() {
 //                viewModel.onIndustrySelected(selectedName)
 //            }
 //        }
-//
-//    }
+    }
 
     private fun renderState(state: FilterState) {
         handleWorkplaceState(state)
