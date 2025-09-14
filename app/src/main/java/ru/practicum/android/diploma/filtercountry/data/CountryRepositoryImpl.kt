@@ -15,7 +15,6 @@ class CountryRepositoryImpl(
     companion object {
         private const val SUCCESS = 200
         private const val ERROR = 500
-        private const val INTERNET_ERROR = -1
     }
 
     override suspend fun getCountries(): Resource<List<Area>> {
@@ -24,7 +23,7 @@ class CountryRepositoryImpl(
 
             when {
                 response is AreasResponse && response.resultCode == SUCCESS -> {
-                    val countries = response.areaDto.orEmpty()
+                    val countries = response.areaDto
                         .filter { it.parentId.isNullOrEmpty() }
                         .map { mapper.mapAreaDtoToArea(it) }
 
@@ -35,7 +34,7 @@ class CountryRepositoryImpl(
                     }
                 }
 
-                response is AreasResponse -> {
+                response is AreasResponse && response.resultCode == ERROR -> {
                     Resource.Error("Ошибка API: код ${response.resultCode}")
                 }
 
@@ -47,4 +46,4 @@ class CountryRepositoryImpl(
             Resource.Error("Исключение: ${e.message}")
         }
     }
-    }
+}

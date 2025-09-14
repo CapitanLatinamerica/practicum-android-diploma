@@ -17,18 +17,18 @@ class CountryViewModel(
 
     fun getCountries() {
         viewModelScope.launch {
-                val result = countryInteractor.getCountries()
-                when (result) {
-                    is Resource.Success -> {
-                        val countries = result.data
-                        _countryState.value = CountryState.Content(countries!!)
-
-                    }
-
-                    is Resource.Error -> {
-                        _countryState.value = CountryState.Error(result.message ?: "Неизвестная ошибка")
-                    }
+            _countryState.value = CountryState.Loading
+            val result = countryInteractor.getCountries()
+            when (result) {
+                is Resource.Success -> {
+                    val countries = result.data
+                    _countryState.value = countries?.let { CountryState.Content(it) }
                 }
+
+                is Resource.Error -> {
+                    _countryState.value = CountryState.Error(result.message ?: "Неизвестная ошибка")
+                }
+            }
         }
     }
 }

@@ -55,11 +55,20 @@ class CountryFragment : Fragment() {
             when (state) {
                 is CountryState.Content -> showContent(state.countries)
                 is CountryState.Error -> showError()
+                is CountryState.Loading -> showLoading()
             }
         }
     }
 
+    private fun showLoading() {
+        binding.progressbar.visibility = View.VISIBLE
+        binding.countryRecyclerView.visibility = View.GONE
+        binding.placeholderImage.visibility = View.GONE
+        binding.placeholderText.visibility = View.GONE
+    }
+
     private fun showContent(countries: List<Area>) {
+        binding.progressbar.visibility = View.GONE
         binding.countryRecyclerView.visibility = View.VISIBLE
         binding.placeholderImage.visibility = View.GONE
         binding.placeholderText.visibility = View.GONE
@@ -68,6 +77,7 @@ class CountryFragment : Fragment() {
     }
 
     private fun showError() {
+        binding.progressbar.visibility = View.GONE
         binding.countryRecyclerView.visibility = View.GONE
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
