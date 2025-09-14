@@ -23,9 +23,10 @@ class CountryRepositoryImpl(
 
         return when (response.resultCode) {
             SUCCESS -> {
-                val countriesList = response.areaDto.map { item ->
-                    mapper.mapAreaDtoToArea(item)
-                }
+                val countriesList = response.areaDto
+                    .filter { it.parentId.isNullOrEmpty() }
+                    .map { mapper.mapAreaDtoToArea(it) }
+
                 Resource.Success(countriesList)
             }
 
