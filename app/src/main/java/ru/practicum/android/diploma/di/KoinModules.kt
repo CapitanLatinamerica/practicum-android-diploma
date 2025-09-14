@@ -34,6 +34,7 @@ import ru.practicum.android.diploma.filtercountry.data.CountryRepositoryImpl
 import ru.practicum.android.diploma.filtercountry.domain.CountryInteractor
 import ru.practicum.android.diploma.filtercountry.domain.CountryRepository
 import ru.practicum.android.diploma.filtercountry.domain.impl.CountryInteractorImpl
+import ru.practicum.android.diploma.filtercountry.ui.CountryViewModel
 import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
 import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
 import ru.practicum.android.diploma.filterworkplace.ui.WorkplaceViewModel
@@ -180,6 +181,8 @@ val industryModule = module {
 
 val workplaceModule = module {
     viewModel { WorkplaceViewModel() }
+
+    viewModel { CountryViewModel(get()) }
 
     factory { AreaMapper }
 
