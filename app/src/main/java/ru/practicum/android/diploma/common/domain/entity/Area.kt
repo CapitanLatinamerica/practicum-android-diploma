@@ -8,4 +8,4 @@ data class Area(
     @SerializedName("name") val name: String,
     @SerializedName("parentId") val parentId: Int?,
     @SerializedName("areas") val areas: List<Area>
-): Serializable
+) : Serializable

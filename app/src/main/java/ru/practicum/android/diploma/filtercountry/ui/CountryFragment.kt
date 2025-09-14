@@ -21,7 +21,8 @@ class CountryFragment : Fragment() {
 
     private val adapter = AreaAdapter { area ->
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
-            "selectedCountry", area
+            "selectedCountry",
+            area
         )
         findNavController().navigateUp()
     }

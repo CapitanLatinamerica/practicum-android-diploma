@@ -55,7 +55,6 @@ class WorkplaceFragment : Fragment() {
                 binding.countryEdit.setText(selectedArea.name)
             }
 
-
         binding.regionEdit.apply {
             setOnClickListener {
                 findNavController().navigate(R.id.action_workplaceFragment_to_regionFragment)

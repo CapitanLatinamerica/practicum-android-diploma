@@ -18,32 +18,28 @@ class CountryRepositoryImpl(
     }
 
     override suspend fun getCountries(): Resource<List<Area>> {
-        return try {
-            val response = networkClient.doRequest(AreasRequest())
+        val response = networkClient.doRequest(AreasRequest())
 
-            when {
-                response is AreasResponse && response.resultCode == SUCCESS -> {
-                    val countries = response.areaDto
-                        .filter { it.parentId.isNullOrEmpty() }
-                        .map { mapper.mapAreaDtoToArea(it) }
+        return when {
+            response is AreasResponse && response.resultCode == SUCCESS -> {
+                val countries = response.areaDto
+                    .filter { it.parentId.isNullOrEmpty() }
+                    .map { mapper.mapAreaDtoToArea(it) }
 
-                    if (countries.isEmpty()) {
-                        Resource.Error("Список стран пуст")
-                    } else {
-                        Resource.Success(countries)
-                    }
-                }
-
-                response is AreasResponse && response.resultCode == ERROR -> {
-                    Resource.Error("Ошибка API: код ${response.resultCode}")
-                }
-
-                else -> {
-                    Resource.Error("Неверный формат ответа")
+                if (countries.isEmpty()) {
+                    Resource.Error("Список стран пуст")
+                } else {
+                    Resource.Success(countries)
                 }
             }
-        } catch (e: Exception) {
-            Resource.Error("Исключение: ${e.message}")
+
+            response is AreasResponse && response.resultCode == ERROR -> {
+                Resource.Error("Ошибка API: код ${response.resultCode}")
+            }
+
+            else -> {
+                Resource.Error("Неверный формат ответа")
+            }
         }
     }
 }
