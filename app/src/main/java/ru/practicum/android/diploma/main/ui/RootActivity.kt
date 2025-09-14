@@ -29,7 +29,9 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.vacancyDetailsFragment ||
                 destination.id == R.id.filteringFragment ||
-                destination.id == R.id.industryFragment
+                destination.id == R.id.industryFragment ||
+                destination.id == R.id.workplaceFragment ||
+                destination.id == R.id.countryFragment
             ) {
                 binding.bottomNavigationView.visibility = View.GONE
             } else {

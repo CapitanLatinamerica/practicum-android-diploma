@@ -21,8 +21,6 @@ interface VacancyRepository {
 
     fun deleteById(id: String): Boolean
 
-    fun getAreas(): List<AreaDto>
-
     fun deleteVacancyFromFavorites(id: String)
 
 }

@@ -17,6 +17,7 @@ import ru.practicum.android.diploma.ErrorMessageProviderImpl
 import ru.practicum.android.diploma.common.data.IndustryRepositoryImpl
 import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.common.data.db.AppDataBase
+import ru.practicum.android.diploma.common.data.mapper.AreaMapper
 import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
 import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCase
@@ -31,6 +32,11 @@ import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
+import ru.practicum.android.diploma.filtercountry.data.CountryRepositoryImpl
+import ru.practicum.android.diploma.filtercountry.domain.CountryInteractor
+import ru.practicum.android.diploma.filtercountry.domain.CountryRepository
+import ru.practicum.android.diploma.filtercountry.domain.impl.CountryInteractorImpl
+import ru.practicum.android.diploma.filtercountry.ui.CountryViewModel
 import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
 import ru.practicum.android.diploma.filtersettings.data.FilterStorage
 import ru.practicum.android.diploma.filtersettings.data.impl.FilteringRepositoryImpl
@@ -202,4 +208,19 @@ val industryModule = module {
 
 val workplaceModule = module {
     viewModel { WorkplaceViewModel() }
+
+    viewModel { CountryViewModel(get()) }
+
+    factory { AreaMapper }
+
+    single<CountryRepository> {
+        CountryRepositoryImpl(
+            networkClient = get(),
+            mapper = get()
+        )
+    }
+
+    single<CountryInteractor> {
+        CountryInteractorImpl(get())
+    }
 }
