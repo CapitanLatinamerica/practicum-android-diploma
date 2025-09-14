@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -47,7 +48,7 @@ class RetrofitNetworkClientTest {
         )
     }
 
-    @Before
+    @After
     fun shutDownServer() {
         server.shutdown()
     }

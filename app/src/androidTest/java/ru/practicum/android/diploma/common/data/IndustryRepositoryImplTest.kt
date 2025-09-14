@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -43,7 +44,7 @@ class IndustryRepositoryImplTest {
         )
     }
 
-    @Before
+    @After
     fun shutDownServer() {
         server.shutdown()
     }
@@ -62,17 +63,31 @@ class IndustryRepositoryImplTest {
         assertEquals(3, resource.data?.size)
     }
 
+    @Test
     fun should_return_error() = runBlocking {
         val responseBody = ""
 
-        server.enqueue(MockResponse().setResponseCode(-1).setBody(responseBody))
+        server.enqueue(MockResponse().setResponseCode(345).setBody(responseBody))
         val industryRepositoryImpl = IndustryRepositoryImpl(
             networkClient,
             IndustryMapper
         )
         val resource = industryRepositoryImpl.getIndustries()
-        assertEquals(3, resource.data?.size)
-        assertEquals("Перевозки, логистика, склад, ВЭД", resource.data?.get(0)?.name)
-        assertEquals(3, resource.data?.size)
+        assertEquals("Ошибка: код 345", resource.message)
+
     }
+
+    @Test
+    fun should_return_server_error_500() = runBlocking {
+        val responseBody = ""
+
+        server.enqueue(MockResponse().setResponseCode(500).setBody(responseBody))
+        val industryRepositoryImpl = IndustryRepositoryImpl(
+            networkClient,
+            IndustryMapper
+        )
+        val resource = industryRepositoryImpl.getIndustries()
+        assertEquals("Ошибка сервера", resource.message)
+    }
+
 }
