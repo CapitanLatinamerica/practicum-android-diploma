@@ -63,7 +63,7 @@ class RetrofitNetworkClientTest {
 
     @Test
     fun should_get_vacancy() = runBlocking {
-        val responseBody = JsonApiMock.getResponseFromFile("vacancy.js")
+        val responseBody = JsonApiMock.getResponseFromFile("vacancy.json")
         server.enqueue(
             MockResponse().setBody(
                 responseBody
