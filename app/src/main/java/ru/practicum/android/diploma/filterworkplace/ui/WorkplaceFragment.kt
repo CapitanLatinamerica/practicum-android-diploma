@@ -12,6 +12,7 @@ import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentWorkplaceBinding
 
 class WorkplaceFragment : Fragment() {
@@ -38,22 +39,22 @@ class WorkplaceFragment : Fragment() {
             renderState(state)
         }
 
-//        binding.countryEdit.setOnClickListener {
-//            showSelectionDialog(isWorkplace = true)
-//        }
-//        binding.regionEdit.setOnClickListener {
-//            showSelectionDialog(isWorkplace = false)
-//        }
-
         viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
             handleVisibilityButtonsState(visible)
         }
 
-        binding.countryEdit.apply {
-            setOnClickListener {
-                findNavController().navigate(R.id.action_workplaceFragment_to_countryFragment)
-            }
+        binding.countryEdit.setOnClickListener {
+            val action = WorkplaceFragmentDirections.actionWorkplaceFragmentToCountryFragment()
+            findNavController().navigate(action)
         }
+
+        val navBackStackEntry = findNavController().getBackStackEntry(R.id.workplaceFragment)
+        navBackStackEntry.savedStateHandle.getLiveData<Area>("selectedCountry")
+            .observe(viewLifecycleOwner) { selectedArea ->
+                viewModel.onCountrySelected(selectedArea.name)
+                binding.countryEdit.setText(selectedArea.name)
+            }
+
 
         binding.regionEdit.apply {
             setOnClickListener {
@@ -64,24 +65,7 @@ class WorkplaceFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-
     }
-
-//    // Для проверки текстинуптов
-//    private fun showSelectionDialog(isWorkplace: Boolean) {
-//        val items = listOf("Office", "Remote", "Hybrid")
-//        MaterialAlertDialogBuilder(requireContext())
-//            .setTitle(if (isWorkplace) "Select Workplace" else "Select Industry")
-//            .setItems(items.toTypedArray()) { _, which ->
-//                val selected = items[which]
-//                if (isWorkplace) {
-//                    viewModel.onCountrySelected(selected)
-//                } else {
-//                    viewModel.onRegionSelected(selected)
-//                }
-//            }
-//            .show()
-//    }
 
     private fun renderState(state: WorkplaceState) {
         val countryCurrent = binding.countryEdit.text?.toString() ?: ""
@@ -92,6 +76,12 @@ class WorkplaceFragment : Fragment() {
         val regionCurrent = binding.regionEdit.text?.toString() ?: ""
         if (regionCurrent != state.region) {
             binding.regionEdit.setText(state.region)
+        }
+
+        state.country?.let {
+            updateTextInputLayoutAppearance(binding.country, it) {
+                viewModel.clearCountry()
+            }
         }
 
         state.country?.let {
