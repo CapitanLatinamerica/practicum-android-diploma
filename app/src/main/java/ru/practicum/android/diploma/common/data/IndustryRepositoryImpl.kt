@@ -20,11 +20,11 @@ class IndustryRepositoryImpl(
     }
 
     override suspend fun getIndustries(): Resource<List<Industry>> {
-        val response = networkClient.doRequest(IndustriesRequest()) as IndustriesResponse
+        val response = networkClient.doRequest(IndustriesRequest())
 
         return when (response.resultCode) {
             SUCCESS -> {
-                val industryList = response.industriesDto.map { item ->
+                val industryList = (response as IndustriesResponse).industriesDto.map { item ->
                     mapper.map(item)
                 }
                 Resource.Success(industryList)

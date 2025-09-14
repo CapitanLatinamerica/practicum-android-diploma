@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -30,7 +32,13 @@ import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
 import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
+import ru.practicum.android.diploma.filtersettings.data.FilterStorage
+import ru.practicum.android.diploma.filtersettings.data.impl.FilteringRepositoryImpl
+import ru.practicum.android.diploma.filtersettings.domain.FilteringRepository
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
+import ru.practicum.android.diploma.filtersettings.domain.impl.FilteringUseCaseImpl
 import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
+import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
 import ru.practicum.android.diploma.filterworkplace.ui.WorkplaceViewModel
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
@@ -150,7 +158,26 @@ val favouritesModule = module {
 // Модуль для экрана "фильтры"
 val filteringModule = module {
 
-    viewModel { FilteringViewModel() }
+    single<SharedPreferences> {
+        androidContext().getSharedPreferences(
+            FilterStorage.FILTER_PARAMETERS_NAME,
+            Context.MODE_PRIVATE
+        )
+    }
+
+    single { FilterStorage(get(), get()) }
+
+    single<FilteringRepository> {
+        FilteringRepositoryImpl(get())
+    }
+
+    single<FilteringUseCase> {
+        FilteringUseCaseImpl(get())
+    }
+
+    factory<FilterParametersMapper> { FilterParametersMapper() }
+
+    viewModel { FilteringViewModel(get(), get()) }
 }
 
 val industryModule = module {

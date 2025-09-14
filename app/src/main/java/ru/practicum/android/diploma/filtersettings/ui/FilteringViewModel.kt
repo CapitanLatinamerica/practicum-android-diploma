@@ -3,44 +3,95 @@ package ru.practicum.android.diploma.filtersettings.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
+import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
 
-class FilteringViewModel : ViewModel() {
+class FilteringViewModel(
+    private val filteringUseCase: FilteringUseCase,
+    private val mapper: FilterParametersMapper
+) : ViewModel() {
 
     private val _filterState = MutableLiveData(FilterState())
     val filterState: LiveData<FilterState> = _filterState
 
+    private val _buttonsVisibilityState = MutableLiveData(false)
+    val buttonsVisibilityState: LiveData<Boolean> = _buttonsVisibilityState
+
     private var initialState: FilterState = FilterState()
 
-    val buttonsVisibilityState: LiveData<Boolean> = _filterState.map { current ->
-        current != initialState
-    }
+    private var initialized = false
 
-    val selectedIndustryId: String?
-        get() = _filterState.value?.industry.takeIf { !it.isNullOrEmpty() }
+    init {
+        viewModelScope.launch {
+            val savedParams = filteringUseCase.loadParameters()
+            val starting = if (savedParams != null) mapper.mapParamsToUi(savedParams) else FilterState()
+            initialState = starting
 
-    fun onSalaryTextChanged(text: String) {
-        _filterState.value = _filterState.value?.copy(salary = text)
+            _filterState.postValue(starting)
+            _buttonsVisibilityState.postValue(starting != initialState)
+            initialized = true
+        }
     }
-
-    fun onOnlyWithSalaryToggled(isChecked: Boolean) {
-        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
-    }
+//    val selectedIndustryId: String?
+//        get() = _filterState.value?.industry.takeIf { !it.isNullOrEmpty() }
+//
+//    fun onSalaryTextChanged(text: String) {
+//        _filterState.value = _filterState.value?.copy(salary = text)
+//    }
+//
+//    fun onOnlyWithSalaryToggled(isChecked: Boolean) {
+//        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
+//    }
 
     fun onWorkplaceSelected(value: String) {
-        _filterState.value = _filterState.value?.copy(workplace = value)
+        updateAndSave { it.copy(workplace = value) }
     }
 
     fun onIndustrySelected(value: String) {
-        _filterState.value = _filterState.value?.copy(industry = value)
+        updateAndSave { it.copy(industry = value) }
+    }
+
+    fun onSalaryTextChanged(text: String) {
+        updateAndSave { it.copy(salary = text) }
+    }
+
+    fun onOnlyWithSalaryToggled(isChecked: Boolean) {
+        updateAndSave { it.copy(onlyWithSalary = isChecked) }
     }
 
     fun clearWorkplace() {
-        _filterState.value = _filterState.value?.copy(workplace = "")
+        updateAndSave { it.copy(workplace = "") }
     }
 
     fun clearIndustry() {
-        _filterState.value = _filterState.value?.copy(industry = "")
+        updateAndSave { it.copy(industry = "") }
+    }
+
+    private fun updateAndSave(transform: (FilterState) -> FilterState) {
+        val currentState = _filterState.value ?: FilterState()
+        val newState = transform(currentState)
+
+        if (newState == currentState) return
+        _filterState.value = newState
+
+        if (!initialized) return
+
+        _buttonsVisibilityState.postValue(newState != initialState)
+        viewModelScope.launch {
+            filteringUseCase.saveParameters(mapper.mapParamsToDomain(newState))
+        }
+    }
+
+    fun clearAllParams() {
+        val newParams = FilterState()
+        _filterState.value = newParams
+
+        viewModelScope.launch {
+            filteringUseCase.clearParameters()
+        }
+        _buttonsVisibilityState.value = newParams != initialState
     }
 
 }

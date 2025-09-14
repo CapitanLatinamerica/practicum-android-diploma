@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -77,11 +76,16 @@ class FilteringFragment : Fragment() {
 
         }
 
-        binding.workplaceEdit.setOnClickListener {
-            showSelectionDialog(isWorkplace = true)
+        binding.workplaceEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
+            }
         }
-        binding.industryEdit.setOnClickListener {
-            showSelectionDialog(isWorkplace = false)
+
+        binding.industryEdit.apply {
+            setOnClickListener {
+                findNavController().navigate(R.id.action_filteringFragment_to_industryFragment)
+            }
         }
 
         viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
@@ -92,76 +96,49 @@ class FilteringFragment : Fragment() {
             viewModel.onOnlyWithSalaryToggled(isChecked)
         }
 
-        binding.industryEdit.apply {
-            setOnClickListener {
-                val selectedIndustryId = viewModel.selectedIndustryId ?: ""
-                val action = FilteringFragmentDirections.actionFilteringFragmentToIndustryFragment(selectedIndustryId)
-                findNavController().navigate(action)
-            }
-        }
+        binding.deleteButton.setOnClickListener {
+            viewModel.clearAllParams()
 
-        binding.workplaceEdit.apply {
-            setOnClickListener {
-                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
-            }
         }
+//        binding.industryEdit.apply {
+//            setOnClickListener {
+//                val selectedIndustryId = viewModel.selectedIndustryId ?: ""
+//                val action = FilteringFragmentDirections.actionFilteringFragmentToIndustryFragment(selectedIndustryId)
+//                findNavController().navigate(action)
+//            }
+//        }
+//
+//        binding.workplaceEdit.apply {
+//            setOnClickListener {
+//                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
+//            }
+//        }
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        // Обновляем состояние выбранной отрасли во ViewModel
-        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
-            val selectedId = bundle.getString("selectedIndustryId")
-            val selectedName = bundle.getString("selectedIndustryName")
-
-            if (!selectedId.isNullOrEmpty() && !selectedName.isNullOrEmpty()) {
-                viewModel.onIndustrySelected(selectedName)
-            }
-        }
-
-    }
-
-    // Для проверки текстинуптов
-    private fun showSelectionDialog(isWorkplace: Boolean) {
-        val items = listOf("Office", "Remote", "Hybrid")
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(if (isWorkplace) "Select Workplace" else "Select Industry")
-            .setItems(items.toTypedArray()) { _, which ->
-                val selected = items[which]
-                if (isWorkplace) {
-                    viewModel.onWorkplaceSelected(selected)
-                } else {
-                    viewModel.onIndustrySelected(selected)
-                }
-            }
-            .show()
-    }
+//        // Обновляем состояние выбранной отрасли во ViewModel
+//        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
+//            val selectedId = bundle.getString("selectedIndustryId")
+//            val selectedName = bundle.getString("selectedIndustryName")
+//
+//            if (!selectedId.isNullOrEmpty() && !selectedName.isNullOrEmpty()) {
+//                viewModel.onIndustrySelected(selectedName)
+//            }
+//        }
+//
+//    }
 
     private fun renderState(state: FilterState) {
-        if (!binding.salaryEditText.isFocused) {
-            val current = binding.salaryEditText.text?.toString() ?: ""
-            if (current != state.salary) {
-                binding.salaryEditText.setText(state.salary)
-            }
-        }
+        handleWorkplaceState(state)
 
-        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
-        if (wpCurrent != state.workplace) {
-            binding.workplaceEdit.setText(state.workplace)
-        }
+        handleIndustryState(state)
 
-        val indCurrent = binding.industryEdit.text?.toString() ?: ""
-        if (indCurrent != state.industry) {
-            binding.industryEdit.setText(state.industry)
-        }
+        handleSalaryState(state)
 
-        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
-            viewModel.clearWorkplace()
-        }
-        updateTextInputLayoutAppearance(binding.industry, state.industry) {
-            viewModel.clearIndustry()
-        }
+        handleCheckBoxSalaryState(state)
+
     }
 
     private fun updateClearButtonVisibility() {
@@ -226,5 +203,44 @@ class FilteringFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun handleWorkplaceState(state: FilterState) {
+        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
+        if (wpCurrent != state.workplace) {
+            binding.workplaceEdit.setText(state.workplace)
+        }
+        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+            viewModel.clearWorkplace()
+        }
+    }
+
+    private fun handleIndustryState(state: FilterState) {
+        val indCurrent = binding.industryEdit.text?.toString() ?: ""
+        if (indCurrent != state.industry) {
+            binding.industryEdit.setText(state.industry)
+        }
+        updateTextInputLayoutAppearance(binding.industry, state.industry) {
+            viewModel.clearIndustry()
+        }
+    }
+
+    private fun handleSalaryState(state: FilterState) {
+        if (!binding.salaryEditText.isFocused) {
+            val current = binding.salaryEditText.text?.toString() ?: ""
+            if (current != state.salary) {
+                binding.salaryEditText.setText(state.salary)
+            }
+        }
+    }
+
+    private fun handleCheckBoxSalaryState(state: FilterState) {
+        with(binding) {
+            salaryCheckBox.setOnCheckedChangeListener(null)
+            salaryCheckBox.isChecked = state.onlyWithSalary
+            salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onOnlyWithSalaryToggled(isChecked)
+            }
+        }
     }
 }

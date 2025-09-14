@@ -145,5 +145,3 @@ class WorkplaceFragment : Fragment() {
         _binding = null
     }
 }
-
-
