@@ -65,6 +65,10 @@ class WorkplaceFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.applyButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun renderState(state: WorkplaceState) {
