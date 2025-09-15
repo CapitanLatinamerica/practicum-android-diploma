@@ -29,11 +29,11 @@ class WorkplaceViewModel(
                 // Восстанавливаем состояние из сохраненных параметров
                 _workplaceState.postValue(
                     WorkplaceState(
-                        country = params.workplace,
+                        country = params.country,
                         region = "" // Регион пока не используется в FilterParameters
                     )
                 )
-                _hasSelectedCountry.postValue(params.workplace.isNotEmpty())
+                _hasSelectedCountry.postValue(params.country.isNotEmpty())
             }
         }
     }
@@ -63,7 +63,7 @@ class WorkplaceViewModel(
     private fun saveWorkplaceToPreferences(workplace: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
-            val updatedParams = currentParams.copy(workplace = workplace)
+            val updatedParams = currentParams.copy(country = workplace)
             filteringUseCase.saveParameters(updatedParams)
         }
     }

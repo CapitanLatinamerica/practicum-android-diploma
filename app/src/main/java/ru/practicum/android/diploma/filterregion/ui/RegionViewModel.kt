@@ -17,22 +17,19 @@ class RegionViewModel(
     val regionState: LiveData<RegionState> = _regionState
 
     // Запрос списка регионов для указанного countryId
-    fun getRegions(countryId: String) {
+    fun getRegions(countryId: Int) {
         viewModelScope.launch {
             _regionState.value = RegionState.Loading
-            when(val result = interactor.getRegions(countryId)) {
+            when(val result = interactor.getRegions(countryId.toString())) {
                 is Resource.Success -> {
-                    Log.d("RegionViewModel", "Успех: ${result.data?.size ?: 0} регионов")
                     val regions = result.data
                     if (regions != null && regions.isNotEmpty()) {
                         _regionState.value = RegionState.Content(regions)
                     } else {
-                        Log.w("RegionViewModel", "Регионы null или пустые")
                         _regionState.value = RegionState.Error("Нет данных о регионах")
                     }
                 }
                 is Resource.Error -> {
-                    Log.e("RegionViewModel", "Ошибка: ${result.message}")
                     _regionState.value = RegionState.Error(result.message ?: "Ошибка загрузки")
                 }
             }

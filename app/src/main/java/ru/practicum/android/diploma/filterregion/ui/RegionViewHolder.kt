@@ -19,7 +19,10 @@ class RegionViewHolder(
     fun bind(region: Area) {
         regionName.text = region.name
         itemView.setOnClickListener {
-            onItemClickListener(region)
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onItemClickListener(region)
+            }
         }
     }
 

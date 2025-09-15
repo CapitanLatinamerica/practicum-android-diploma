@@ -19,47 +19,37 @@ class RegionRepositoryImpl(
         private const val ERROR = 500
     }
 
-    override suspend fun getRegions(countryName: String): Resource<List<Area>> {
-        Log.d("RegionRepository", "Поиск регионов для страны: $countryName")
+    override suspend fun getRegions(countryId: String): Resource<List<Area>> {
+        Log.d("RegionRepository", "Поиск регионов для countryId: $countryId")
 
-        // Сначала получаем ВСЕ области чтобы найти ID страны
-        val allAreasResponse = networkClient.doRequest(AreasRequest())
+        val response = networkClient.doRequest(AreasRequest())
 
         return when {
-            allAreasResponse is AreasResponse && allAreasResponse.resultCode == SUCCESS -> {
-                // 2. Находим страну по имени
-                val country = allAreasResponse.areaDto.find { it.name == countryName }
+            response is AreasResponse && response.resultCode == SUCCESS -> {
+                // 1. Находим страну по ID
+                val country = response.areaDto.find { it.id == countryId }
 
                 if (country == null) {
-                    Log.w("RegionRepository", "Страна '$countryName' не найдена")
+                    Log.w("RegionRepository", "Страна с ID '$countryId' не найдена")
                     Resource.Error("Страна не найдена")
                 } else {
-                    Log.d("RegionRepository", "Найдена страна: ${country.name} (ID: ${country.id})")
+                    // 2. Берем вложенные регионы из поля areas
+                    val regions = country.areas?.map { mapper.mapAreaDtoToArea(it) } ?: emptyList()
 
-                    // 3. Теперь ищем регионы для этой страны
-                    val regionsResponse = networkClient.doRequest(AreasRequest(parentId = country.id))
+                    Log.d("RegionRepository", "Найдено регионов: ${regions.size} для страны '${country.name}'")
 
-                    when {
-                        regionsResponse is AreasResponse && regionsResponse.resultCode == SUCCESS -> {
-                            val regions = regionsResponse.areaDto
-                                .map { mapper.mapAreaDtoToArea(it) }
-
-                            Log.d("RegionRepository", "Найдено регионов: ${regions.size}")
-
-                            if (regions.isEmpty()) {
-                                Resource.Error("Список регионов пуст")
-                            } else {
-                                Resource.Success(regions)
-                            }
-                        }
-                        else -> {
-                            Resource.Error("Ошибка при загрузке регионов")
-                        }
+                    if (regions.isEmpty()) {
+                        Resource.Error("Список регионов пуст")
+                    } else {
+                        Resource.Success(regions)
                     }
                 }
             }
+            response is AreasResponse && response.resultCode == ERROR -> {
+                Resource.Error("Ошибка API: код ${response.resultCode}")
+            }
             else -> {
-                Resource.Error("Ошибка при загрузке списка областей")
+                Resource.Error("Неверный формат ответа")
             }
         }
     }

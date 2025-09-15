@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.filtersettings.ui.FilterState
 class FilterParametersMapper {
     fun mapParamsToUi(params: FilterParameters): FilterState {
         return FilterState(
-            workplace = params.workplace,
+            workplace = params.country,
             industry = params.industry,
             salary = params.salary,
             onlyWithSalary = params.onlyWithSalary
@@ -15,7 +15,7 @@ class FilterParametersMapper {
 
     fun mapParamsToDomain(params: FilterState): FilterParameters {
         return FilterParameters(
-            workplace = params.workplace,
+            country = params.workplace,
             industry = params.industry,
             salary = params.salary,
             onlyWithSalary = params.onlyWithSalary

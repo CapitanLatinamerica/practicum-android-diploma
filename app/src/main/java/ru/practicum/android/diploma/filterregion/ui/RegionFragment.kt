@@ -44,8 +44,15 @@ class RegionFragment : Fragment() {
             lifecycleScope.launch {
                 // Сохраняем выбранный регион в SharedPreferences через FilteringUseCase
                 val currentParams = filteringUseCase.loadParameters() ?: return@launch
-                val updatedParams = currentParams.copy(region = selectedRegion.id.toString())
+
+                Log.d("RegionFragment", "Текущие параметры: $currentParams")
+                val updatedParams = currentParams.copy(
+                    region = selectedRegion.name, // сохраняем название региона
+                    regionId = selectedRegion.id   // сохраняем ID региона
+                )
+
                 filteringUseCase.saveParameters(updatedParams)
+
                 parentFragmentManager.popBackStack()
             }
         }
@@ -72,12 +79,7 @@ class RegionFragment : Fragment() {
     private fun loadRegionsFromUseCase() {
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            Log.d("RegionFragment", "Загружен countryId для запроса регионов: ${params?.workplace}")
-            if (!params?.workplace.isNullOrEmpty()) {
-                viewModel.getRegions(params!!.workplace)
-            } else {
-                Log.w("RegionFragment", "countryId для регионов пустой")
-            }
+            viewModel.getRegions(params!!.countryId)
         }
     }
 

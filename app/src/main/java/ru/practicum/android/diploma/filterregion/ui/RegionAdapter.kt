@@ -19,7 +19,6 @@ class RegionAdapter(
     }
 
     override fun onBindViewHolder(holder: RegionViewHolder, position: Int) {
-        Log.d("RegionAdapter", "onBindViewHolder на позиции: $position")
         val region = regions[position]
         holder.bind(region) // привязка данных региона к ViewHolder
     }
