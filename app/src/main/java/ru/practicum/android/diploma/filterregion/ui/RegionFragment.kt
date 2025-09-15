@@ -72,8 +72,8 @@ class RegionFragment : Fragment() {
                 val updatedParams = currentParams.copy(
                     country = countryName,
                     countryId = selectedRegion.parentId ?: currentParams.countryId,
-                    region = selectedRegion.name, // сохраняем название региона
-                    regionId = selectedRegion.id   // сохраняем ID региона
+                    region = selectedRegion.name,
+                    regionId = selectedRegion.id
                 )
 
                 filteringUseCase.saveParameters(updatedParams)
@@ -95,8 +95,8 @@ class RegionFragment : Fragment() {
             when (state) {
                 is RegionState.Loading -> showLoading()
                 is RegionState.Content -> showContent(state.regions)
-                is RegionState.Empty -> showEmpty(state.message)  // ← Нет результатов
-                is RegionState.Error -> showError(state.message)  // ← Ошибка загрузки
+                is RegionState.Empty -> showEmpty(state.message)
+                is RegionState.Error -> showError(state.message)
             }
         }
     }
@@ -119,8 +119,8 @@ class RegionFragment : Fragment() {
     private fun showEmpty(message: String) {
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.GONE
-        binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)  // ← Кот-мем
-        binding.placeholderText.setText(R.string.no_region)  // ← Нет регионов
+        binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
+        binding.placeholderText.setText(R.string.no_region)
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
         Toast.makeText(requireContext(), "Нет результатов: $message", Toast.LENGTH_SHORT).show()

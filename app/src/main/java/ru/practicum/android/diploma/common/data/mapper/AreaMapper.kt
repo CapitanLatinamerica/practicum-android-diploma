@@ -7,7 +7,6 @@ import ru.practicum.android.diploma.common.domain.entity.Area
 object AreaMapper {
 
     fun mapAreaDtoToArea(areaDto: AreaDto): Area {
-
         return Area(
             id = areaDto.id.toInt(),
             name = areaDto.name,

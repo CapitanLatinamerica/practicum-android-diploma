@@ -77,7 +77,6 @@ class RegionRepositoryImpl(
         allAreas: List<AreaDto>,
         countryId: String
     ): Resource<List<Area>> {
-
         val country = allAreas.find { it.id == countryId }
         return if (country == null) {
             Resource.Error("Страна не найдена")
