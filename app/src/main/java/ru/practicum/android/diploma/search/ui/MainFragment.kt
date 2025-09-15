@@ -160,7 +160,10 @@ class MainFragment : Fragment() {
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
             is SearchState.Error -> showError(state.errorType, state.errorMessage)
-            is SearchState.FilterStatusChanging -> switchFilterMarkIcon(state.isFilterParametersApplied)
+            is SearchState.FilterStatusChanging -> {
+                switchFilterMarkIcon(state.isFilterParametersApplied)
+                showInitial()
+            }
         }
     }
 
