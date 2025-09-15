@@ -12,11 +12,14 @@ class IndustryVIewModel(private val useCase: GetIndustriesUseCase) : ViewModel()
     private val _industryState = MutableLiveData<IndustryState>()
     val industryState: LiveData<IndustryState> get() = _industryState
 
-    fun getIndustries() {
+    fun getIndustries(selectedIndustryId: String? = null) {
         viewModelScope.launch {
             val resource = useCase.execute()
             if (resource.data != null) {
-                _industryState.value = IndustryState.Content(resource.data)
+                _industryState.value = IndustryState.Content(
+                    industryList = resource.data,
+                    selectedIndustryId = selectedIndustryId
+                )
             } else {
                 _industryState.value = IndustryState.Error
             }

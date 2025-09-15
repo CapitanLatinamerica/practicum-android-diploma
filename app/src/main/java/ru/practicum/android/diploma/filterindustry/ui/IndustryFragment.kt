@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
+import ru.practicum.android.diploma.filtersettings.data.FilterParameters
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class IndustryFragment : Fragment() {
     private val args: IndustryFragmentArgs by navArgs()
+    private val filteringUseCase: FilteringUseCase by inject()
 
     private var _binding: FragmentIndustryBinding? = null
     private val binding: FragmentIndustryBinding
@@ -46,6 +52,13 @@ class IndustryFragment : Fragment() {
 
         binding.industryRecyclerView.adapter = adapter
 
+        lifecycleScope.launch {
+            val params = filteringUseCase.loadParameters()
+            val selectedIndustryId = params?.industry ?: "" // industry хранится как String ID
+
+            viewModel.getIndustries(selectedIndustryId) // передаем ID для выделения
+        }
+
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustryState.Content -> {
@@ -56,6 +69,7 @@ class IndustryFragment : Fragment() {
                     binding.placeholderImage.visibility = View.GONE
                     binding.placeholderText.visibility = View.GONE
                 }
+
                 IndustryState.Error -> {
                     Toast.makeText(requireActivity(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
                     binding.industryScrolls.visibility = View.GONE
@@ -82,14 +96,18 @@ class IndustryFragment : Fragment() {
 
         binding.applyButton.setOnClickListener {
             val selectedIndustry = adapter.getSelectedIndustry()
-            if (selectedIndustry != null) {
-                parentFragmentManager.setFragmentResult("selectedIndustryKey", Bundle().apply {
-                    putString("selectedIndustryId", selectedIndustry.id.toString())
-                    putString("selectedIndustryName", selectedIndustry.name)
-                })
+            lifecycleScope.launch {
+                // Загружаем текущие параметры
+                val currentParams = filteringUseCase.loadParameters()
+
+                // Создаем обновленные параметры
+                val updatedParams = (currentParams ?: FilterParameters()).copy(
+                    industry = selectedIndustry?.id.toString()
+                )
+
+                // Сохраняем
+                filteringUseCase.saveParameters(updatedParams)
                 parentFragmentManager.popBackStack()
-            } else {
-                Toast.makeText(requireContext(), "Выберите отрасль", Toast.LENGTH_SHORT).show()
             }
         }
 
