@@ -215,7 +215,7 @@ val industryModule = module {
 }
 
 val workplaceModule = module {
-    viewModel { WorkplaceViewModel() }
+    viewModel { WorkplaceViewModel(get()) }
 
     viewModel { CountryViewModel(get()) }
 

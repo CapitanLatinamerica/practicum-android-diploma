@@ -39,8 +39,9 @@ class WorkplaceFragment : Fragment() {
             renderState(state)
         }
 
-        viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
-            handleVisibilityButtonsState(visible)
+        // Отслеживаем наличие выбранной страны для кнопки "Выбрать"
+        viewModel.hasSelectedCountry.observe(viewLifecycleOwner) { hasCountry ->
+            handleSelectButtonVisibility(hasCountry)
         }
 
         binding.countryEdit.setOnClickListener {
@@ -55,47 +56,47 @@ class WorkplaceFragment : Fragment() {
                 binding.countryEdit.setText(selectedArea.name)
             }
 
-        binding.regionEdit.apply {
-            setOnClickListener {
-                findNavController().navigate(R.id.action_workplaceFragment_to_regionFragment)
-            }
+        binding.regionEdit.setOnClickListener {
+            findNavController().navigate(R.id.action_workplaceFragment_to_regionFragment)
         }
 
         binding.toolbar.setNavigationOnClickListener {
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "workplaceUpdated",
+                true
+            )
             findNavController().navigateUp()
         }
 
         binding.applyButton.setOnClickListener {
+            viewModel.applyChanges()
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "workplaceUpdated",
+                true
+            )
             findNavController().navigateUp()
         }
     }
 
     private fun renderState(state: WorkplaceState) {
         val countryCurrent = binding.countryEdit.text?.toString() ?: ""
-        if (countryCurrent != state.country) {
-            binding.countryEdit.setText(state.country)
+        val countryNew = state.country ?: ""
+        if (countryCurrent != countryNew) {
+            binding.countryEdit.setText(countryNew)
         }
 
         val regionCurrent = binding.regionEdit.text?.toString() ?: ""
-        if (regionCurrent != state.region) {
-            binding.regionEdit.setText(state.region)
+        val regionNew = state.region ?: ""
+        if (regionCurrent != regionNew) {
+            binding.regionEdit.setText(regionNew)
         }
 
-        state.country?.let {
-            updateTextInputLayoutAppearance(binding.country, it) {
-                viewModel.clearCountry()
-            }
+        updateTextInputLayoutAppearance(binding.country, countryNew) {
+            viewModel.clearCountry()
         }
 
-        state.country?.let {
-            updateTextInputLayoutAppearance(binding.country, it) {
-                viewModel.clearCountry()
-            }
-        }
-        state.region?.let {
-            updateTextInputLayoutAppearance(binding.region, it) {
-                viewModel.clearRegion()
-            }
+        updateTextInputLayoutAppearance(binding.region, regionNew) {
+            viewModel.clearRegion()
         }
     }
 
@@ -110,7 +111,6 @@ class WorkplaceFragment : Fragment() {
             layout.defaultHintTextColor =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.onPrimary))
 
-            // Отключение ripple эффекта для endIcon
             val endIconImageButton = layout.findViewById<CheckableImageButton>(
                 com.google.android.material.R.id.text_input_end_icon
             )
@@ -128,9 +128,8 @@ class WorkplaceFragment : Fragment() {
         }
     }
 
-    private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {
-        val visibility = if (hasAnyChange) View.VISIBLE else View.GONE
-        binding.applyButton.visibility = visibility
+    private fun handleSelectButtonVisibility(hasCountry: Boolean) {
+        binding.applyButton.visibility = if (hasCountry) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
