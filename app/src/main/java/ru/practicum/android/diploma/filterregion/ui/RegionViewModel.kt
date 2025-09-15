@@ -13,7 +13,8 @@ class RegionViewModel(
     private val interactor: RegionInteractor
 ) : ViewModel() {
 
-    private val _regionState = MutableLiveData<RegionState>() // LiveData для внутреннего обновления состояния
+    private val _regionState =
+        MutableLiveData<RegionState>() // LiveData для внутреннего обновления состояния
     val regionState: LiveData<RegionState> = _regionState
 
     private var allRegions: List<Area> = emptyList()
@@ -22,7 +23,7 @@ class RegionViewModel(
     fun getRegions(countryId: Int?) {
         viewModelScope.launch {
             _regionState.value = RegionState.Loading
-            when(val result = interactor.getRegions(countryId)) {
+            when (val result = interactor.getRegions(countryId)) {
                 is Resource.Success -> {
                     val regions = result.data
                     if (regions != null && regions.isNotEmpty()) {
@@ -32,6 +33,7 @@ class RegionViewModel(
                         _regionState.value = RegionState.Empty("Нет данных о регионах")
                     }
                 }
+
                 is Resource.Error -> {
                     _regionState.value = RegionState.Error(result.message ?: "Ошибка загрузки")
                 }

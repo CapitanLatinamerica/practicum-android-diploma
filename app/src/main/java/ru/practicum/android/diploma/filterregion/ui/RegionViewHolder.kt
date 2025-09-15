@@ -14,7 +14,8 @@ class RegionViewHolder(
     private val onItemClickListener: (Area) -> Unit // колбэк для сообщения о клике
 ) : RecyclerView.ViewHolder(inflater.inflate(R.layout.country_item, parent, false)) {
 
-    private val regionName: TextView = itemView.findViewById(R.id.countryName) // текстовое поле с именем региона
+    private val regionName: TextView =
+        itemView.findViewById(R.id.countryName) // текстовое поле с именем региона
 
     fun bind(region: Area) {
         regionName.text = region.name

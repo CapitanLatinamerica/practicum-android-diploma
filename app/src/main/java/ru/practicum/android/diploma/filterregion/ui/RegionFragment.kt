@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.filterregion.ui
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,12 +56,11 @@ class RegionFragment : Fragment() {
                 val countryName = if (selectedRegion.parentId != null) {
                     when (val result = viewModel.findCountryByRegion(selectedRegion.parentId)) {
                         is Resource.Success -> {
-                            result.data?.let { country ->
-                                country.name
-                            } ?: run {
+                            result.data?.name ?: run {
                                 currentParams.country
                             }
                         }
+
                         is Resource.Error -> {
                             currentParams.country
                         }
