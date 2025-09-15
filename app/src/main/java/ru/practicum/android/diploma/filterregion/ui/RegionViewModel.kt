@@ -27,6 +27,7 @@ class RegionViewModel(
                 is Resource.Success -> {
                     val regions = result.data
                     if (regions != null && regions.isNotEmpty()) {
+                        allRegions = regions // ← ВОТ ЭТОЙ СТРОЧКИ НЕТ!
                         _regionState.value = RegionState.Content(regions)
                     } else {
                         _regionState.value = RegionState.Empty("Нет данных о регионах")
