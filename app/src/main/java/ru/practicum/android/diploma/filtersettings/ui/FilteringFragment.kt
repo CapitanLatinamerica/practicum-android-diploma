@@ -200,11 +200,17 @@ class FilteringFragment : Fragment() {
     }
 
     private fun handleWorkplaceState(state: FilterState) {
-        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
-        if (wpCurrent != state.workplace) {
-            binding.workplaceEdit.setText(state.workplace)
+        val display = when {
+            state.country.isBlank() -> ""
+            state.region.isBlank() -> state.country
+            else -> "${state.country}, ${state.region}"
         }
-        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+
+        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
+        if (wpCurrent != display) {
+            binding.workplaceEdit.setText(display)
+        }
+        updateTextInputLayoutAppearance(binding.workplace, display) {
             viewModel.clearWorkplace()
         }
     }

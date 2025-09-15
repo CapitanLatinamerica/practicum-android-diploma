@@ -45,13 +45,13 @@ class FilteringViewModel(
 //        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
 //    }
 
-    fun onWorkplaceSelected(value: String) {
-        updateAndSave { it.copy(workplace = value) }
-    }
-
-    fun onIndustrySelected(value: String) {
-        updateAndSave { it.copy(industry = value) }
-    }
+//    fun onWorkplaceSelected(value: String) {
+//        updateAndSave { it.copy(workplace = value) }
+//    }
+//
+//    fun onIndustrySelected(value: String) {
+//        updateAndSave { it.copy(industry = value) }
+//    }
 
     fun onSalaryTextChanged(text: String) {
         updateAndSave { it.copy(salary = text) }
@@ -62,7 +62,7 @@ class FilteringViewModel(
     }
 
     fun clearWorkplace() {
-        updateAndSave { it.copy(workplace = "") }
+        updateAndSave { it.copy(country = "", region = "") }
     }
 
     fun clearIndustry() {
