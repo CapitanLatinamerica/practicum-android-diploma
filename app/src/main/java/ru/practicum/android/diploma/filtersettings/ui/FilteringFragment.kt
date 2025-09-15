@@ -111,7 +111,8 @@ class FilteringFragment : Fragment() {
 
         binding.toolbar.setNavigationOnClickListener {
             setFragmentResult(
-                FILTERS_RESULT_KEY, bundleOf(
+                FILTERS_RESULT_KEY,
+                bundleOf(
                     APPLIED_PARAMS_KEY to true,
                     PERFORM_SEARCH_KEY to false
                 )
@@ -121,7 +122,8 @@ class FilteringFragment : Fragment() {
 
         binding.applyButton.setOnClickListener {
             setFragmentResult(
-                FILTERS_RESULT_KEY, bundleOf(
+                FILTERS_RESULT_KEY,
+                bundleOf(
                     APPLIED_PARAMS_KEY to true,
                     PERFORM_SEARCH_KEY to true
                 )
