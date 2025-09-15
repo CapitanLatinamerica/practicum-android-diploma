@@ -25,10 +25,14 @@ class FilteringRepositoryImpl(
         }
     }
 
-    override suspend fun isNotBlank(): Boolean = loadParameters()?.let {
-        it.onlyWithSalary ||
-            it.workplace.isNotBlank() ||
-            it.industry.isNotBlank() ||
-            it.salary.isNotBlank()
-    } ?: false
+    override suspend fun isNotBlank(): Boolean {
+        val parameters = loadParameters()
+        if (parameters == null) {
+            return false
+        }
+        return parameters.onlyWithSalary ||
+            parameters.country.isNotBlank() ||
+            parameters.industry.isNotBlank() ||
+            parameters.salary.isNotBlank()
+    }
 }

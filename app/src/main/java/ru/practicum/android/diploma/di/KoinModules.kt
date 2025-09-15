@@ -130,15 +130,7 @@ val searchModule = module {
         ErrorMessageProviderImpl(androidContext())
     }
 
-    viewModel { SearchViewModel(get(), get(), get(), get()) }
-
-    single<FilteringUseCase> {
-        FilteringUseCaseImpl(get())
-    }
-
-    single<FilteringRepository> {
-        FilteringRepositoryImpl(get())
-    }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get()) }
 }
 
 // Модуль для деталей вакансии

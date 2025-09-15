@@ -33,16 +33,16 @@ class VacancyRepositoryImpl(
         private const val NOT_FOUND = 404
     }
 
-    override fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>> =
+    override fun searchVacancies(filteredVacancyParameters: FilteredVacancyParameters): Flow<Resource<VacanciesPage>> =
         flow {
             val request =
                 FilteredVacancyRequest(
-                    areaId = null,
-                    industryId = null,
-                    text = if (query.isBlank()) null else query,
-                    salary = null,
-                    page = page,
-                    onlyWithSalary = null,
+                    areaId = filteredVacancyParameters.areaId,
+                    industryId = filteredVacancyParameters.industryId,
+                    text = if (filteredVacancyParameters.text.isNullOrBlank()) null else filteredVacancyParameters.text,
+                    salary = filteredVacancyParameters.salary,
+                    page = filteredVacancyParameters.page,
+                    onlyWithSalary = filteredVacancyParameters.onlyWithSalary
                 )
 
             val response = networkClient.doRequest(request)
