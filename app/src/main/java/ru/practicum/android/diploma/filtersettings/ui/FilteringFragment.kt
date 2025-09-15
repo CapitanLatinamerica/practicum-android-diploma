@@ -27,6 +27,12 @@ class FilteringFragment : Fragment() {
     private val binding: FragmentFilteringBinding
         get() = _binding!!
 
+    companion object {
+        const val FILTERS_RESULT_KEY = "filters_applied"
+        const val APPLIED_PARAMS_KEY = "applied"
+        const val PERFORM_SEARCH_KEY = "perform_search"
+    }
+
     private val viewModel: FilteringViewModel by viewModel()
 
     override fun onCreateView(
@@ -104,16 +110,22 @@ class FilteringFragment : Fragment() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            setFragmentResult("filters_applied", bundleOf(
-                "applied" to true,
-                "perform_search" to false))
+            setFragmentResult(
+                FILTERS_RESULT_KEY, bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to false
+                )
+            )
             findNavController().navigateUp()
         }
 
         binding.applyButton.setOnClickListener {
-            setFragmentResult("filters_applied", bundleOf(
-                "applied" to true,
-                "perform_search" to true))
+            setFragmentResult(
+                FILTERS_RESULT_KEY, bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to true
+                )
+            )
             findNavController().navigateUp()
         }
     }
@@ -196,9 +208,12 @@ class FilteringFragment : Fragment() {
     override fun onDestroyView() {
         val hasChanges = viewModel.buttonsVisibilityState.value == true
         if (hasChanges) {
-            setFragmentResult("filters_applied", bundleOf(
-                "applied" to true,
-                "perform_search" to false))
+            setFragmentResult(
+                "filters_applied", bundleOf(
+                    "applied" to true,
+                    "perform_search" to false
+                )
+            )
         }
         super.onDestroyView()
         _binding = null
