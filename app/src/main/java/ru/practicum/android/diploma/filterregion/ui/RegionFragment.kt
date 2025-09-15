@@ -2,11 +2,10 @@ package ru.practicum.android.diploma.filterregion.ui
 
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.text.TextWatcher
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -51,8 +50,6 @@ class RegionFragment : Fragment() {
             lifecycleScope.launch {
                 // Сохраняем выбранный регион в SharedPreferences через FilteringUseCase
                 val currentParams = filteringUseCase.loadParameters() ?: return@launch
-
-                Log.d("RegionFragment", "Текущие параметры: $currentParams")
                 val updatedParams = currentParams.copy(
                     region = selectedRegion.name, // сохраняем название региона
                     regionId = selectedRegion.id   // сохраняем ID региона
@@ -87,7 +84,15 @@ class RegionFragment : Fragment() {
     private fun loadRegionsFromUseCase() {
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            viewModel.getRegions(params!!.countryId.toString())
+            val countryId = params?.countryId ?: 0 // Если null, используем 0
+
+            if (countryId == 0) {
+                // Если countryId = 0, загружаем все регионы всех стран
+                viewModel.getRegions(null)
+            } else {
+                // Иначе загружаем регионы конкретной страны
+                viewModel.getRegions(countryId)
+            }
         }
     }
 
@@ -109,6 +114,7 @@ class RegionFragment : Fragment() {
     }
 
     private fun showContent(regions: List<Area>) {
+
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.VISIBLE
         binding.placeholderImage.visibility = View.GONE

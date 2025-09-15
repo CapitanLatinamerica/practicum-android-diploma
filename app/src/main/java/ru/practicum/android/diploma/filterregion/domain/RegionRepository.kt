@@ -4,5 +4,5 @@ import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Area
 
 interface RegionRepository {
-    suspend fun getRegions(countryId: String): Resource<List<Area>>
+    suspend fun getRegions(countryId: Int?): Resource<List<Area>>
 }

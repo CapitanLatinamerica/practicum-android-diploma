@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.filterregion.domain.RegionRepository
 class RegionInteractorImpl(
     private val repository: RegionRepository
 ): RegionInteractor {
-    override suspend fun getRegions(countryId: String): Resource<List<Area>> {
+    override suspend fun getRegions(countryId: Int?): Resource<List<Area>> {
         return repository.getRegions(countryId)
     }
 }

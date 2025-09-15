@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filterregion.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,14 +19,14 @@ class RegionViewModel(
     private var allRegions: List<Area> = emptyList()
 
     // Запрос списка регионов для указанного countryId
-    fun getRegions(countryId: String) {
+    fun getRegions(countryId: Int?) {
         viewModelScope.launch {
             _regionState.value = RegionState.Loading
             when(val result = interactor.getRegions(countryId)) {
                 is Resource.Success -> {
                     val regions = result.data
                     if (regions != null && regions.isNotEmpty()) {
-                        allRegions = regions // ← ВОТ ЭТОЙ СТРОЧКИ НЕТ!
+                        allRegions = regions
                         _regionState.value = RegionState.Content(regions)
                     } else {
                         _regionState.value = RegionState.Empty("Нет данных о регионах")
