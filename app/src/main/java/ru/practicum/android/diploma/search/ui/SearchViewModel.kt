@@ -239,8 +239,7 @@ class SearchViewModel(
             _searchState.postValue(SearchState.Loading)
             loadPage(lastText, 1, isFirstRequest = true)
         } else {
-//            _searchState.postValue(SearchState.Initial)
-            _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
+            _searchState.postValue(SearchState.Initial)
         }
     }
 
