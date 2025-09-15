@@ -28,8 +28,7 @@ class RegionFragment : Fragment() {
     private val filteringUseCase: FilteringUseCase by inject()
 
     private var allRegions: List<Area> = emptyList()
-
-    private lateinit var adapter: RegionAdapter
+    private var adapter: RegionAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRegionBinding.inflate(inflater, container, false)
@@ -78,7 +77,6 @@ class RegionFragment : Fragment() {
                 )
 
                 filteringUseCase.saveParameters(updatedParams)
-
                 parentFragmentManager.popBackStack()
             }
         }
@@ -136,7 +134,6 @@ class RegionFragment : Fragment() {
     }
 
     private fun showContent(regions: List<Area>) {
-
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.VISIBLE
         binding.placeholderImage.visibility = View.GONE
@@ -144,14 +141,14 @@ class RegionFragment : Fragment() {
 
         // Сохраняем все регионы для фильтрации
         allRegions = regions
-        adapter.update(regions)
+        adapter?.update(regions)
     }
 
     private fun showError(message: String) {
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.GONE
-        binding.placeholderImage.setImageResource(R.drawable.error_region)  // ← Иконка ошибки
-        binding.placeholderText.setText(R.string.error_region)  // ← Ошибка загрузки
+        binding.placeholderImage.setImageResource(R.drawable.error_region) // Иконка ошибки
+        binding.placeholderText.setText(R.string.error_region) // Ошибка загрузки
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
         Toast.makeText(requireContext(), "Ошибка: $message", Toast.LENGTH_SHORT).show()
@@ -185,6 +182,7 @@ class RegionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        adapter = null
         _binding = null
     }
 }

@@ -20,7 +20,6 @@ class RegionRepositoryImpl(
     }
 
     override suspend fun getRegions(countryId: Int?): Resource<List<Area>> {
-
         val response = networkClient.doRequest(AreasRequest())
 
         return when {
@@ -44,28 +43,23 @@ class RegionRepositoryImpl(
     }
 
     override suspend fun findCountryByRegion(parentId: Int): Resource<Area?> {
-        return try {
-            val response = networkClient.doRequest(AreasRequest())
-            if (response is AreasResponse && response.resultCode == SUCCESS) {
-                // Ищем регион по ID
-                val areaDto = response.areaDto.find { it.id == parentId.toString() }
-                if (areaDto != null) {
-                    Resource.Success(AreaMapper.mapAreaDtoToArea(areaDto))
-                } else {
-                    Resource.Error("Area does'nt exist")
-                }
+        val response = networkClient.doRequest(AreasRequest())
 
+        return if (response is AreasResponse && response.resultCode == SUCCESS) {
+            // Ищем регион по ID
+            val areaDto = response.areaDto.find { it.id == parentId.toString() }
+            if (areaDto != null) {
+                Resource.Success(AreaMapper.mapAreaDtoToArea(areaDto))
             } else {
-                Resource.Error("Ошибка загрузки данных")
+                Resource.Error("Area does'nt exist")
             }
-        } catch (e: Exception) {
-            Resource.Error("Ошибка поиска страны")
+
+        } else {
+            Resource.Error("Ошибка загрузки данных")
         }
     }
 
     private fun getAllRegionsFromAllCountries(allAreas: List<AreaDto>): Resource<List<Area>> {
-
-
         val allRegions = allAreas.flatMap { country ->
             country.areas?.map { mapper.mapAreaDtoToArea(it) } ?: emptyList()
         }
