@@ -31,8 +31,8 @@ class FilteringRepositoryImpl(
             return false
         }
         return parameters.onlyWithSalary ||
-                parameters.country.isNotBlank() ||
-                parameters.industry.isNotBlank() ||
-                parameters.salary.isNotBlank()
+            parameters.country.isNotBlank() ||
+            parameters.industry.isNotBlank() ||
+            parameters.salary.isNotBlank()
     }
 }
