@@ -51,6 +51,7 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
+//    var isFilterParametersBlank = false
 
     private var currentFilterParams = FilteredVacancyParameters(
         areaId = null,
@@ -69,6 +70,14 @@ class SearchViewModel(
             val mapped = filterParametersMapper.mapToSearchParams(saved)
             currentFilterParams = mapped
         }
+//        var isFilterParametersBlank = false
+//        _searchState.value = SearchState.Initial(isFilterParametersBlank)
+//    }
+//
+//    fun checkFilterStatus() {
+//        viewModelScope.launch {
+//            isFilterParametersBlank = filteringUseCase.isNotBlank()
+//        }
     }
 
     fun clearSearch() {
@@ -77,6 +86,7 @@ class SearchViewModel(
         latestSearchText = null
         resetPaging()
         _searchState.postValue(SearchState.Initial)
+//        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
         _isBottomLoading.postValue(false)
     }
 

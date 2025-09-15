@@ -24,4 +24,11 @@ class FilteringRepositoryImpl(
             storage.clear()
         }
     }
+
+    override suspend fun isNotBlank(): Boolean = loadParameters()?.let {
+        it.onlyWithSalary ||
+            it.workplace.isNotBlank() ||
+            it.industry.isNotBlank() ||
+            it.salary.isNotBlank()
+    } ?: false
 }

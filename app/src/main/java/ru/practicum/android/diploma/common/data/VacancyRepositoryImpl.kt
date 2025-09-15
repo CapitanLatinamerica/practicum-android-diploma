@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.db.AppDataBase
-import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
@@ -146,11 +145,6 @@ class VacancyRepositoryImpl(
 
     override fun deleteById(id: String): Boolean {
         TODO("Not implemented deleteById")
-    }
-
-    override fun getAreas(): List<AreaDto> {
-        // Временно
-        return emptyList()
     }
 
     override fun deleteVacancyFromFavorites(id: String) {

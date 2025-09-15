@@ -182,6 +182,11 @@ class FilteringFragment : Fragment() {
         }
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.loadFilterSettings()
+//    }
+
     private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {
         val visibility = if (hasAnyChange) View.VISIBLE else View.GONE
         binding.applyButton.visibility = visibility
