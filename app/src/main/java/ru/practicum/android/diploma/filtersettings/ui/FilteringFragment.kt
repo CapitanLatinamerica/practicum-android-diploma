@@ -211,9 +211,10 @@ class FilteringFragment : Fragment() {
         val hasChanges = viewModel.buttonsVisibilityState.value == true
         if (hasChanges) {
             setFragmentResult(
-                "filters_applied", bundleOf(
-                    "applied" to true,
-                    "perform_search" to false
+                FILTERS_RESULT_KEY,
+                bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to false
                 )
             )
         }
