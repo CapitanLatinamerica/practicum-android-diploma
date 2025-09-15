@@ -15,8 +15,10 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
+import ru.practicum.android.diploma.filtersettings.data.FilterParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class RegionFragment : Fragment() {
@@ -50,15 +52,35 @@ class RegionFragment : Fragment() {
         adapter = RegionAdapter { selectedRegion ->
             lifecycleScope.launch {
                 // Сохраняем выбранный регион в SharedPreferences через FilteringUseCase
-                val currentParams = filteringUseCase.loadParameters() ?: return@launch
+                val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+                // Получаем название страны по parentId региона
+                val countryName = if (selectedRegion.parentId != null) {
+                    when (val result = viewModel.findCountryByRegion(selectedRegion.parentId)) {
+                        is Resource.Success -> {
+                            result.data?.let { country ->
+                                country.name
+                            } ?: run {
+                                currentParams.country
+                            }
+                        }
+                        is Resource.Error -> {
+                            currentParams.country
+                        }
+                    }
+                } else {
+                    // Если parentId null, оставляем текущее значение
+                    currentParams.country
+                }
+
                 val updatedParams = currentParams.copy(
+                    country = countryName,
+                    countryId = selectedRegion.parentId ?: currentParams.countryId,
                     region = selectedRegion.name, // сохраняем название региона
                     regionId = selectedRegion.id   // сохраняем ID региона
                 )
 
                 filteringUseCase.saveParameters(updatedParams)
 
-                Log.d("RegionFragment", "Параметры сохранены: $updatedParams")
                 parentFragmentManager.popBackStack()
             }
         }

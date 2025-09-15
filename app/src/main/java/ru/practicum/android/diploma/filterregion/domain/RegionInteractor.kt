@@ -5,4 +5,5 @@ import ru.practicum.android.diploma.common.domain.entity.Area
 
 interface RegionInteractor {
     suspend fun getRegions(countryId: Int?): Resource<List<Area>>
+    suspend fun findCountryByRegion(parentId: Int): Resource<Area?>
 }

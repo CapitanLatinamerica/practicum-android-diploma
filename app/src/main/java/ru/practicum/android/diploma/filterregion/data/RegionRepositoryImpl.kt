@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filterregion.data
 
-import android.util.Log
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.mapper.AreaMapper
@@ -44,6 +43,26 @@ class RegionRepositoryImpl(
         }
     }
 
+    override suspend fun findCountryByRegion(parentId: Int): Resource<Area?> {
+        return try {
+            val response = networkClient.doRequest(AreasRequest())
+            if (response is AreasResponse && response.resultCode == SUCCESS) {
+                // Ищем регион по ID
+                val areaDto = response.areaDto.find { it.id == parentId.toString() }
+                if (areaDto != null) {
+                    Resource.Success(AreaMapper.mapAreaDtoToArea(areaDto))
+                } else {
+                    Resource.Error("Area does'nt exist")
+                }
+
+            } else {
+                Resource.Error("Ошибка загрузки данных")
+            }
+        } catch (e: Exception) {
+            Resource.Error("Ошибка поиска страны")
+        }
+    }
+
     private fun getAllRegionsFromAllCountries(allAreas: List<AreaDto>): Resource<List<Area>> {
 
 
@@ -60,7 +79,10 @@ class RegionRepositoryImpl(
         return Resource.Success(filteredRegions)
     }
 
-    private fun getRegionsForSpecificCountry(allAreas: List<AreaDto>, countryId: String): Resource<List<Area>> {
+    private fun getRegionsForSpecificCountry(
+        allAreas: List<AreaDto>,
+        countryId: String
+    ): Resource<List<Area>> {
 
         val country = allAreas.find { it.id == countryId }
         return if (country == null) {

@@ -57,4 +57,8 @@ class RegionViewModel(
             _regionState.value = RegionState.Content(filteredRegions)
         }
     }
+
+    suspend fun findCountryByRegion(parentId: Int): Resource<Area?> {
+        return interactor.findCountryByRegion(parentId)
+    }
 }
