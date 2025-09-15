@@ -63,19 +63,18 @@ class SearchViewModel(
     )
 
     init {
-//        _searchState.postValue(SearchState.Initial)
+        _searchState.value = SearchState.Initial
         viewModelScope.launch {
             val saved = filteringUseCase.loadParameters()
             val mapped = filterParametersMapper.mapToSearchParams(saved)
             currentFilterParams = mapped
         }
-        var isFilterParametersBlank = false
-        _searchState.value = SearchState.Initial(isFilterParametersBlank)
     }
 
     fun checkFilterStatus() {
         viewModelScope.launch {
-            isFilterParametersBlank = filteringUseCase.isNotBlank()
+            var isFilterParametersBlank = filteringUseCase.isNotBlank()
+            _searchState.value = SearchState.FilterStatusChanging(isFilterParametersBlank)
         }
     }
 
@@ -84,15 +83,13 @@ class SearchViewModel(
         collectJob?.cancel()
         latestSearchText = null
         resetPaging()
-//        _searchState.value = SearchState.Initial
-        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
+        _searchState.postValue(SearchState.Initial)
         _isBottomLoading.postValue(false)
     }
 
     fun searchDebounce(changedText: String) {
         if (changedText == latestSearchText) return
         latestSearchText = changedText
-
         debounceJob?.cancel()
         debounceJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
@@ -242,8 +239,7 @@ class SearchViewModel(
             _searchState.postValue(SearchState.Loading)
             loadPage(lastText, 1, isFirstRequest = true)
         } else {
-//            _searchState.postValue(SearchState.Initial)
-            _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
+            _searchState.postValue(SearchState.Initial)
         }
     }
 
