@@ -8,4 +8,6 @@ interface FilteringRepository {
     suspend fun loadParameters(): FilterParameters?
 
     suspend fun clearParameters()
+
+    suspend fun isNotBlank(): Boolean
 }

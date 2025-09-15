@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -48,6 +49,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.checkFilterStatus()
 
         onVacancyClickDebounce = debounce(
             CLICK_DEBOUNCE_DELAY,
@@ -93,6 +96,7 @@ class MainFragment : Fragment() {
                     findNavController().navigate(R.id.action_mainFragment_to_filteringFragment)
                     true
                 }
+
                 else -> false
             }
         }
@@ -151,7 +155,7 @@ class MainFragment : Fragment() {
 
     private fun renderState(state: SearchState) {
         when (state) {
-            is SearchState.Initial -> showInitial()
+            is SearchState.Initial -> showInitial(state.isFilterParametersApplied)
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
@@ -159,13 +163,14 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun showInitial() {
+    private fun showInitial(isFilterParametersApplied: Boolean) {
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
             placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
+            switchFilterMarkIcon(isFilterParametersApplied)
         }
     }
 
@@ -177,6 +182,16 @@ class MainFragment : Fragment() {
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
         }
+    }
+
+    private fun switchFilterMarkIcon(enabled: Boolean) {
+        val id = binding.toolbar.menu.findItem(R.id.filter)
+        var iconId = R.drawable.ic_filter
+        if (enabled) {
+            iconId = R.drawable.ic_filter_active
+        }
+        id?.icon = ContextCompat.getDrawable(requireContext(), iconId)
+
     }
 
     private fun showContent(found: Int, vacancies: List<VacancyUi>) {

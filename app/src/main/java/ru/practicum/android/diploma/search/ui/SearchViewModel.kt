@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Event
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
@@ -20,7 +21,8 @@ import ru.practicum.android.diploma.search.ui.model.VacancyUi
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
     private val mapper: VacancyToVacancyUiMapper,
-    private val errorMessageProvider: ErrorMessageProvider
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val filteringUseCase: FilteringUseCase
 ) : ViewModel() {
 
     companion object {
@@ -46,9 +48,17 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
+    var isFilterParametersBlank = false
 
     init {
-        _searchState.value = SearchState.Initial
+        var isFilterParametersBlank = false
+        _searchState.value = SearchState.Initial(isFilterParametersBlank)
+    }
+
+    fun checkFilterStatus() {
+        viewModelScope.launch {
+            isFilterParametersBlank = filteringUseCase.isNotBlank()
+        }
     }
 
     fun clearSearch() {
@@ -56,7 +66,7 @@ class SearchViewModel(
         collectJob?.cancel()
         latestSearchText = null
         resetPaging()
-        _searchState.postValue(SearchState.Initial)
+        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
         _isBottomLoading.postValue(false)
     }
 

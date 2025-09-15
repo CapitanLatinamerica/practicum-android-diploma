@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.common.domain
 
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.Resource
-import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
