@@ -69,11 +69,11 @@ class WorkplaceFragment : Fragment() {
         }
 
         binding.applyButton.setOnClickListener {
-            viewModel.applyChanges()
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                "workplaceUpdated",
-                true
-            )
+//            viewModel.applyChanges()
+//            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+//                "workplaceUpdated",
+//                true
+//            )
             findNavController().navigateUp()
         }
     }
