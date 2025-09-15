@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filterregion.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,9 +72,11 @@ class RegionFragment : Fragment() {
     private fun loadRegionsFromUseCase() {
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            val selectedCountryId = params?.workplace
-            if (!selectedCountryId.isNullOrBlank()) {
-                viewModel.getRegions(selectedCountryId)
+            Log.d("RegionFragment", "Загружен countryId для запроса регионов: ${params?.workplace}")
+            if (!params?.workplace.isNullOrEmpty()) {
+                viewModel.getRegions(params!!.workplace)
+            } else {
+                Log.w("RegionFragment", "countryId для регионов пустой")
             }
         }
     }

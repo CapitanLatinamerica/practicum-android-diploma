@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filterregion.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ class RegionAdapter(
     }
 
     override fun onBindViewHolder(holder: RegionViewHolder, position: Int) {
+        Log.d("RegionAdapter", "onBindViewHolder на позиции: $position")
         val region = regions[position]
         holder.bind(region) // привязка данных региона к ViewHolder
     }
@@ -27,6 +29,7 @@ class RegionAdapter(
     // Обновление данных в адаптере и перерисовка списка
     fun update(regions: List<Area>) {
         this.regions = regions
+        Log.d("RegionAdapter", "Обновлено элементов: ${regions.size}")
         notifyDataSetChanged()
     }
 }

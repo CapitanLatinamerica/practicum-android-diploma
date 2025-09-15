@@ -5,5 +5,7 @@ data class FilterParameters(
     val industry: String = "",
     val salary: String = "",
     val onlyWithSalary: Boolean = false,
+    val countryId: String = "",
+    val countryName: String = "",
     val region: String = ""
 )
