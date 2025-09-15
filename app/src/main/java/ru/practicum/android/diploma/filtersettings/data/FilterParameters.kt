@@ -7,5 +7,5 @@ data class FilterParameters(
     val salary: String = "",
     val onlyWithSalary: Boolean = false,
     val region: String = "",
-    val regionId: Int = 2019
+    val regionId: Int = 0
 )
