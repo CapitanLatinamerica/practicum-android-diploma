@@ -124,7 +124,7 @@ val searchModule = module {
         ErrorMessageProviderImpl(androidContext())
     }
 
-    viewModel { SearchViewModel(get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get()) }
 }
 
 // Модуль для деталей вакансии

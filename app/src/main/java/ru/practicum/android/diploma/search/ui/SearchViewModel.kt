@@ -12,6 +12,9 @@ import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Event
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
+import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
@@ -19,8 +22,10 @@ import ru.practicum.android.diploma.search.ui.model.VacancyUi
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val mapper: VacancyToVacancyUiMapper,
-    private val errorMessageProvider: ErrorMessageProvider
+    private val vacancyToVacancyUiMapper: VacancyToVacancyUiMapper,
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val filteringUseCase: FilteringUseCase,
+    private val filterParametersMapper: FilterParametersMapper
 ) : ViewModel() {
 
     companion object {
@@ -47,8 +52,23 @@ class SearchViewModel(
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
 
+    private var currentFilterParams = FilteredVacancyParameters(
+        areaId = null,
+        industryId = null,
+        text = null,
+        salary = null,
+        page = null,
+        onlyWithSalary = null
+    )
+
     init {
         _searchState.value = SearchState.Initial
+
+        viewModelScope.launch {
+            val saved = filteringUseCase.loadParameters()
+            val mapped = filterParametersMapper.mapToSearchParams(saved)
+            currentFilterParams = mapped
+        }
     }
 
     fun clearSearch() {
@@ -94,7 +114,9 @@ class SearchViewModel(
         startLoading(page, isFirstRequest)
 
         collectJob = viewModelScope.launch {
-            searchUseCase.searchVacancies(query, page)
+            val params = buildParamsForSearch(page, query)
+
+            searchUseCase.searchVacancies(params)
                 .onCompletion { finishLoading(page) }
                 .collect { resource ->
                     when (resource) {
@@ -125,7 +147,7 @@ class SearchViewModel(
         currentPage = pageObj.page
         maxPages = pageObj.pages
 
-        val newUi = pageObj.items.map { mapper.mapToUi(it) }
+        val newUi = pageObj.items.map { vacancyToVacancyUiMapper.mapToUi(it) }
         if (page == 1) {
             vacanciesList.clear()
             vacanciesList.addAll(newUi)
@@ -172,6 +194,64 @@ class SearchViewModel(
             "Проверьте подключение к интернету" -> ErrorType.NO_INTERNET to errorMessageProvider.noInternet()
             "Ошибка сервера" -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
             else -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
+        }
+    }
+
+    private fun buildParamsForSearch(page: Int, text: String?): FilteredVacancyParameters {
+        val finalText = text?.takeIf { it.isNotBlank() }
+
+        val areaId = currentFilterParams.areaId?.takeIf { it != 0 }
+        val industryId = currentFilterParams.industryId?.takeIf { it != 0 }
+        val salary = currentFilterParams.salary?.takeIf { it != 0 }
+        val onlyWithSalary = currentFilterParams.onlyWithSalary?.takeIf { it }
+
+        return FilteredVacancyParameters(
+            areaId = areaId,
+            industryId = industryId,
+            text = finalText,
+            salary = salary,
+            page = page,
+            onlyWithSalary = onlyWithSalary
+        )
+    }
+
+    // Это событие, когда была нажата кнопка "Применить" на экране фильтров
+    private fun applyFilters(newParams: FilteredVacancyParameters) {
+        currentFilterParams = FilteredVacancyParameters(
+            areaId = newParams.areaId,
+            industryId = newParams.industryId,
+            text = null,
+            salary = newParams.salary,
+            page = null,
+            onlyWithSalary = newParams.onlyWithSalary
+        )
+
+        resetPaging()
+
+        val lastText = latestSearchText
+        if (!lastText.isNullOrBlank()) {
+            _searchState.postValue(SearchState.Loading)
+            loadPage(lastText, 1, isFirstRequest = true)
+        } else {
+            _searchState.postValue(SearchState.Initial)
+        }
+    }
+
+    // Это обработчик внешнего сигнала, что фильтры были изменены (или просто сохранились)
+    fun onFiltersApplied(performSearch: Boolean) {
+        viewModelScope.launch {
+            val savedParams = filteringUseCase.loadParameters()
+            val mapped = filterParametersMapper.mapToSearchParams(savedParams)
+
+            if (mapped == currentFilterParams) {
+                return@launch
+            }
+
+            if (performSearch) {
+                applyFilters(mapped)
+            } else {
+                currentFilterParams = mapped
+            }
         }
     }
 }
