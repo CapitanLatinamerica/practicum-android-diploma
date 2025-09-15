@@ -63,15 +63,12 @@ class SearchViewModel(
     )
 
     init {
-          _searchState.value = SearchState.Initial
+        _searchState.value = SearchState.Initial
         viewModelScope.launch {
             val saved = filteringUseCase.loadParameters()
             val mapped = filterParametersMapper.mapToSearchParams(saved)
             currentFilterParams = mapped
         }
-
-
-
     }
 
     fun checkFilterStatus() {
@@ -86,14 +83,13 @@ class SearchViewModel(
         collectJob?.cancel()
         latestSearchText = null
         resetPaging()
-        _searchState.postValue(SearchState.Initial)l
+        _searchState.postValue(SearchState.Initial)
         _isBottomLoading.postValue(false)
     }
 
     fun searchDebounce(changedText: String) {
         if (changedText == latestSearchText) return
         latestSearchText = changedText
-
         debounceJob?.cancel()
         debounceJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
