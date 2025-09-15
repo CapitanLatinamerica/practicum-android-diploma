@@ -213,10 +213,10 @@ class FilteringFragment : Fragment() {
 
     private fun handleWorkplaceState(state: FilterState) {
         val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
-        if (wpCurrent != state.workplace) {
-            binding.workplaceEdit.setText(state.workplace)
+        if (wpCurrent != state.country) {
+            binding.workplaceEdit.setText(state.country)
         }
-        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+        updateTextInputLayoutAppearance(binding.workplace, state.country) {
             viewModel.clearWorkplace()
         }
     }

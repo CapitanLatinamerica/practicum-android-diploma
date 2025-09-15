@@ -1,16 +1,20 @@
 package ru.practicum.android.diploma.filterregion.ui
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.text.TextWatcher
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
@@ -21,6 +25,8 @@ class RegionFragment : Fragment() {
 
     private val viewModel: RegionViewModel by viewModel()
     private val filteringUseCase: FilteringUseCase by inject()
+
+    private var allRegions: List<Area> = emptyList()
 
     private lateinit var adapter: RegionAdapter
 
@@ -34,6 +40,7 @@ class RegionFragment : Fragment() {
 
         setupRecyclerView()
         setupToolbar()
+        setupSearch()
         setupObservers()
 
         loadRegionsFromUseCase()
@@ -71,7 +78,8 @@ class RegionFragment : Fragment() {
             when (state) {
                 is RegionState.Loading -> showLoading()
                 is RegionState.Content -> showContent(state.regions)
-                is RegionState.Error -> showError()
+                is RegionState.Empty -> showEmpty(state.message)  // ← Нет результатов
+                is RegionState.Error -> showError(state.message)  // ← Ошибка загрузки
             }
         }
     }
@@ -79,8 +87,18 @@ class RegionFragment : Fragment() {
     private fun loadRegionsFromUseCase() {
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            viewModel.getRegions(params!!.countryId)
+            viewModel.getRegions(params!!.countryId.toString())
         }
+    }
+
+    private fun showEmpty(message: String) {
+        binding.progressbar.visibility = View.GONE
+        binding.regionRecyclerView.visibility = View.GONE
+        binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)  // ← Кот-мем
+        binding.placeholderText.setText(R.string.no_region)  // ← Нет регионов
+        binding.placeholderImage.visibility = View.VISIBLE
+        binding.placeholderText.visibility = View.VISIBLE
+        Toast.makeText(requireContext(), "Нет результатов: $message", Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {
@@ -95,14 +113,46 @@ class RegionFragment : Fragment() {
         binding.regionRecyclerView.visibility = View.VISIBLE
         binding.placeholderImage.visibility = View.GONE
         binding.placeholderText.visibility = View.GONE
+
+        // Сохраняем все регионы для фильтрации
+        allRegions = regions
         adapter.update(regions)
     }
 
-    private fun showError() {
+    private fun showError(message: String) {
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.GONE
+        binding.placeholderImage.setImageResource(R.drawable.error_region)  // ← Иконка ошибки
+        binding.placeholderText.setText(R.string.error_region)  // ← Ошибка загрузки
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
+        Toast.makeText(requireContext(), "Ошибка: $message", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupSearch() {
+        binding.editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateSearchIcon(s)
+                viewModel.filterRegions(s.toString()) // ← вызываем ViewModel
+            }
+
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
+
+        binding.btnEditAction.setOnClickListener {
+            if (binding.editText.text.isNotEmpty()) {
+                binding.editText.text.clear()
+            }
+        }
+    }
+
+    private fun updateSearchIcon(text: CharSequence?) {
+        val isEmpty = text.isNullOrEmpty()
+        binding.btnEditAction.setImageResource(
+            if (isEmpty) R.drawable.ic_search else R.drawable.ic_clear_button
+        )
     }
 
     override fun onDestroyView() {

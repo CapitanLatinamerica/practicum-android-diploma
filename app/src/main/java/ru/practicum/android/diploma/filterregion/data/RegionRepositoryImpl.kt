@@ -26,30 +26,25 @@ class RegionRepositoryImpl(
 
         return when {
             response is AreasResponse && response.resultCode == SUCCESS -> {
-                // 1. Находим страну по ID
                 val country = response.areaDto.find { it.id == countryId }
 
                 if (country == null) {
-                    Log.w("RegionRepository", "Страна с ID '$countryId' не найдена")
-                    Resource.Error("Страна не найдена")
+                    Resource.Error("Страна не найдена")  // → showError
                 } else {
-                    // 2. Берем вложенные регионы из поля areas
                     val regions = country.areas?.map { mapper.mapAreaDtoToArea(it) } ?: emptyList()
 
-                    Log.d("RegionRepository", "Найдено регионов: ${regions.size} для страны '${country.name}'")
-
                     if (regions.isEmpty()) {
-                        Resource.Error("Список регионов пуст")
+                        Resource.Success(emptyList())  // → будет обработано как Empty в ViewModel
                     } else {
                         Resource.Success(regions)
                     }
                 }
             }
             response is AreasResponse && response.resultCode == ERROR -> {
-                Resource.Error("Ошибка API: код ${response.resultCode}")
+                Resource.Error("Ошибка API: код ${response.resultCode}")  // → showError
             }
             else -> {
-                Resource.Error("Неверный формат ответа")
+                Resource.Error("Неверный формат ответа")  // → showError
             }
         }
     }

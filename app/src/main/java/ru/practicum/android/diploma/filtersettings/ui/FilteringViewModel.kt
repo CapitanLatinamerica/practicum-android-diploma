@@ -46,7 +46,7 @@ class FilteringViewModel(
 //    }
 
     fun onWorkplaceSelected(value: String) {
-        updateAndSave { it.copy(workplace = value) }
+        updateAndSave { it.copy(country = value) }
     }
 
     fun onIndustrySelected(value: String) {
@@ -62,7 +62,7 @@ class FilteringViewModel(
     }
 
     fun clearWorkplace() {
-        updateAndSave { it.copy(workplace = "") }
+        updateAndSave { it.copy(country = "") }
     }
 
     fun clearIndustry() {
