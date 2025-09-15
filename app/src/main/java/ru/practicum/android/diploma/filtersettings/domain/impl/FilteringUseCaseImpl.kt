@@ -18,4 +18,8 @@ class FilteringUseCaseImpl(
     override suspend fun clearParameters() {
         repository.clearParameters()
     }
+
+    override suspend fun isNotBlank(): Boolean {
+        return repository.isNotBlank()
+    }
 }
