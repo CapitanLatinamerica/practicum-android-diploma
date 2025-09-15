@@ -56,7 +56,7 @@ class SearchViewModel(
     fun checkFilterStatus() {
         viewModelScope.launch {
             var isFilterParametersBlank = filteringUseCase.isNotBlank()
-            _searchState.postValue(SearchState.FilterStatusChanging(isFilterParametersBlank))
+            _searchState.value = SearchState.FilterStatusChanging(isFilterParametersBlank)
         }
     }
 
