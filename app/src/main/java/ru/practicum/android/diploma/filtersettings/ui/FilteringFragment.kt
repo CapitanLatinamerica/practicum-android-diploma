@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
@@ -24,6 +26,12 @@ class FilteringFragment : Fragment() {
     private var _binding: FragmentFilteringBinding? = null
     private val binding: FragmentFilteringBinding
         get() = _binding!!
+
+    companion object {
+        const val FILTERS_RESULT_KEY = "filters_applied"
+        const val APPLIED_PARAMS_KEY = "applied"
+        const val PERFORM_SEARCH_KEY = "perform_search"
+    }
 
     private val viewModel: FilteringViewModel by viewModel()
 
@@ -100,33 +108,28 @@ class FilteringFragment : Fragment() {
             viewModel.clearAllParams()
 
         }
-//        binding.industryEdit.apply {
-//            setOnClickListener {
-//                val selectedIndustryId = viewModel.selectedIndustryId ?: ""
-//                val action = FilteringFragmentDirections.actionFilteringFragmentToIndustryFragment(selectedIndustryId)
-//                findNavController().navigate(action)
-//            }
-//        }
-//
-//        binding.workplaceEdit.apply {
-//            setOnClickListener {
-//                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
-//            }
-//        }
 
         binding.toolbar.setNavigationOnClickListener {
+            setFragmentResult(
+                FILTERS_RESULT_KEY,
+                bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to false
+                )
+            )
             findNavController().navigateUp()
         }
 
-//        Обновляем состояние выбранной отрасли во ViewModel
-//        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
-//            val selectedId = bundle.getString("selectedIndustryId")
-//            val selectedName = bundle.getString("selectedIndustryName")
-//
-//            if (!selectedId.isNullOrEmpty() && !selectedName.isNullOrEmpty()) {
-//                viewModel.onIndustrySelected(selectedName)
-//            }
-//        }
+        binding.applyButton.setOnClickListener {
+            setFragmentResult(
+                FILTERS_RESULT_KEY,
+                bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to true
+                )
+            )
+            findNavController().navigateUp()
+        }
     }
 
     private fun renderState(state: FilterState) {
@@ -193,6 +196,11 @@ class FilteringFragment : Fragment() {
         }
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.loadFilterSettings()
+//    }
+
     private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {
         val visibility = if (hasAnyChange) View.VISIBLE else View.GONE
         binding.applyButton.visibility = visibility
@@ -200,16 +208,32 @@ class FilteringFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        val hasChanges = viewModel.buttonsVisibilityState.value == true
+        if (hasChanges) {
+            setFragmentResult(
+                FILTERS_RESULT_KEY,
+                bundleOf(
+                    APPLIED_PARAMS_KEY to true,
+                    PERFORM_SEARCH_KEY to false
+                )
+            )
+        }
         super.onDestroyView()
         _binding = null
     }
 
     private fun handleWorkplaceState(state: FilterState) {
-        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
-        if (wpCurrent != state.workplace) {
-            binding.workplaceEdit.setText(state.workplace)
+        val display = when {
+            state.country.isBlank() -> ""
+            state.region.isBlank() -> state.country
+            else -> "${state.country}, ${state.region}"
         }
-        updateTextInputLayoutAppearance(binding.workplace, state.workplace) {
+
+        val wpCurrent = binding.workplaceEdit.text?.toString() ?: ""
+        if (wpCurrent != display) {
+            binding.workplaceEdit.setText(display)
+        }
+        updateTextInputLayoutAppearance(binding.workplace, display) {
             viewModel.clearWorkplace()
         }
     }

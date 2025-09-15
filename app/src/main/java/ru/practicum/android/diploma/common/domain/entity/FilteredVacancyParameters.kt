@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.common.domain.entity
 
-class FilteredVacancyParameters(
+data class FilteredVacancyParameters(
     val areaId: Int?,
     val industryId: Int?,
     val text: String?,

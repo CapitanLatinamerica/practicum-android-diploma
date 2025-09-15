@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 interface VacancyRepository {
 
     // Поиск вакансий с фильтрацией по тексту и страницам
-    fun searchVacancies(query: String, page: Int): Flow<Resource<VacanciesPage>>
+    fun searchVacancies(filteredVacancyParameters: FilteredVacancyParameters): Flow<Resource<VacanciesPage>>
 
     fun searchAllVacancies(): List<Vacancy>
 

@@ -45,13 +45,13 @@ class FilteringViewModel(
 //        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
 //    }
 
-    fun onWorkplaceSelected(value: String) {
-        updateAndSave { it.copy(workplace = value) }
-    }
-
-    fun onIndustrySelected(value: String) {
-        updateAndSave { it.copy(industry = value) }
-    }
+//    fun onWorkplaceSelected(value: String) {
+//        updateAndSave { it.copy(workplace = value) }
+//    }
+//
+//    fun onIndustrySelected(value: String) {
+//        updateAndSave { it.copy(industry = value) }
+//    }
 
     fun onSalaryTextChanged(text: String) {
         updateAndSave { it.copy(salary = text) }
@@ -62,11 +62,26 @@ class FilteringViewModel(
     }
 
     fun clearWorkplace() {
-        updateAndSave { it.copy(workplace = "") }
+        updateAndSave { it.copy(country = "", region = "") }
     }
 
     fun clearIndustry() {
         updateAndSave { it.copy(industry = "") }
+    }
+
+    fun loadFilterSettings() {
+        viewModelScope.launch {
+            val savedParams = filteringUseCase.loadParameters()
+            val newState = if (savedParams != null) mapper.mapParamsToUi(savedParams) else FilterState()
+
+            if (!initialized) {
+                initialState = newState
+                initialized = true
+            }
+
+            _filterState.postValue(newState)
+            _buttonsVisibilityState.postValue(newState != initialState)
+        }
     }
 
     private fun updateAndSave(transform: (FilterState) -> FilterState) {
@@ -93,5 +108,4 @@ class FilteringViewModel(
         }
         _buttonsVisibilityState.value = newParams != initialState
     }
-
 }
