@@ -107,16 +107,20 @@ class FilteringFragment : Fragment() {
 //                findNavController().navigate(action)
 //            }
 //        }
-//
-//        binding.workplaceEdit.apply {
-//            setOnClickListener {
-//                findNavController().navigate(R.id.action_filteringFragment_to_workplaceFragment)
-//            }
-//        }
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("workplaceUpdated")
+            ?.observe(viewLifecycleOwner) { updated ->
+                if (updated) {
+                    // Обновляем данные при возврате из WorkplaceFragment
+                    viewModel.loadFilterSettings()
+                    // Сбрасываем флаг
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set("workplaceUpdated", false)
+                }
+            }
 
 //        Обновляем состояние выбранной отрасли во ViewModel
 //        parentFragmentManager.setFragmentResultListener("selectedIndustryKey", viewLifecycleOwner) { _, bundle ->
@@ -191,6 +195,11 @@ class FilteringFragment : Fragment() {
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.gray))
             layout.setEndIconOnClickListener(null)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadFilterSettings()
     }
 
     private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {

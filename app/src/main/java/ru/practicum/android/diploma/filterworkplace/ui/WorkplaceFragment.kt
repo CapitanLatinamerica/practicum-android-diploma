@@ -61,12 +61,21 @@ class WorkplaceFragment : Fragment() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "workplaceUpdated",
+                true
+            )
             findNavController().navigateUp()
         }
 
         // Кнопка "Применить" для сохранения и возврата
         binding.applyButton.setOnClickListener {
+
             viewModel.applyChanges()
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "workplaceUpdated",
+                true
+            )
             findNavController().navigateUp()
         }
     }
