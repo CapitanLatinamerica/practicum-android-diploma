@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -73,17 +74,13 @@ class MainFragment : Fragment() {
         }
 
         binding.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Для многоуважаемого детекта
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 extracted(s)
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                // Для многоуважаемого детекта
-            }
+            override fun afterTextChanged(s: Editable?) = Unit
         })
 
         binding.btnEditAction.setOnClickListener {
@@ -117,6 +114,12 @@ class MainFragment : Fragment() {
                 onScroll(dy, recyclerView)
             }
         })
+
+        // Cлушатель результата от FilteringFragment о том, запускать поиск или просто обновить параметры
+        setFragmentResultListener("filters_applied") { _, bundle ->
+            val performSearch = bundle.getBoolean("perform_search", false)
+            viewModel.onFiltersApplied(performSearch)
+        }
     }
 
     private fun onScroll(dy: Int, recyclerView: RecyclerView) {
