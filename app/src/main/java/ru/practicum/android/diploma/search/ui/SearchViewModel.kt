@@ -253,14 +253,12 @@ class SearchViewModel(
             val savedParams = filteringUseCase.loadParameters()
             val mapped = filterParametersMapper.mapToSearchParams(savedParams)
 
-            if (mapped == currentFilterParams) {
-                return@launch
-            }
-
-            if (performSearch) {
-                applyFilters(mapped)
-            } else {
-                currentFilterParams = mapped
+            if (mapped != currentFilterParams) {
+                if (performSearch) {
+                    applyFilters(mapped)
+                } else {
+                    currentFilterParams = mapped
+                }
             }
         }
     }

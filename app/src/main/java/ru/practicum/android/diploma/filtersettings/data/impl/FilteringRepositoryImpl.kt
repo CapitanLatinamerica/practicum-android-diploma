@@ -27,9 +27,9 @@ class FilteringRepositoryImpl(
 
     override suspend fun isNotBlank(): Boolean = loadParameters()?.let {
         it.onlyWithSalary ||
-                it.country.isNotBlank() ||
-                it.region.isNotBlank() ||
-                it.industry.isNotBlank() ||
-                it.salary.isNotBlank()
+        it.country.isNotBlank() ||
+        it.region.isNotBlank() ||
+        it.industry.isNotBlank() ||
+        it.salary.isNotBlank()
     } ?: false
 }
