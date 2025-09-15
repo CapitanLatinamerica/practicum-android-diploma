@@ -48,16 +48,15 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
-    var isFilterParametersBlank = false
 
-    init {
-        var isFilterParametersBlank = false
-        _searchState.value = SearchState.Initial(isFilterParametersBlank)
+    init{
+        _searchState.value = SearchState.Initial
     }
 
     fun checkFilterStatus() {
         viewModelScope.launch {
-            isFilterParametersBlank = filteringUseCase.isNotBlank()
+            var isFilterParametersBlank = filteringUseCase.isNotBlank()
+            _searchState.value = SearchState.FilterStatusChanging(isFilterParametersBlank)
         }
     }
 
@@ -66,7 +65,7 @@ class SearchViewModel(
         collectJob?.cancel()
         latestSearchText = null
         resetPaging()
-        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
+        _searchState.postValue(SearchState.Initial)
         _isBottomLoading.postValue(false)
     }
 
