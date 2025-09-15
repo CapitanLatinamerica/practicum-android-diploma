@@ -68,12 +68,12 @@ class FilteringViewModel(
     fun clearIndustry() {
         updateAndSave { it.copy(industry = "") }
     }
+
     fun loadFilterSettings() {
         viewModelScope.launch {
             val savedParams = filteringUseCase.loadParameters()
             val newState = if (savedParams != null) mapper.mapParamsToUi(savedParams) else FilterState()
 
-            // Обновляем initialState только при первой загрузке
             if (!initialized) {
                 initialState = newState
                 initialized = true
@@ -108,5 +108,4 @@ class FilteringViewModel(
         }
         _buttonsVisibilityState.value = newParams != initialState
     }
-
 }

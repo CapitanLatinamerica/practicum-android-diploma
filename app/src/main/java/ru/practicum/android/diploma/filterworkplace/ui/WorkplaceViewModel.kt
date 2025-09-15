@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.filterworkplace.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +15,6 @@ class WorkplaceViewModel(
     private val _workplaceState = MutableLiveData(WorkplaceState())
     val workplaceState: LiveData<WorkplaceState> = _workplaceState
 
-    // LiveData для отслеживания наличия выбранной страны
     private val _hasSelectedCountry = MutableLiveData<Boolean>()
     val hasSelectedCountry: LiveData<Boolean> = _hasSelectedCountry
 
@@ -44,7 +42,6 @@ class WorkplaceViewModel(
         _workplaceState.value = _workplaceState.value?.copy(country = value)
         _hasSelectedCountry.value = value.isNotEmpty()
 
-        // Сохраняем страну сразу при выборе
         saveWorkplaceToPreferences(value)
     }
 
@@ -71,7 +68,6 @@ class WorkplaceViewModel(
         }
     }
 
-    // Метод для применения всех изменений (если нужно)
     fun applyChanges() {
         val currentState = _workplaceState.value ?: return
         saveWorkplaceToPreferences(currentState.country ?: "")

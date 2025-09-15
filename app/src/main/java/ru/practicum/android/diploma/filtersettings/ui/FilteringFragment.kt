@@ -115,9 +115,7 @@ class FilteringFragment : Fragment() {
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("workplaceUpdated")
             ?.observe(viewLifecycleOwner) { updated ->
                 if (updated) {
-                    // Обновляем данные при возврате из WorkplaceFragment
                     viewModel.loadFilterSettings()
-                    // Сбрасываем флаг
                     findNavController().currentBackStackEntry?.savedStateHandle?.set("workplaceUpdated", false)
                 }
             }

@@ -68,9 +68,7 @@ class WorkplaceFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // Кнопка "Применить" для сохранения и возврата
         binding.applyButton.setOnClickListener {
-
             viewModel.applyChanges()
             findNavController().previousBackStackEntry?.savedStateHandle?.set(
                 "workplaceUpdated",
@@ -130,7 +128,6 @@ class WorkplaceFragment : Fragment() {
         }
     }
 
-    // Управление видимостью кнопки "Выбрать"
     private fun handleSelectButtonVisibility(hasCountry: Boolean) {
         binding.applyButton.visibility = if (hasCountry) View.VISIBLE else View.GONE
     }
