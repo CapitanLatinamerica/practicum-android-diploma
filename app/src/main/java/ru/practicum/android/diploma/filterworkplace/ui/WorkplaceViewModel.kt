@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.filtersettings.data.FilterParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class WorkplaceViewModel(
@@ -29,11 +28,12 @@ class WorkplaceViewModel(
                 // Восстанавливаем состояние из сохраненных параметров
                 _workplaceState.postValue(
                     WorkplaceState(
-                        country = params.workplace,
-                        region = "" // Регион пока не используется в FilterParameters
+                        country = params.country,
+                        region = params.region
                     )
                 )
-                _hasSelectedCountry.postValue(params.workplace.isNotEmpty())
+                _hasSelectedCountry.postValue(params.country.isNotEmpty())
+                _hasSelectedCountry.postValue(params.region.isNotEmpty())
             }
         }
     }
@@ -42,7 +42,7 @@ class WorkplaceViewModel(
         _workplaceState.value = _workplaceState.value?.copy(country = value)
         _hasSelectedCountry.value = value.isNotEmpty()
 
-        saveWorkplaceToPreferences(value)
+//        saveWorkplaceToPreferences(value)
     }
 
     fun onRegionSelected(value: String) {
@@ -53,23 +53,23 @@ class WorkplaceViewModel(
         _workplaceState.value = _workplaceState.value?.copy(country = "")
         _hasSelectedCountry.value = false
         // Очищаем workplace в настройках
-        saveWorkplaceToPreferences("")
+//        saveWorkplaceToPreferences("")
     }
 
     fun clearRegion() {
         _workplaceState.value = _workplaceState.value?.copy(region = "")
     }
 
-    private fun saveWorkplaceToPreferences(workplace: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
-            val updatedParams = currentParams.copy(workplace = workplace)
-            filteringUseCase.saveParameters(updatedParams)
-        }
-    }
-
-    fun applyChanges() {
-        val currentState = _workplaceState.value ?: return
-        saveWorkplaceToPreferences(currentState.country ?: "")
-    }
+//    private fun saveWorkplaceToPreferences(workplace: String) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+//            val updatedParams = currentParams.copy(workplace = workplace)
+//            filteringUseCase.saveParameters(updatedParams)
+//        }
+//    }
+//
+//    fun applyChanges() {
+//        val currentState = _workplaceState.value ?: return
+//        saveWorkplaceToPreferences(currentState.country ?: "")
+//    }
 }

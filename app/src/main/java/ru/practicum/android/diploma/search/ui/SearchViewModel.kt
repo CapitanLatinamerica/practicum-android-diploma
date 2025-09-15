@@ -51,7 +51,7 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
-//    var isFilterParametersBlank = false
+    var isFilterParametersBlank = false
 
     private var currentFilterParams = FilteredVacancyParameters(
         areaId = null,
@@ -63,21 +63,20 @@ class SearchViewModel(
     )
 
     init {
-        _searchState.value = SearchState.Initial
-
+//        _searchState.postValue(SearchState.Initial)
         viewModelScope.launch {
             val saved = filteringUseCase.loadParameters()
             val mapped = filterParametersMapper.mapToSearchParams(saved)
             currentFilterParams = mapped
         }
-//        var isFilterParametersBlank = false
-//        _searchState.value = SearchState.Initial(isFilterParametersBlank)
-//    }
-//
-//    fun checkFilterStatus() {
-//        viewModelScope.launch {
-//            isFilterParametersBlank = filteringUseCase.isNotBlank()
-//        }
+        var isFilterParametersBlank = false
+        _searchState.value = SearchState.Initial(isFilterParametersBlank)
+    }
+
+    fun checkFilterStatus() {
+        viewModelScope.launch {
+            isFilterParametersBlank = filteringUseCase.isNotBlank()
+        }
     }
 
     fun clearSearch() {
@@ -85,8 +84,8 @@ class SearchViewModel(
         collectJob?.cancel()
         latestSearchText = null
         resetPaging()
-        _searchState.postValue(SearchState.Initial)
-//        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
+//        _searchState.value = SearchState.Initial
+        _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
         _isBottomLoading.postValue(false)
     }
 
@@ -243,7 +242,8 @@ class SearchViewModel(
             _searchState.postValue(SearchState.Loading)
             loadPage(lastText, 1, isFirstRequest = true)
         } else {
-            _searchState.postValue(SearchState.Initial)
+//            _searchState.postValue(SearchState.Initial)
+            _searchState.postValue(SearchState.Initial(isFilterParametersBlank))
         }
     }
 
