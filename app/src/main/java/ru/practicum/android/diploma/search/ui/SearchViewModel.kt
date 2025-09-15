@@ -49,7 +49,7 @@ class SearchViewModel(
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
 
-    init{
+    init {
         _searchState.value = SearchState.Initial
     }
 
