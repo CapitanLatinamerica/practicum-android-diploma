@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.filtersettings.data.FilterParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
 
@@ -34,39 +35,47 @@ class FilteringViewModel(
             initialized = true
         }
     }
-//    val selectedIndustryId: String?
-//        get() = _filterState.value?.industry.takeIf { !it.isNullOrEmpty() }
-//
-//    fun onSalaryTextChanged(text: String) {
-//        _filterState.value = _filterState.value?.copy(salary = text)
-//    }
-//
-//    fun onOnlyWithSalaryToggled(isChecked: Boolean) {
-//        _filterState.value = _filterState.value?.copy(onlyWithSalary = isChecked)
-//    }
-
-//    fun onWorkplaceSelected(value: String) {
-//        updateAndSave { it.copy(workplace = value) }
-//    }
-//
-//    fun onIndustrySelected(value: String) {
-//        updateAndSave { it.copy(industry = value) }
-//    }
 
     fun onSalaryTextChanged(text: String) {
-        updateAndSave { it.copy(salary = text) }
+        updateSalaryAndCheckbox { currentState ->
+            currentState.copy(salary = text)
+        }
     }
 
     fun onOnlyWithSalaryToggled(isChecked: Boolean) {
-        updateAndSave { it.copy(onlyWithSalary = isChecked) }
+        updateSalaryAndCheckbox { currentState ->
+            currentState.copy(onlyWithSalary = isChecked)
+        }
     }
 
     fun clearWorkplace() {
-        updateAndSave { it.copy(country = "", region = "") }
+        viewModelScope.launch {
+            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+            val updatedParams = currentParams.copy(
+                country = "", countryId = 0, region = "", regionId = 0
+            )
+            filteringUseCase.saveParameters(updatedParams)
+
+            val currentState = _filterState.value ?: FilterState()
+            val newState = currentState.copy(country = "", region = "")
+            _filterState.value = newState
+            _buttonsVisibilityState.value = newState != initialState
+        }
     }
 
     fun clearIndustry() {
-        updateAndSave { it.copy(industry = "") }
+        viewModelScope.launch {
+            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+            val updatedParams = currentParams.copy(
+                industry = "", industryId = 0
+            )
+            filteringUseCase.saveParameters(updatedParams)
+
+            val currentState = _filterState.value ?: FilterState()
+            val newState = currentState.copy(industry = "")
+            _filterState.value = newState
+            _buttonsVisibilityState.value = newState != initialState
+        }
     }
 
     fun loadFilterSettings() {
@@ -84,7 +93,7 @@ class FilteringViewModel(
         }
     }
 
-    private fun updateAndSave(transform: (FilterState) -> FilterState) {
+    private fun updateSalaryAndCheckbox(transform: (FilterState) -> FilterState) {
         val currentState = _filterState.value ?: FilterState()
         val newState = transform(currentState)
 
@@ -94,8 +103,16 @@ class FilteringViewModel(
         if (!initialized) return
 
         _buttonsVisibilityState.postValue(newState != initialState)
+
         viewModelScope.launch {
-            filteringUseCase.saveParameters(mapper.mapParamsToDomain(newState))
+            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+
+            val updatedParams = currentParams.copy(
+                salary = newState.salary,
+                onlyWithSalary = newState.onlyWithSalary
+            )
+
+            filteringUseCase.saveParameters(updatedParams)
         }
     }
 
