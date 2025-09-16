@@ -54,7 +54,7 @@ class IndustryFragment : Fragment() {
 
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            val selectedIndustryId = params?.industry ?: "" // industry хранится как String ID
+            val selectedIndustryId = params?.industryId?.toString() ?: "" // industry хранится как String ID
 
             viewModel.getIndustries(selectedIndustryId) // передаем ID для выделения
         }
@@ -62,9 +62,8 @@ class IndustryFragment : Fragment() {
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustryState.Content -> {
-                    adapter.updateItems(state.industryList, selectedId = null)
+                    adapter.updateItems(state.industryList, state.selectedIndustryId)
                     updateApplyButtonVisibility()
-                    adapter.updateItems(state.industryList, args.selectedIndustryId)
                     binding.industryScrolls.visibility = View.VISIBLE
                     binding.placeholderImage.visibility = View.GONE
                     binding.placeholderText.visibility = View.GONE
@@ -78,7 +77,6 @@ class IndustryFragment : Fragment() {
                 }
             }
         }
-        viewModel.getIndustries()
         binding.industryEditText.addTextChangedListener { editable ->
             val hasText = !editable.isNullOrEmpty()
             val iconRes = if (hasText) R.drawable.ic_clear_button else R.drawable.ic_search
@@ -102,7 +100,8 @@ class IndustryFragment : Fragment() {
 
                 // Создаем обновленные параметры
                 val updatedParams = (currentParams ?: FilterParameters()).copy(
-                    industry = selectedIndustry?.id.toString()
+                    industry = selectedIndustry?.name.toString(),
+                    industryId = selectedIndustry?.id ?: 0
                 )
 
                 // Сохраняем
