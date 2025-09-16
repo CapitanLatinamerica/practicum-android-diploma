@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filterindustry.ui
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,17 +18,12 @@ import ru.practicum.android.diploma.filtersettings.data.FilterParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class IndustryFragment : Fragment() {
-    private val args: IndustryFragmentArgs by navArgs()
     private val filteringUseCase: FilteringUseCase by inject()
 
     private var _binding: FragmentIndustryBinding? = null
     private val binding: FragmentIndustryBinding
         get() = _binding!!
-    private var adapter = IndustryAdapter(onItemClick = { industry ->
-        // Обработка клика по элементу
-        Toast.makeText(requireContext(), "Выбрана отрасль: ${industry.name}", Toast.LENGTH_SHORT).show()
-        // При необходимости передать выбор в FilteringFragment или закрыть фрагмент
-    })
+    private var adapter = IndustryAdapter(onItemClick = { industry -> })
 
     private val viewModel: IndustryVIewModel by viewModel()
 
@@ -64,27 +59,17 @@ class IndustryFragment : Fragment() {
                 is IndustryState.Content -> {
                     adapter.updateItems(state.industryList, state.selectedIndustryId)
                     updateApplyButtonVisibility()
-                    binding.industryScrolls.visibility = View.VISIBLE
-                    binding.placeholderImage.visibility = View.GONE
-                    binding.placeholderText.visibility = View.GONE
+                    onIndustryStateHideElements()
                 }
 
                 IndustryState.Error -> {
                     Toast.makeText(requireActivity(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
-                    binding.industryScrolls.visibility = View.GONE
-                    binding.placeholderImage.visibility = View.VISIBLE
-                    binding.placeholderText.visibility = View.VISIBLE
+                    onIndustryStateErrorShowElements()
                 }
             }
         }
         binding.industryEditText.addTextChangedListener { editable ->
-            val hasText = !editable.isNullOrEmpty()
-            val iconRes = if (hasText) R.drawable.ic_clear_button else R.drawable.ic_search
-            binding.clearIcon.setImageResource(iconRes)
-            binding.clearIcon.visibility = View.VISIBLE
-
-            adapter.filter(editable?.toString() ?: "")
-            updateApplyButtonVisibility()
+            onChangedText(editable)
         }
 
         binding.clearIcon.setOnClickListener {
@@ -109,8 +94,28 @@ class IndustryFragment : Fragment() {
                 parentFragmentManager.popBackStack()
             }
         }
-
         updateApplyButtonVisibility()
+    }
+
+    private fun onChangedText(editable: Editable?) {
+        val hasText = !editable.isNullOrEmpty()
+        val iconRes = if (hasText) R.drawable.ic_clear_button else R.drawable.ic_search
+        binding.clearIcon.setImageResource(iconRes)
+        binding.clearIcon.visibility = View.VISIBLE
+        adapter.filter(editable?.toString() ?: "")
+        updateApplyButtonVisibility()
+    }
+
+    private fun onIndustryStateErrorShowElements() {
+        binding.industryScrolls.visibility = View.GONE
+        binding.placeholderImage.visibility = View.VISIBLE
+        binding.placeholderText.visibility = View.VISIBLE
+    }
+
+    private fun onIndustryStateHideElements() {
+        binding.industryScrolls.visibility = View.VISIBLE
+        binding.placeholderImage.visibility = View.GONE
+        binding.placeholderText.visibility = View.GONE
     }
 
     private fun setupToolbar() {

@@ -30,4 +30,3 @@ class RegionAdapter(
         notifyDataSetChanged()
     }
 }
-
