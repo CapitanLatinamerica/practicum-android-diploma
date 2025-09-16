@@ -56,15 +56,22 @@ class WorkplaceFragment : Fragment() {
                 binding.countryEdit.setText(selectedArea.name)
             }
 
+// Для региона
+        navBackStackEntry.savedStateHandle.getLiveData<Area>("selectedRegion")
+            .observe(viewLifecycleOwner) { selectedArea ->
+                viewModel.onRegionSelected(selectedArea.name)
+                binding.regionEdit.setText(selectedArea.name)
+            }
+
         binding.regionEdit.setOnClickListener {
             findNavController().navigate(R.id.action_workplaceFragment_to_regionFragment)
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                "workplaceUpdated",
-                true
-            )
+//            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+//                "workplaceUpdated",
+//                true
+//            )
             findNavController().navigateUp()
         }
 
@@ -130,6 +137,12 @@ class WorkplaceFragment : Fragment() {
 
     private fun handleSelectButtonVisibility(hasCountry: Boolean) {
         binding.applyButton.visibility = if (hasCountry) View.VISIBLE else View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Обновляем данные при каждом возвращении на экран
+        viewModel.loadExistingFilterSettings()
     }
 
     override fun onDestroyView() {

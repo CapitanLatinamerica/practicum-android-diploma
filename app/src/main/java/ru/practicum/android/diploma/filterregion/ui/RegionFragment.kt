@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -49,23 +50,15 @@ class RegionFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = RegionAdapter { selectedRegion ->
             lifecycleScope.launch {
-                // Сохраняем выбранный регион в SharedPreferences через FilteringUseCase
                 val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
-                // Получаем название страны по parentId региона
+
+                // Если у региона есть parentId, находим страну
                 val countryName = if (selectedRegion.parentId != null) {
                     when (val result = viewModel.findCountryByRegion(selectedRegion.parentId)) {
-                        is Resource.Success -> {
-                            result.data?.name ?: run {
-                                currentParams.country
-                            }
-                        }
-
-                        is Resource.Error -> {
-                            currentParams.country
-                        }
+                        is Resource.Success -> result.data?.name ?: currentParams.country
+                        is Resource.Error -> currentParams.country
                     }
                 } else {
-                    // Если parentId null, оставляем текущее значение
                     currentParams.country
                 }
 
@@ -77,7 +70,7 @@ class RegionFragment : Fragment() {
                 )
 
                 filteringUseCase.saveParameters(updatedParams)
-                parentFragmentManager.popBackStack()
+                findNavController().navigateUp()
             }
         }
         binding.regionRecyclerView.adapter = adapter
