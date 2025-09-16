@@ -64,6 +64,10 @@ class FilteringFragment : Fragment() {
 
         })
 
+        viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
+            handleVisibilityButtonsState(visible)
+        }
+
         binding.salaryEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.salaryEditText.clearFocus()
@@ -74,9 +78,7 @@ class FilteringFragment : Fragment() {
         }
 
         binding.salaryEditText.setOnFocusChangeListener { _, hasFocus ->
-            handleSalaryHintColor()
-            updateClearButtonVisibility()
-            handleKeyboardVisibility(hasFocus)
+            onFocusChangeSalaryEditText(hasFocus)
         }
 
         binding.clearIcon.setOnClickListener {
@@ -96,14 +98,14 @@ class FilteringFragment : Fragment() {
             }
         }
 
-        viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
-            handleVisibilityButtonsState(visible)
-        }
-
         binding.salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onOnlyWithSalaryToggled(isChecked)
         }
 
+        defineListeners()
+    }
+
+    private fun defineListeners() {
         binding.deleteButton.setOnClickListener {
             viewModel.clearAllParams()
 
@@ -132,15 +134,17 @@ class FilteringFragment : Fragment() {
         }
     }
 
+    private fun onFocusChangeSalaryEditText(hasFocus: Boolean) {
+        handleSalaryHintColor()
+        updateClearButtonVisibility()
+        handleKeyboardVisibility(hasFocus)
+    }
+
     private fun renderState(state: FilterState) {
         handleWorkplaceState(state)
-
         handleIndustryState(state)
-
         handleSalaryState(state)
-
         handleCheckBoxSalaryState(state)
-
     }
 
     private fun updateClearButtonVisibility() {

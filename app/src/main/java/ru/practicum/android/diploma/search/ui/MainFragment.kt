@@ -73,6 +73,32 @@ class MainFragment : Fragment() {
             renderState(state)
         }
 
+        viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
+            adapter?.showLoadingFooter(loading)
+        }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { toastMessage ->
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                defineListeners()
+            }
+        }
+
+        binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScroll(dy, recyclerView)
+            }
+        })
+
+        // Cлушатель результата от FilteringFragment о том, запускать поиск или просто обновить параметры
+        setFragmentResultListener("filters_applied") { _, bundle ->
+            val performSearch = bundle.getBoolean("perform_search", false)
+            viewModel.onFiltersApplied(performSearch)
+        }
+    }
+
+    private fun defineListeners() {
         binding.editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
@@ -96,29 +122,6 @@ class MainFragment : Fragment() {
 
                 else -> false
             }
-        }
-
-        viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
-            adapter?.showLoadingFooter(loading)
-        }
-
-        viewModel.toastMessage.observe(viewLifecycleOwner) { event ->
-            event?.getContentIfNotHandled()?.let { toastMessage ->
-                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                onScroll(dy, recyclerView)
-            }
-        })
-
-        // Cлушатель результата от FilteringFragment о том, запускать поиск или просто обновить параметры
-        setFragmentResultListener("filters_applied") { _, bundle ->
-            val performSearch = bundle.getBoolean("perform_search", false)
-            viewModel.onFiltersApplied(performSearch)
         }
     }
 
