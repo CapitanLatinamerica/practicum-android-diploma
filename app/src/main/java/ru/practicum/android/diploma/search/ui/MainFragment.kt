@@ -158,22 +158,25 @@ class MainFragment : Fragment() {
 
     private fun renderState(state: SearchState) {
         when (state) {
-            is SearchState.Initial -> showInitial(state.isFilterParametersApplied)
+            is SearchState.Initial -> showInitial()
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
             is SearchState.Error -> showError(state.errorType, state.errorMessage)
+            is SearchState.FilterStatusChanging -> {
+                switchFilterMarkIcon(state.isFilterParametersApplied)
+                showInitial()
+            }
         }
     }
 
-    private fun showInitial(isFilterParametersApplied: Boolean) {
+    private fun showInitial() {
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
             placeholderMainScreen.setImageResource(R.drawable.placeholder_main_screen)
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
-            switchFilterMarkIcon(isFilterParametersApplied)
         }
     }
 

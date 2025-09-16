@@ -38,6 +38,11 @@ import ru.practicum.android.diploma.filtercountry.domain.CountryRepository
 import ru.practicum.android.diploma.filtercountry.domain.impl.CountryInteractorImpl
 import ru.practicum.android.diploma.filtercountry.ui.CountryViewModel
 import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
+import ru.practicum.android.diploma.filterregion.data.RegionInteractorImpl
+import ru.practicum.android.diploma.filterregion.data.RegionRepositoryImpl
+import ru.practicum.android.diploma.filterregion.domain.RegionInteractor
+import ru.practicum.android.diploma.filterregion.domain.RegionRepository
+import ru.practicum.android.diploma.filterregion.ui.RegionViewModel
 import ru.practicum.android.diploma.filtersettings.data.FilterStorage
 import ru.practicum.android.diploma.filtersettings.data.impl.FilteringRepositoryImpl
 import ru.practicum.android.diploma.filtersettings.domain.FilteringRepository
@@ -222,5 +227,20 @@ val workplaceModule = module {
 
     single<CountryInteractor> {
         CountryInteractorImpl(get())
+    }
+}
+
+val regionModule = module {
+
+    single<RegionInteractor> {
+        RegionInteractorImpl(get())
+    }
+
+    single<RegionRepository> {
+        RegionRepositoryImpl(get(), get())
+    }
+
+    viewModel {
+        RegionViewModel(get())
     }
 }
