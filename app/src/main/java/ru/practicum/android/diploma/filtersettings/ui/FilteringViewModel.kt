@@ -52,7 +52,10 @@ class FilteringViewModel(
         viewModelScope.launch {
             val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
             val updatedParams = currentParams.copy(
-                country = "", countryId = 0, region = "", regionId = 0
+                country = "",
+                countryId = 0,
+                region = "",
+                regionId = 0
             )
             filteringUseCase.saveParameters(updatedParams)
 
@@ -66,9 +69,7 @@ class FilteringViewModel(
     fun clearIndustry() {
         viewModelScope.launch {
             val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
-            val updatedParams = currentParams.copy(
-                industry = "", industryId = 0
-            )
+            val updatedParams = currentParams.copy(industry = "", industryId = 0)
             filteringUseCase.saveParameters(updatedParams)
 
             val currentState = _filterState.value ?: FilterState()
