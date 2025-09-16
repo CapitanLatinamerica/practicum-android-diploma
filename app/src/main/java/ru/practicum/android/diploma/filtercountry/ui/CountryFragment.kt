@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentCountryBinding
+import ru.practicum.android.diploma.filtersettings.data.FilterParameters
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class CountryFragment : Fragment() {
 
@@ -18,13 +23,19 @@ class CountryFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: CountryViewModel by viewModel()
+    private val filteringUseCase: FilteringUseCase by inject()
 
     private val adapter = AreaAdapter { area ->
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(
-            "selectedCountry",
-            area
-        )
-        findNavController().navigateUp()
+        // Сохраняем выбранную страну напрямую в SharedPreferences
+        lifecycleScope.launch {
+            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+            val updatedParams = currentParams.copy(
+                country = area.name,
+                countryId = area.id
+            )
+            filteringUseCase.saveParameters(updatedParams)
+            findNavController().navigateUp()
+        }
     }
 
     override fun onCreateView(
