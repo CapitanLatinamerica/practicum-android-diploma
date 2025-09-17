@@ -80,7 +80,6 @@ class MainFragment : Fragment() {
         viewModel.toastMessage.observe(viewLifecycleOwner) { event ->
             event?.getContentIfNotHandled()?.let { toastMessage ->
                 Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
-                defineListeners()
             }
         }
 
@@ -96,6 +95,8 @@ class MainFragment : Fragment() {
             val performSearch = bundle.getBoolean("perform_search", false)
             viewModel.onFiltersApplied(performSearch)
         }
+
+        defineListeners()
     }
 
     private fun defineListeners() {
