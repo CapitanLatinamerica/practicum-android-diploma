@@ -12,7 +12,6 @@ import com.google.android.material.internal.CheckableImageButton
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentWorkplaceBinding
 
 class WorkplaceFragment : Fragment() {
@@ -39,48 +38,20 @@ class WorkplaceFragment : Fragment() {
             renderState(state)
         }
 
-        // Отслеживаем наличие выбранной страны для кнопки "Выбрать"
-        viewModel.hasSelectedCountry.observe(viewLifecycleOwner) { hasCountry ->
-            handleSelectButtonVisibility(hasCountry)
-        }
-
         binding.countryEdit.setOnClickListener {
             val action = WorkplaceFragmentDirections.actionWorkplaceFragmentToCountryFragment()
             findNavController().navigate(action)
         }
-
-        val navBackStackEntry = findNavController().getBackStackEntry(R.id.workplaceFragment)
-        navBackStackEntry.savedStateHandle.getLiveData<Area>("selectedCountry")
-            .observe(viewLifecycleOwner) { selectedArea ->
-                viewModel.onCountrySelected(selectedArea.name)
-                binding.countryEdit.setText(selectedArea.name)
-            }
-
-// Для региона
-        navBackStackEntry.savedStateHandle.getLiveData<Area>("selectedRegion")
-            .observe(viewLifecycleOwner) { selectedArea ->
-                viewModel.onRegionSelected(selectedArea.name)
-                binding.regionEdit.setText(selectedArea.name)
-            }
 
         binding.regionEdit.setOnClickListener {
             findNavController().navigate(R.id.action_workplaceFragment_to_regionFragment)
         }
 
         binding.toolbar.setNavigationOnClickListener {
-//            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-//                "workplaceUpdated",
-//                true
-//            )
             findNavController().navigateUp()
         }
 
         binding.applyButton.setOnClickListener {
-//            viewModel.applyChanges()
-//            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-//                "workplaceUpdated",
-//                true
-//            )
             findNavController().navigateUp()
         }
     }
@@ -97,6 +68,10 @@ class WorkplaceFragment : Fragment() {
         if (regionCurrent != regionNew) {
             binding.regionEdit.setText(regionNew)
         }
+
+        // Проверяем наличие выбранного рабочего места (страны ИЛИ региона)
+        val hasWorkplace = state.country?.isNotEmpty() == true || state.region?.isNotEmpty() == true
+        handleSelectButtonVisibility(hasWorkplace)
 
         updateTextInputLayoutAppearance(binding.country, countryNew) {
             viewModel.clearCountry()
@@ -135,8 +110,8 @@ class WorkplaceFragment : Fragment() {
         }
     }
 
-    private fun handleSelectButtonVisibility(hasCountry: Boolean) {
-        binding.applyButton.visibility = if (hasCountry) View.VISIBLE else View.GONE
+    private fun handleSelectButtonVisibility(hasWorkplace: Boolean) {
+        binding.applyButton.visibility = if (hasWorkplace) View.VISIBLE else View.GONE
     }
 
     override fun onResume() {
