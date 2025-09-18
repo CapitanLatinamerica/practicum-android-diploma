@@ -41,6 +41,9 @@ class SearchViewModel(
     private val _toastMessage = MutableLiveData<Event<String>?>()
     val toastMessage: LiveData<Event<String>?> = _toastMessage
 
+    private val _isFilterApplied = MutableLiveData(false)
+    val isFilterApplied: LiveData<Boolean> = _isFilterApplied
+
     private var latestSearchText: String? = null
 
     private var debounceJob: Job? = null
@@ -51,7 +54,6 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
-    var isFilterParametersBlank = false
 
     private var currentFilterParams = FilteredVacancyParameters(
         areaId = null,
@@ -73,8 +75,8 @@ class SearchViewModel(
 
     fun checkFilterStatus() {
         viewModelScope.launch {
-            var isFilterParametersBlank = filteringUseCase.isNotBlank()
-            _searchState.value = SearchState.FilterStatusChanging(isFilterParametersBlank)
+            val applied = filteringUseCase.isNotBlank()
+            _isFilterApplied.postValue(applied)
         }
     }
 

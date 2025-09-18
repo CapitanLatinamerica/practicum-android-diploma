@@ -51,6 +51,9 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.isFilterApplied.observe(viewLifecycleOwner) { applied ->
+            switchFilterMarkIcon(applied)
+        }
         viewModel.checkFilterStatus()
 
         onVacancyClickDebounce = debounce(
@@ -167,10 +170,6 @@ class MainFragment : Fragment() {
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
             is SearchState.Error -> showError(state.errorType, state.errorMessage)
-            is SearchState.FilterStatusChanging -> {
-                switchFilterMarkIcon(state.isFilterParametersApplied)
-                showInitial()
-            }
         }
     }
 
