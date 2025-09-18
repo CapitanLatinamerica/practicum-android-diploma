@@ -33,15 +33,14 @@
 
     <EditText
         android:id="@+id/industryEditText"
-        style="@style/IndustryEditText"
+        style="@style/EditText"
         android:layout_width="@dimen/zero_dp"
-        android:layout_height="@dimen/height_51"
+        android:layout_height="@dimen/tb_height"
         android:layout_marginTop="@dimen/padding_8"
         android:autofillHints="MyAwesomeHint"
         android:hint="@string/industry_input"
-        android:inputType="text"
-        android:maxLines="1"
-        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_56"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
