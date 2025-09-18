@@ -53,8 +53,8 @@ class MainFragment : Fragment() {
 
         viewModel.isFilterApplied.observe(viewLifecycleOwner) { applied ->
             switchFilterMarkIcon(applied)
-            viewModel.checkFilterStatus()
         }
+        viewModel.checkFilterStatus()
 
         onVacancyClickDebounce = debounce(
             CLICK_DEBOUNCE_DELAY,
