@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.common.data.model.NetResponse
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
+import java.net.SocketTimeoutException
 
 class RetrofitNetworkClient(
     private val headHunterApi: HeadHunterApi,
@@ -27,6 +28,7 @@ class RetrofitNetworkClient(
         private const val SERVER_ERROR = 500
         private const val ERROR = 400
         private const val TAG = "RetrofitNetworkClient"
+        private const val TIMEOUT_ERROR = 408
     }
 
     override suspend fun doRequest(dto: Any): NetResponse {
@@ -63,12 +65,13 @@ class RetrofitNetworkClient(
                     else ->
                         NetResponse().serverError()
                 }
+//            } catch (e: CancellationException) {
+//                throw e
+            } catch (e: SocketTimeoutException) {
+                Log.e(TAG, "Socket timeout", e)
+                NetResponse().error(TIMEOUT_ERROR)
             } catch (e: retrofit2.HttpException) {
-                Log.e(
-                    TAG,
-                    "HTTP ${e.code()} ${e.message()}",
-                    e
-                )
+                Log.e(TAG, "HTTP ${e.code()} ${e.message()}", e)
                 NetResponse().error(e.code())
             }
         }

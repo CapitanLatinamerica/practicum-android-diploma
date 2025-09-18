@@ -21,6 +21,7 @@ import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacanciesResponse
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class RetrofitNetworkClientTest {
@@ -132,4 +133,11 @@ class RetrofitNetworkClientTest {
         assertEquals(500, industries.resultCode)
     }
 
+    @Test
+    fun should_get_IO_exception() = runBlocking {
+        val responseBody = JsonApiMock.getResponseFromFile("industries.json")
+        server.enqueue(MockResponse().setBodyDelay(15, TimeUnit.SECONDS).setBody(responseBody))
+        val industries = networkClient.doRequest(IndustriesRequest())
+        assertEquals(408, industries.resultCode)
+    }
 }
