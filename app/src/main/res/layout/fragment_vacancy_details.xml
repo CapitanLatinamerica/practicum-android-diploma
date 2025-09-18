@@ -124,6 +124,7 @@
                         <TextView
                             android:id="@+id/companyName"
                             style="@style/TextMedium22"
+                            android:textColor="@color/black_universal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/company_name" />
@@ -131,6 +132,7 @@
                         <TextView
                             android:id="@+id/companyCity"
                             style="@style/TextRegular16"
+                            android:textColor="@color/black_universal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/city" />

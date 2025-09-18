@@ -224,6 +224,8 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             textView.post {
                 val text = textView.text?.toString()
                 if (!text.isNullOrBlank()) {
+                    binding.vacancySkills.visibility = View.VISIBLE
+                    binding.skillsTextView.visibility = View.VISIBLE
                     val widthLeft = textView.paddingLeft
                     val widthRight = textView.paddingRight
                     val availableWidth = textView.width - widthLeft - widthRight
@@ -235,6 +237,9 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                         prefix = "" // Без префиксов для контактов
                     )
                     textView.text = formattedText
+                } else {
+                    binding.vacancySkills.visibility = View.GONE
+                    binding.skillsTextView.visibility = View.GONE
                 }
             }
         }
