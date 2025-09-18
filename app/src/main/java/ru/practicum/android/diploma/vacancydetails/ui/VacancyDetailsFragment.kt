@@ -220,7 +220,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 )
             }
 
-            if (email.isNullOrBlank()&&phones.isNullOrBlank()) {
+            if (email.isNullOrBlank() && phones.isNullOrBlank()) {
                 binding.vacancyContacts.visibility = View.GONE
             } else {
                 binding.emailTextView.visibility = View.GONE
