@@ -68,6 +68,11 @@ class IndustryFragment : Fragment() {
                 }
             }
         }
+        defineListeners()
+        updateApplyButtonVisibility()
+    }
+
+    private fun defineListeners() {
         binding.industryEditText.addTextChangedListener { editable ->
             onChangedText(editable)
         }
@@ -94,7 +99,6 @@ class IndustryFragment : Fragment() {
                 parentFragmentManager.popBackStack()
             }
         }
-        updateApplyButtonVisibility()
     }
 
     private fun onChangedText(editable: Editable?) {
