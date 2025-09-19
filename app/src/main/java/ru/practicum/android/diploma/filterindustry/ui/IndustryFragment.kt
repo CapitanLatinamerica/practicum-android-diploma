@@ -49,20 +49,25 @@ class IndustryFragment : Fragment() {
 
         lifecycleScope.launch {
             val params = filteringUseCase.loadParameters()
-            val selectedIndustryId = params?.industryId?.toString() ?: "" // industry хранится как String ID
+            val selectedIndustryId = params?.industryId?.toString() ?: ""
 
             viewModel.getIndustries(selectedIndustryId) // передаем ID для выделения
         }
 
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
+                IndustryState.Loading -> {
+                    showLoading()
+                }
                 is IndustryState.Content -> {
+                    hideLoading()
                     adapter.updateItems(state.industryList, state.selectedIndustryId)
                     updateApplyButtonVisibility()
                     onIndustryStateHideElements()
                 }
 
                 IndustryState.Error -> {
+                    hideLoading()
                     Toast.makeText(
                         requireActivity(),
                         getString(R.string.industry_loading_error),
@@ -139,6 +144,17 @@ class IndustryFragment : Fragment() {
 
     private fun updateApplyButtonVisibility() {
         binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
+    }
+
+    private fun showLoading() {
+        binding.progressbar.visibility = View.VISIBLE
+        binding.industryScrolls.visibility = View.GONE
+        binding.placeholderImage.visibility = View.GONE
+        binding.placeholderText.visibility = View.GONE
+    }
+
+    private fun hideLoading() {
+        binding.progressbar.visibility = View.GONE
     }
 
     override fun onDestroyView() {

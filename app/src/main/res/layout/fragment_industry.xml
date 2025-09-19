@@ -120,8 +120,8 @@
 
     <ProgressBar
         android:id="@+id/progressbar"
-        android:layout_width="@dimen/vacancy_icon_shape_size"
-        android:layout_height="@dimen/vacancy_icon_shape_size"
+        android:layout_width="@dimen/search_progress_bar_diameter"
+        android:layout_height="@dimen/search_progress_bar_diameter"
         android:indeterminateTint="@color/blue"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
