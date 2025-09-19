@@ -61,11 +61,19 @@ class IndustryAdapter(
         } else {
             items.filter { it.name.contains(query, ignoreCase = true) }
         }
+        // Сохраняем выбранный элемент, если он присутствует в отфильтрованном списке
+        val selectedIndustry = getSelectedIndustry()
+        selectedIndustryId = if (selectedIndustry != null && filteredItems.contains(selectedIndustry)) {
+            selectedIndustry.id.toString()
+        } else {
+            null
+        }
         notifyDataSetChanged()
     }
 
     fun getSelectedIndustry(): Industry? =
-        items.find { it.id.toString() == selectedIndustryId }
+        filteredItems.find { it.id.toString() == selectedIndustryId }
 
-    fun hasSelection(): Boolean = selectedIndustryId != null
+    fun hasSelection(): Boolean =
+        selectedIndustryId != null && filteredItems.any { it.id.toString() == selectedIndustryId }
 }

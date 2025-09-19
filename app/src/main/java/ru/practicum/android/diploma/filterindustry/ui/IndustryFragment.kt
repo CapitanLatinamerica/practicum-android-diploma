@@ -79,7 +79,7 @@ class IndustryFragment : Fragment() {
 
         binding.clearIcon.setOnClickListener {
             binding.industryEditText.text?.clear()
-            binding.applyButton.visibility = View.GONE
+            updateApplyButtonVisibility() // Обновляем видимость кнопки
         }
 
         binding.applyButton.setOnClickListener {
