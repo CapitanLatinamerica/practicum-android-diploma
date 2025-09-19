@@ -36,9 +36,9 @@
         android:layout_width="@dimen/search_progress_bar_diameter"
         android:layout_height="@dimen/search_progress_bar_diameter"
         android:layout_gravity="center_horizontal"
-        android:indeterminateTint="@color/blue"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/detailsScrollView"
+        android:indeterminateTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />

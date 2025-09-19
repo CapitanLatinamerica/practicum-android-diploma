@@ -63,7 +63,10 @@ class IndustryFragment : Fragment() {
                 }
 
                 IndustryState.Error -> {
-                    Toast.makeText(requireActivity(), "Ошибка загрузки отраслей", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.industry_loading_error),
+                        Toast.LENGTH_SHORT).show()
                     onIndustryStateErrorShowElements()
                 }
             }
@@ -75,6 +78,11 @@ class IndustryFragment : Fragment() {
     private fun defineListeners() {
         binding.industryEditText.addTextChangedListener { editable ->
             onChangedText(editable)
+            if (adapter.itemCount == 0) {
+                binding.industryScrolls.visibility = View.GONE
+            } else {
+                binding.industryScrolls.visibility = View.VISIBLE
+            }
         }
 
         binding.clearIcon.setOnClickListener {
