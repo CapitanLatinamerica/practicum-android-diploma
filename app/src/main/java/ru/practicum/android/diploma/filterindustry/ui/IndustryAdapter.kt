@@ -12,7 +12,8 @@ class IndustryAdapter(
 ) : RecyclerView.Adapter<IndustryAdapter.IndustryViewHolder>() {
 
     private var filteredItems: List<Industry> = items.toList()
-    internal var selectedIndustryId: String? = null
+    private var selectedIndustryId: String? = null
+    private var originalSelectedIndustryId: String? = null // Сохраняем оригинальный выбор
 
     inner class IndustryViewHolder(
         private val binding: ItemIndustryCheckboxBinding
@@ -46,12 +47,14 @@ class IndustryAdapter(
     fun updateItems(newItems: List<Industry>, selectedId: String?) {
         items = newItems
         selectedIndustryId = selectedId
+        originalSelectedIndustryId = selectedId // Сохраняем оригинальный выбор
         filteredItems = items.toList()
         notifyDataSetChanged()
     }
 
     fun selectIndustry(industry: Industry) {
         selectedIndustryId = industry.id.toString()
+        originalSelectedIndustryId = industry.id.toString() // Обновляем оригинальный выбор
         notifyDataSetChanged()
     }
 
@@ -61,19 +64,20 @@ class IndustryAdapter(
         } else {
             items.filter { it.name.contains(query, ignoreCase = true) }
         }
-        // Сохраняем выбранный элемент, если он присутствует в отфильтрованном списке
-        val selectedIndustry = getSelectedIndustry()
-        selectedIndustryId = if (selectedIndustry != null && filteredItems.contains(selectedIndustry)) {
-            selectedIndustry.id.toString()
-        } else {
-            null
-        }
+
+        // Проверяем, есть ли выбранная отрасль в отфильтрованном списке
+        val selectedInFiltered = filteredItems.any { it.id.toString() == originalSelectedIndustryId }
+        selectedIndustryId = if (selectedInFiltered) originalSelectedIndustryId else null
+
         notifyDataSetChanged()
     }
 
-    fun getSelectedIndustry(): Industry? =
-        filteredItems.find { it.id.toString() == selectedIndustryId }
+    fun getSelectedIndustry(): Industry? {
+        return filteredItems.find { it.id.toString() == originalSelectedIndustryId }
+    }
 
-    fun hasSelection(): Boolean =
-        selectedIndustryId != null && filteredItems.any { it.id.toString() == selectedIndustryId }
+    fun hasSelection(): Boolean {
+        return originalSelectedIndustryId != null &&
+            filteredItems.any { it.id.toString() == originalSelectedIndustryId }
+    }
 }
