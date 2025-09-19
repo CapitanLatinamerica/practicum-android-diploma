@@ -5,7 +5,6 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -73,7 +72,8 @@ class IndustryFragment : Fragment() {
                     Toast.makeText(
                         requireActivity(),
                         getString(R.string.industry_loading_error),
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                     onIndustryStateErrorShowElements()
                 }
             }
@@ -85,7 +85,7 @@ class IndustryFragment : Fragment() {
     private fun defineListeners() {
         binding.industryEditText.addTextChangedListener { editable ->
             onChangedText(editable)
-            if ((adapter.itemCount == 0)&&(binding.industryEditText.text.isNotEmpty())) {
+            if (adapter.itemCount == 0 && binding.industryEditText.text.isNotEmpty()) {
                 binding.industryScrolls.visibility = View.GONE
                 binding.placeholderImage.visibility = View.VISIBLE
                 binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
