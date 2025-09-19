@@ -97,7 +97,7 @@ class ContactHandler(private val fragment: Fragment) {
 
     private fun makePhoneCall(phoneNumber: String) {
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = "tel:${phoneNumber}".toUri() // ← убираем фильтрацию цифр!
+            data = "tel:$phoneNumber".toUri()
         }
 
         try {
