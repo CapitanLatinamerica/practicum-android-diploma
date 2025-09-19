@@ -17,7 +17,8 @@ data class Vacancy(
     val contactEmail: String?,
     val contactPhones: List<Phone>?,
     val contactPerson: String?,
-    val vacancyUrl: String?
+    val vacancyUrl: String?,
+    val address: String?
 )
 
 data class Phone(

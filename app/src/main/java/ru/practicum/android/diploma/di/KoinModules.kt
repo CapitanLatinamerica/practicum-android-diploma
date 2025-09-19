@@ -141,7 +141,7 @@ val searchModule = module {
 // Модуль для деталей вакансии
 val vacancyDetailsModule = module {
 
-    single<SharingRepository> { SharingRepositoryImpl(get()) }
+    single<SharingRepository> { SharingRepositoryImpl() }
     single<SharingInteractor> { SharingInteractorImpl(get()) }
 
     viewModel { (vacancyId: String) ->

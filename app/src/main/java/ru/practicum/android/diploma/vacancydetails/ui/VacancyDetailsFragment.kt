@@ -139,7 +139,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.vacancySalary.text = uiModel.salaryText
         binding.vacancyDescriptionTextView.text = vacancy.description
         binding.companyName.text = vacancy.employer
-        binding.companyCity.text = vacancy.area
+        binding.companyCity.text = if (vacancy.address.isNullOrEmpty()) vacancy.area else vacancy.address
         binding.skillsTextView.text = vacancy.skills.toString()
     }
 

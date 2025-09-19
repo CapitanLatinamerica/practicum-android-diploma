@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -88,8 +87,8 @@ class RegionFragment : Fragment() {
             when (state) {
                 is RegionState.Loading -> showLoading()
                 is RegionState.Content -> showContent(state.regions)
-                is RegionState.Empty -> showEmpty(state.message)
-                is RegionState.Error -> showError(state.message)
+                is RegionState.Empty -> showEmpty()
+                is RegionState.Error -> showError()
             }
         }
     }
@@ -109,14 +108,13 @@ class RegionFragment : Fragment() {
         }
     }
 
-    private fun showEmpty(message: String) {
+    private fun showEmpty() {
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.GONE
         binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
         binding.placeholderText.setText(R.string.no_region)
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
-        Toast.makeText(requireContext(), "Нет результатов: $message", Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {
@@ -137,14 +135,13 @@ class RegionFragment : Fragment() {
         adapter?.update(regions)
     }
 
-    private fun showError(message: String) {
+    private fun showError() {
         binding.progressbar.visibility = View.GONE
         binding.regionRecyclerView.visibility = View.GONE
         binding.placeholderImage.setImageResource(R.drawable.error_region) // Иконка ошибки
         binding.placeholderText.setText(R.string.error_region) // Ошибка загрузки
         binding.placeholderImage.visibility = View.VISIBLE
         binding.placeholderText.visibility = View.VISIBLE
-        Toast.makeText(requireContext(), "Ошибка: $message", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSearch() {
