@@ -104,4 +104,7 @@
     <string name="item_industry_description">IT</string>
     <string name="no_list_of_industries">Не удалось получить список</string>
     <string name="industries_does_nt_exist">When a list of industries does\'nt exist</string>
+    <string name="do_search">do search</string>
+    <string name="initial_placeholder">initial placeholder</string>
+    <string name="industry_loading_error">Ошибка загрузки отраслей</string>
 </resources>

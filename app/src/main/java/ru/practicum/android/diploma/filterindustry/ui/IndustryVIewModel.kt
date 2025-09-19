@@ -14,6 +14,7 @@ class IndustryVIewModel(private val useCase: GetIndustriesUseCase) : ViewModel()
 
     fun getIndustries(selectedIndustryId: String? = null) {
         viewModelScope.launch {
+            _industryState.value = IndustryState.Loading
             val resource = useCase.execute()
             if (resource.data != null) {
                 _industryState.value = IndustryState.Content(

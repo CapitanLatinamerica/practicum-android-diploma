@@ -33,15 +33,14 @@
 
     <EditText
         android:id="@+id/industryEditText"
-        style="@style/IndustryEditText"
+        style="@style/EditText"
         android:layout_width="@dimen/zero_dp"
-        android:layout_height="@dimen/height_51"
+        android:layout_height="@dimen/tb_height"
         android:layout_marginTop="@dimen/padding_8"
         android:autofillHints="MyAwesomeHint"
         android:hint="@string/industry_input"
-        android:inputType="text"
-        android:maxLines="1"
-        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_56"
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -118,5 +117,16 @@
         app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="@dimen/search_progress_bar_diameter"
+        android:layout_height="@dimen/search_progress_bar_diameter"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

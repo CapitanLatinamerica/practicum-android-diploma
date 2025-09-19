@@ -140,7 +140,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.vacancyDescriptionTextView.text = vacancy.description
         binding.companyName.text = vacancy.employer
         binding.companyCity.text = vacancy.area
-        binding.experienceLine.text = vacancy.experience
         binding.skillsTextView.text = vacancy.skills.toString()
     }
 
@@ -199,6 +198,8 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                     binding.skillsTextView.paint,
                     availableWidth
                 )
+            } else {
+                binding.skillsTextView.visibility = View.GONE
             }
 
             if (!phones.isNullOrBlank()) {
@@ -207,6 +208,8 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                     binding.phoneTextView.paint,
                     availableWidth
                 )
+            } else {
+                binding.phoneTextView.visibility = View.GONE
             }
 
             if (!email.isNullOrBlank()) {
@@ -216,6 +219,12 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                     availableWidth
                 )
             }
+
+            if (email.isNullOrBlank() && phones.isNullOrBlank()) {
+                binding.vacancyContacts.visibility = View.GONE
+            } else {
+                binding.emailTextView.visibility = View.GONE
+            }
         }
     }
 
@@ -224,8 +233,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
             textView.post {
                 val text = textView.text?.toString()
                 if (!text.isNullOrBlank()) {
-                    binding.vacancySkills.visibility = View.VISIBLE
-                    binding.skillsTextView.visibility = View.VISIBLE
                     val widthLeft = textView.paddingLeft
                     val widthRight = textView.paddingRight
                     val availableWidth = textView.width - widthLeft - widthRight
@@ -237,9 +244,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                         prefix = "" // Без префиксов для контактов
                     )
                     textView.text = formattedText
-                } else {
-                    binding.vacancySkills.visibility = View.GONE
-                    binding.skillsTextView.visibility = View.GONE
                 }
             }
         }
