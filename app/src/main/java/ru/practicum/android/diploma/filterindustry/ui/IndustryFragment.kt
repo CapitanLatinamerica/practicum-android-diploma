@@ -5,6 +5,7 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -59,6 +60,7 @@ class IndustryFragment : Fragment() {
                 IndustryState.Loading -> {
                     showLoading()
                 }
+
                 is IndustryState.Content -> {
                     hideLoading()
                     adapter.updateItems(state.industryList, state.selectedIndustryId)
@@ -83,10 +85,20 @@ class IndustryFragment : Fragment() {
     private fun defineListeners() {
         binding.industryEditText.addTextChangedListener { editable ->
             onChangedText(editable)
-            if (adapter.itemCount == 0) {
+            if ((adapter.itemCount == 0)&&(binding.industryEditText.text.isNotEmpty())) {
                 binding.industryScrolls.visibility = View.GONE
+                binding.placeholderImage.visibility = View.VISIBLE
+                binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
+                binding.placeholderText.visibility = View.VISIBLE
+                binding.placeholderText.text = "Отрасль не найдена"
+                binding.applyButton.visibility = View.GONE
             } else {
                 binding.industryScrolls.visibility = View.VISIBLE
+                binding.placeholderImage.visibility = View.GONE
+                binding.placeholderImage.setImageResource(R.drawable.error_region)
+                binding.placeholderText.visibility = View.GONE
+                binding.placeholderText.text = getString(R.string.error_region)
+                binding.applyButton.visibility = View.VISIBLE
             }
         }
 
