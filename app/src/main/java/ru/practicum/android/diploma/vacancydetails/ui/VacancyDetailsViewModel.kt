@@ -76,10 +76,10 @@ class VacancyDetailsViewModel(
 
     fun shareVacancy(context: Context) {
         currentVacancy?.let { vacancy ->
-            sharingInteractor.shareVacancy(context, vacancy.contactEmail)
+            sharingInteractor.shareVacancy(context, vacancy.name, vacancy.vacancyUrl)
         } ?: run {
-            // Если вакансия еще не загружена, используем дефолтный текст
-            sharingInteractor.shareVacancy(context, null)
+            // Если вакансия еще не загружена
+            sharingInteractor.shareVacancy(context, null, null)
         }
     }
 

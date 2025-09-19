@@ -29,7 +29,8 @@ object VacancyMapper {
                 Phone(it.formatted, it.comment)
             },
             contactPerson = vacancyDto.contactsDto?.name,
-            vacancyUrl = vacancyDto.url
+            vacancyUrl = vacancyDto.url,
+            address = vacancyDto.addressDto?.raw?: ""
         )
     }
 
@@ -51,7 +52,8 @@ object VacancyMapper {
             contactEmail = vacancy.contactEmail,
             contactPhonesJson = vacancy.contactPhones?.let { gson.toJson(it) },
             contactPerson = vacancy.contactPerson,
-            vacancyUrl = vacancy.vacancyUrl
+            vacancyUrl = vacancy.vacancyUrl,
+            address = vacancy.address
         )
     }
 
@@ -75,7 +77,8 @@ object VacancyMapper {
                 gson.fromJson(it, Array<Phone>::class.java).toList()
             },
             contactPerson = vacancyEntity.contactPerson,
-            vacancyUrl = vacancyEntity.vacancyUrl
+            vacancyUrl = vacancyEntity.vacancyUrl,
+            address = vacancyEntity.address
         )
     }
 }
