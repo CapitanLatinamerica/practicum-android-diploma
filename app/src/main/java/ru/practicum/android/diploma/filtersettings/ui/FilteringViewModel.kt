@@ -24,6 +24,14 @@ class FilteringViewModel(
 
     private var initialized = false
 
+    private fun isStateNotBlank(state: FilterState): Boolean {
+        return state.onlyWithSalary ||
+            state.country.isNotBlank() ||
+            state.industry.isNotBlank() ||
+            state.salary.isNotBlank() ||
+            state.region.isNotBlank()
+    }
+
     init {
         viewModelScope.launch {
             val savedParams = filteringUseCase.loadParameters()
@@ -31,7 +39,6 @@ class FilteringViewModel(
             initialState = starting
 
             _filterState.postValue(starting)
-            _buttonsVisibilityState.postValue(starting != initialState)
             initialized = true
         }
     }
@@ -62,7 +69,7 @@ class FilteringViewModel(
             val currentState = _filterState.value ?: FilterState()
             val newState = currentState.copy(country = "", region = "")
             _filterState.value = newState
-            _buttonsVisibilityState.value = newState != initialState
+            updateButtonsVisibility(newState)
         }
     }
 
@@ -75,7 +82,7 @@ class FilteringViewModel(
             val currentState = _filterState.value ?: FilterState()
             val newState = currentState.copy(industry = "")
             _filterState.value = newState
-            _buttonsVisibilityState.value = newState != initialState
+            updateButtonsVisibility(newState)
         }
     }
 
@@ -90,7 +97,7 @@ class FilteringViewModel(
             }
 
             _filterState.postValue(newState)
-            _buttonsVisibilityState.postValue(newState != initialState)
+            updateButtonsVisibility(newState)
         }
     }
 
@@ -103,7 +110,7 @@ class FilteringViewModel(
 
         if (!initialized) return
 
-        _buttonsVisibilityState.postValue(newState != initialState)
+        updateButtonsVisibility(newState)
 
         viewModelScope.launch {
             val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
@@ -124,6 +131,17 @@ class FilteringViewModel(
         viewModelScope.launch {
             filteringUseCase.clearParameters()
         }
-        _buttonsVisibilityState.value = newParams != initialState
+        updateButtonsVisibility(newParams)
+    }
+
+    fun checkEmptyStorage() {
+        viewModelScope.launch {
+            val isStorageEmpty = filteringUseCase.isNotBlank()
+            _buttonsVisibilityState.postValue(isStorageEmpty)
+        }
+    }
+
+    private fun updateButtonsVisibility(state: FilterState) {
+        _buttonsVisibilityState.value = isStateNotBlank(state)
     }
 }
