@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.common.data.model.NetResponse
 import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class RetrofitNetworkClient(
@@ -73,6 +74,8 @@ class RetrofitNetworkClient(
             } catch (e: retrofit2.HttpException) {
                 Log.e(TAG, "HTTP ${e.code()} ${e.message()}", e)
                 NetResponse().error(e.code())
+            } catch (e: ConnectException) {
+                NetResponse().error(INTERNET_ERROR)
             }
         }
     }
