@@ -30,7 +30,7 @@ object VacancyMapper {
             },
             contactPerson = vacancyDto.contactsDto?.name,
             vacancyUrl = vacancyDto.url,
-            address = vacancyDto.addressDto?.raw?: ""
+            address = vacancyDto.addressDto?.raw ?: ""
         )
     }
 
