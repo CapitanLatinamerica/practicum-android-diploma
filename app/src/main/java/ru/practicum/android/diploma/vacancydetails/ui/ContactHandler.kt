@@ -1,9 +1,14 @@
 package ru.practicum.android.diploma.vacancydetails.ui
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Paint
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import ru.practicum.android.diploma.R
@@ -39,21 +44,18 @@ class ContactHandler(private val fragment: Fragment) {
         }
     }
 
-    fun setupEmail(email: String?, emailTextView: TextView) {
-        if (email.isNullOrBlank()) {
-            emailTextView.visibility = View.GONE
-            return
-        }
-
-        emailTextView.text = buildString {
-            append(fragment.getString(R.string.email_icon))
-            append("   ")
-            append(email)
-        }
-        emailTextView.visibility = View.VISIBLE
-
-        emailTextView.setOnClickListener {
-            openEmailClient(email)
+    fun setupEmail(email: String?, textView: TextView) {
+        if (!email.isNullOrBlank()) {
+            textView.visibility = View.VISIBLE
+            textView.text = email
+            textView.setOnClickListener {
+                openEmailClient(email)
+            }
+            // Добавляем возможность клика
+            textView.setTextColor(ContextCompat.getColor(fragment.requireContext(), R.color.blue))
+            textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        } else {
+            textView.visibility = View.GONE
         }
     }
 
@@ -76,9 +78,21 @@ class ContactHandler(private val fragment: Fragment) {
 
     private fun openEmailClient(email: String) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = "mailto:$email".toUri()
+            data = "mailto:".toUri() // только email приложения
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            putExtra(Intent.EXTRA_SUBJECT, R.string.share_vacancy_title)
         }
-        fragment.startActivity(Intent.createChooser(intent, fragment.getString(R.string.choose_email_app)))
+
+        try {
+            fragment.startActivity(Intent.createChooser(intent, "Выберите почтовое приложение"))
+        } catch (e: ActivityNotFoundException) {
+            Log.e("VacancyDetails", "No email app found", e)
+            Toast.makeText(
+                fragment.requireContext(),
+                R.string.no_email_app,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun makePhoneCall(phoneNumber: String) {

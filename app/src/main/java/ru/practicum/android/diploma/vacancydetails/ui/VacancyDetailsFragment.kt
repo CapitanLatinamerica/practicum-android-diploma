@@ -186,8 +186,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private fun formatSkillsTextView() {
         binding.skillsTextView.post {
             val text = binding.skillsTextView.text?.toString()
-            val phones = binding.phoneTextView.text?.toString()
-            val email = binding.emailTextView.text?.toString()
             val widthLeft = binding.skillsTextView.paddingLeft
             val widthRight = binding.skillsTextView.paddingRight
             val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
@@ -200,30 +198,6 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 )
             } else {
                 binding.skillsTextView.visibility = View.GONE
-            }
-
-            if (!phones.isNullOrBlank()) {
-                binding.phoneTextView.text = ToolsText.formatSkillsTextWithPaint(
-                    phones,
-                    binding.phoneTextView.paint,
-                    availableWidth
-                )
-            } else {
-                binding.phoneTextView.visibility = View.GONE
-            }
-
-            if (!email.isNullOrBlank()) {
-                binding.emailTextView.text = ToolsText.formatSkillsTextWithPaint(
-                    email,
-                    binding.emailTextView.paint,
-                    availableWidth
-                )
-            }
-
-            if (email.isNullOrBlank() && phones.isNullOrBlank()) {
-                binding.vacancyContacts.visibility = View.GONE
-            } else {
-                binding.emailTextView.visibility = View.GONE
             }
         }
     }
@@ -260,7 +234,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         if (vacancy.contactPhones.isNullOrEmpty() && vacancy.contactEmail.isNullOrBlank()) {
             binding.vacancyContacts.visibility = View.GONE
             binding.phoneTextView.visibility = View.GONE
-            binding.emailTextView.visibility = View.GONE
+//            binding.emailTextView.visibility = View.GONE
         } else {
             binding.vacancyContacts.visibility = View.VISIBLE
         }
