@@ -67,6 +67,7 @@ class FilteringFragment : Fragment() {
         viewModel.buttonsVisibilityState.observe(viewLifecycleOwner) { visible ->
             handleVisibilityButtonsState(visible)
         }
+        viewModel.checkEmptyStorage()
 
         binding.salaryEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -205,8 +206,8 @@ class FilteringFragment : Fragment() {
         viewModel.loadFilterSettings()
     }
 
-    private fun handleVisibilityButtonsState(hasAnyChange: Boolean) {
-        val visibility = if (hasAnyChange) View.VISIBLE else View.GONE
+    private fun handleVisibilityButtonsState(inNotEmpty: Boolean) {
+        val visibility = if (inNotEmpty) View.VISIBLE else View.GONE
         binding.applyButton.visibility = visibility
         binding.deleteButton.visibility = visibility
     }
