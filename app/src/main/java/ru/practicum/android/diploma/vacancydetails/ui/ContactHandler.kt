@@ -97,8 +97,18 @@ class ContactHandler(private val fragment: Fragment) {
 
     private fun makePhoneCall(phoneNumber: String) {
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = "tel:${phoneNumber.filter { it.isDigit() }}".toUri()
+            data = "tel:${phoneNumber}".toUri() // ← убираем фильтрацию цифр!
         }
-        fragment.startActivity(intent)
+
+        try {
+            fragment.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e("ContactHandler", "No dialer app found", e)
+            Toast.makeText(
+                fragment.requireContext(),
+                fragment.getString(R.string.no_dialer_app),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
