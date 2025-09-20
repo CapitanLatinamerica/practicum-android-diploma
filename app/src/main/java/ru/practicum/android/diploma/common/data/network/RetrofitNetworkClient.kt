@@ -33,9 +33,7 @@ class RetrofitNetworkClient(
     }
 
     override suspend fun doRequest(dto: Any): NetResponse {
-        if (!Tools.isConnected(context)) {
-            return NetResponse().internetError()
-        }
+        if (!Tools.isConnected(context)) return NetResponse().internetError()
 
         return withContext(Dispatchers.IO) {
             try {
@@ -75,6 +73,7 @@ class RetrofitNetworkClient(
                 Log.e(TAG, "HTTP ${e.code()} ${e.message()}", e)
                 NetResponse().error(e.code())
             } catch (e: ConnectException) {
+                Log.e(TAG, "Network error", e)
                 NetResponse().error(INTERNET_ERROR)
             }
         }
