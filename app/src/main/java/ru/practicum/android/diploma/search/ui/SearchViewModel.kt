@@ -54,6 +54,7 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
+    private var pageErrorToastShowed = false
 
     private var currentFilterParams = FilteredVacancyParameters(
         areaId = null,
@@ -129,6 +130,7 @@ class SearchViewModel(
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
+                            pageErrorToastShowed = false
                             val pageObj = resource.data!!
                             handleSuccess(page, pageObj)
                         }
@@ -179,7 +181,10 @@ class SearchViewModel(
         if (page == 1) {
             _searchState.postValue(SearchState.Error(errorType, displayMessage))
         } else {
-            _toastMessage.postValue(Event(displayMessage))
+            if (!pageErrorToastShowed) {
+                _toastMessage.postValue(Event(displayMessage))
+            }
+            pageErrorToastShowed = true
         }
     }
 
