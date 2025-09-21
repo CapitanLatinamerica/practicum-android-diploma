@@ -109,4 +109,6 @@
     <string name="industry_loading_error">Ошибка загрузки отраслей</string>
     <string name="share_vacancy_with_link">Интересная вакансия: %1$s\n%2$s</string>
     <string name="share_vacancy_without_link">Интересная вакансия: %1$s</string>
+    <string name="choose_email_client">Выберите почтовое приложение</string>
+    <string name="no_dialer_app">Нет доступных приложений для вызова</string>
 </resources>
