@@ -182,7 +182,6 @@ class RegionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireContext().unregisterReceiver(networkChangeReceiver)
         adapter = null
         _binding = null
     }

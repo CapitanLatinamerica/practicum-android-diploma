@@ -117,7 +117,6 @@ class CountryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireContext().unregisterReceiver(networkChangeReceiver)
         _binding = null
     }
 
