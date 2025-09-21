@@ -90,7 +90,13 @@ class VacancyDetailsViewModel(
 
     private fun mapErrorMessage(errMsg: String?): Pair<ErrorType, String> {
         return when (errMsg) {
-            "Вакансия не найдена или удалена" -> ErrorType.DENIED_VACANCY to errorMessageProvider.vacancyDenied()
+            "404" -> {
+                viewModelScope.launch {
+                    favouritesInteractor.deleteVacancyById(vacancyId)
+                }
+                ErrorType.DENIED_VACANCY to errorMessageProvider.vacancyDenied()
+            }
+
             else -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
         }
     }

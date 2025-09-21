@@ -96,7 +96,7 @@ class VacancyRepositoryImpl(
             }
 
             NOT_FOUND -> {
-                Resource.Error("Вакансия не найдена или удалена")
+                Resource.Error("404")
             }
 
             else -> {
