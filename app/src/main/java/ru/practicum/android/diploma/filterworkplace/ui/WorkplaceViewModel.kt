@@ -14,9 +14,6 @@ class WorkplaceViewModel(
     private val _workplaceState = MutableLiveData(WorkplaceState())
     val workplaceState: LiveData<WorkplaceState> = _workplaceState
 
-    private val _hasSelectedCountry = MutableLiveData<Boolean>()
-    val hasSelectedCountry: LiveData<Boolean> = _hasSelectedCountry
-
     init {
         loadExistingFilterSettings()
     }
@@ -30,16 +27,6 @@ class WorkplaceViewModel(
                 )
             }
         }
-    }
-
-    fun onCountrySelected(value: String) {
-        _workplaceState.value = _workplaceState.value?.copy(country = value)
-        _hasSelectedCountry.value = value.isNotEmpty()
-    }
-
-    fun onRegionSelected(value: String) {
-        _workplaceState.value = _workplaceState.value?.copy(region = value)
-        _hasSelectedCountry.value = value.isNotEmpty()
     }
 
     fun clearCountry() {
