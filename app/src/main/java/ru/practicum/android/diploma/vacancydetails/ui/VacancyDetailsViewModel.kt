@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorType
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor

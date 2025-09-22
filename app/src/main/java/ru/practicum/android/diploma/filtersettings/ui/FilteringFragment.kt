@@ -82,10 +82,7 @@ class FilteringFragment : Fragment() {
             onFocusChangeSalaryEditText(hasFocus)
         }
 
-        binding.clearIcon.setOnClickListener {
-            binding.salaryEditText.text?.clear()
-
-        }
+        binding.clearIcon.setOnClickListener { binding.salaryEditText.text?.clear() }
 
         binding.workplaceEdit.apply {
             setOnClickListener {
@@ -266,9 +263,7 @@ class FilteringFragment : Fragment() {
         with(binding) {
             salaryCheckBox.setOnCheckedChangeListener(null)
             salaryCheckBox.isChecked = state.onlyWithSalary
-            salaryCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onOnlyWithSalaryToggled(isChecked)
-            }
+            salaryCheckBox.setOnCheckedChangeListener { _, isChecked -> viewModel.onOnlyWithSalaryToggled(isChecked) }
         }
     }
 }
