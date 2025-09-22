@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.db.AppDataBase
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
@@ -26,13 +27,6 @@ class VacancyRepositoryImpl(
     private val dataBase: AppDataBase
 ) : VacancyRepository {
 
-    companion object {
-        private const val SUCCESS = 200
-        private const val ERROR = 500
-        private const val INTERNET_ERROR = -1
-        private const val NOT_FOUND = 404
-    }
-
     override fun searchVacancies(filteredVacancyParameters: FilteredVacancyParameters): Flow<Resource<VacanciesPage>> =
         flow {
             val request =
@@ -48,15 +42,15 @@ class VacancyRepositoryImpl(
             val response = networkClient.doRequest(request)
 
             when (response.resultCode) {
-                INTERNET_ERROR -> {
+                ErrorConst.INTERNET_ERROR, ErrorConst.TIMEOUT_ERROR -> {
                     emit(Resource.Error("Проверьте подключение к интернету"))
                 }
 
-                SUCCESS -> {
+                ErrorConst.SUCCESS -> {
                     doOnSuccess(response)
                 }
 
-                ERROR -> {
+                ErrorConst.SERVER_ERROR -> {
                     emit(Resource.Error("Ошибка сервера"))
                 }
 
@@ -81,21 +75,21 @@ class VacancyRepositoryImpl(
         val response = networkClient.doRequest(VacancyRequest(id))
 
         return when (response.resultCode) {
-            SUCCESS -> {
+            ErrorConst.SUCCESS -> {
                 resource(response)
             }
 
-            INTERNET_ERROR -> {
+            ErrorConst.INTERNET_ERROR -> {
                 getVacancyFromDatabase(id)?.let { vacancy ->
                     Resource.Success(vacancy)
                 } ?: Resource.Error("Нет интернета")
             }
 
-            ERROR -> {
+            ErrorConst.SERVER_ERROR -> {
                 Resource.Error("Ошибка сервера")
             }
 
-            NOT_FOUND -> {
+            ErrorConst.NOT_FOUND -> {
                 Resource.Error("404")
             }
 

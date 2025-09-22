@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.common.data
 
+import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.model.IndustriesRequest
@@ -13,28 +14,22 @@ class IndustryRepositoryImpl(
     private val mapper: IndustryMapper
 ) : IndustryRepository {
 
-    companion object {
-        private const val SUCCESS = 200
-        private const val ERROR = 500
-        private const val INTERNET_ERROR = -1
-    }
-
     override suspend fun getIndustries(): Resource<List<Industry>> {
         val response = networkClient.doRequest(IndustriesRequest())
 
         return when (response.resultCode) {
-            SUCCESS -> {
+            ErrorConst.SUCCESS -> {
                 val industryList = (response as IndustriesResponse).industriesDto.map { item ->
                     mapper.map(item)
                 }
                 Resource.Success(industryList)
             }
 
-            ERROR -> {
+            ErrorConst.SERVER_ERROR -> {
                 Resource.Error("Ошибка сервера")
             }
 
-            INTERNET_ERROR -> {
+            ErrorConst.INTERNET_ERROR -> {
                 Resource.Error("Проверьте подключение к интернету")
             }
 

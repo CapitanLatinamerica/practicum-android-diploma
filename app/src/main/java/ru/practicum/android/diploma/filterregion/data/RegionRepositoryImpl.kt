@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filterregion.data
 
+import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.mapper.AreaMapper
@@ -14,16 +15,11 @@ class RegionRepositoryImpl(
     private val mapper: AreaMapper
 ) : RegionRepository {
 
-    companion object {
-        private const val SUCCESS = 200
-        private const val ERROR = 500
-    }
-
     override suspend fun getRegions(countryId: Int?): Resource<List<Area>> {
         val response = networkClient.doRequest(AreasRequest())
 
         return when {
-            response is AreasResponse && response.resultCode == SUCCESS -> {
+            response is AreasResponse && response.resultCode == ErrorConst.SUCCESS -> {
                 if (countryId == null) {
                     getAllRegionsFromAllCountries(response.areaDto)
                 } else {
@@ -32,7 +28,7 @@ class RegionRepositoryImpl(
                 }
             }
 
-            response is AreasResponse && response.resultCode == ERROR -> {
+            response is AreasResponse && response.resultCode == ErrorConst.SERVER_ERROR -> {
                 Resource.Error("Ошибка API: код ${response.resultCode}")
             }
 
@@ -45,7 +41,7 @@ class RegionRepositoryImpl(
     override suspend fun findCountryByRegion(parentId: Int): Resource<Area?> {
         val response = networkClient.doRequest(AreasRequest())
 
-        return if (response is AreasResponse && response.resultCode == SUCCESS) {
+        return if (response is AreasResponse && response.resultCode == ErrorConst.SUCCESS) {
             // Ищем регион по ID
             val areaDto = response.areaDto.find { it.id == parentId.toString() }
             if (areaDto != null) {

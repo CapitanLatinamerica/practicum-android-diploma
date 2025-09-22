@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.filtercountry.data
 
+import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.mapper.AreaMapper
 import ru.practicum.android.diploma.common.data.model.AreasRequest
@@ -12,16 +13,12 @@ class CountryRepositoryImpl(
     private val networkClient: NetworkClient,
     private val mapper: AreaMapper
 ) : CountryRepository {
-    companion object {
-        private const val SUCCESS = 200
-        private const val ERROR = 500
-    }
 
     override suspend fun getCountries(): Resource<List<Area>> {
         val response = networkClient.doRequest(AreasRequest())
 
         return when {
-            response is AreasResponse && response.resultCode == SUCCESS -> {
+            response is AreasResponse && response.resultCode == ErrorConst.SUCCESS -> {
                 val countries = response.areaDto
                     .filter { it.parentId.isNullOrEmpty() }
                     .map { mapper.mapAreaDtoToArea(it) }
@@ -33,7 +30,7 @@ class CountryRepositoryImpl(
                 }
             }
 
-            response is AreasResponse && response.resultCode == ERROR -> {
+            response is AreasResponse && response.resultCode == ErrorConst.SERVER_ERROR -> {
                 Resource.Error("Ошибка API: код ${response.resultCode}")
             }
 

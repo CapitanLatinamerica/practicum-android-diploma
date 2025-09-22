@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.common.data.model.AreasRequest
 import ru.practicum.android.diploma.common.data.model.AreasResponse
@@ -24,12 +25,7 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     companion object {
-        private const val INTERNET_ERROR = -1
-        private const val SUCCESS = 200
-        private const val SERVER_ERROR = 500
-        private const val ERROR = 400
         private const val TAG = "RetrofitNetworkClient"
-        private const val TIMEOUT_ERROR = 408
     }
 
     override suspend fun doRequest(dto: Any): NetResponse {
@@ -68,13 +64,13 @@ class RetrofitNetworkClient(
 //                throw e
             } catch (e: SocketTimeoutException) {
                 Log.e(TAG, "Socket timeout", e)
-                NetResponse().error(TIMEOUT_ERROR)
+                NetResponse().error(ErrorConst.TIMEOUT_ERROR)
             } catch (e: retrofit2.HttpException) {
                 Log.e(TAG, "HTTP ${e.code()} ${e.message()}", e)
                 NetResponse().error(e.code())
             } catch (e: ConnectException) {
                 Log.e(TAG, "Network error", e)
-                NetResponse().error(INTERNET_ERROR)
+                NetResponse().error(ErrorConst.INTERNET_ERROR)
             }
         }
     }
@@ -114,8 +110,8 @@ class RetrofitNetworkClient(
             .success()
     }
 
-    private fun NetResponse.success(): NetResponse = apply { resultCode = SUCCESS }
-    private fun NetResponse.error(code: Int = ERROR): NetResponse = apply { resultCode = code }
-    private fun NetResponse.serverError(): NetResponse = apply { resultCode = SERVER_ERROR }
-    private fun NetResponse.internetError(): NetResponse = apply { resultCode = INTERNET_ERROR }
+    private fun NetResponse.success(): NetResponse = apply { resultCode = ErrorConst.SUCCESS }
+    private fun NetResponse.error(code: Int = ErrorConst.ERROR): NetResponse = apply { resultCode = code }
+    private fun NetResponse.serverError(): NetResponse = apply { resultCode = ErrorConst.SERVER_ERROR }
+    private fun NetResponse.internetError(): NetResponse = apply { resultCode = ErrorConst.INTERNET_ERROR }
 }
