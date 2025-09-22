@@ -8,9 +8,13 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.filterregion.domain.RegionInteractor
+import ru.practicum.android.diploma.filtersettings.data.FilterParameters
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class RegionViewModel(
-    private val interactor: RegionInteractor
+    private val interactor: RegionInteractor,
+    private val filteringUseCase: FilteringUseCase
+
 ) : ViewModel() {
 
     private val _regionState =
@@ -18,6 +22,44 @@ class RegionViewModel(
     val regionState: LiveData<RegionState> = _regionState
 
     private var allRegions: List<Area> = emptyList()
+
+    fun loadFilterParameters(selectedRegion: Area) {
+        viewModelScope.launch {
+            val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
+            // Если у региона есть parentId, находим страну
+            val countryName = if (selectedRegion.parentId != null) {
+                when (val result = findCountryByRegion(selectedRegion.parentId)) {
+                    is Resource.Success -> result.data?.name ?: currentParams.country
+                    is Resource.Error -> currentParams.country
+                }
+            } else {
+                currentParams.country
+            }
+            val updatedParams = currentParams.copy(
+                country = countryName,
+                countryId = selectedRegion.parentId ?: currentParams.countryId,
+                region = selectedRegion.name,
+                regionId = selectedRegion.id
+            )
+            filteringUseCase.saveParameters(updatedParams)
+            _regionState.value = RegionState.RegionSelected
+        }
+    }
+
+    fun loadRegionsFromUseCase() {
+        viewModelScope.launch {
+            val params = filteringUseCase.loadParameters()
+            val countryId = params?.countryId ?: 0 // Если null, используем 0
+
+            if (countryId == 0) {
+                // Если countryId = 0, загружаем все регионы всех стран
+                getRegions(null)
+            } else {
+                // Иначе загружаем регионы конкретной страны
+                getRegions(countryId)
+            }
+        }
+    }
 
     // Запрос списка регионов для указанного countryId
     fun getRegions(countryId: Int?) {

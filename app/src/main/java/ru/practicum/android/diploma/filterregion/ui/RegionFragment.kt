@@ -12,26 +12,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
-import ru.practicum.android.diploma.filtersettings.data.FilterParameters
-import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class RegionFragment : Fragment() {
     private var _binding: FragmentRegionBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: RegionViewModel by viewModel()
-    private val filteringUseCase: FilteringUseCase by inject()
 
     private var allRegions: List<Area> = emptyList()
     private var adapter: RegionAdapter? = null
@@ -40,7 +33,7 @@ class RegionFragment : Fragment() {
         override fun onReceive(context: Context, intent: Intent) {
             if (Tools.isConnected(context)) {
                 // Интернет появился - перезагружаем данные
-                loadRegionsFromUseCase()
+                viewModel.loadRegionsFromUseCase()
             }
         }
     }
@@ -67,55 +60,23 @@ class RegionFragment : Fragment() {
                 is RegionState.Content -> showContent(state.regions)
                 is RegionState.Empty -> showEmpty()
                 is RegionState.Error -> showError()
+                RegionState.RegionSelected -> onRegionSelected()
             }
         }
 
-        loadRegionsFromUseCase()
+        viewModel.loadRegionsFromUseCase()
     }
 
     private fun setupRecyclerView() {
         adapter = RegionAdapter { selectedRegion ->
-            lifecycleScope.launch {
-                val currentParams = filteringUseCase.loadParameters() ?: FilterParameters()
-
-                // Если у региона есть parentId, находим страну
-                val countryName = if (selectedRegion.parentId != null) {
-                    when (val result = viewModel.findCountryByRegion(selectedRegion.parentId)) {
-                        is Resource.Success -> result.data?.name ?: currentParams.country
-                        is Resource.Error -> currentParams.country
-                    }
-                } else {
-                    currentParams.country
-                }
-
-                val updatedParams = currentParams.copy(
-                    country = countryName,
-                    countryId = selectedRegion.parentId ?: currentParams.countryId,
-                    region = selectedRegion.name,
-                    regionId = selectedRegion.id
-                )
-
-                filteringUseCase.saveParameters(updatedParams)
-                findNavController().navigateUp()
-            }
+            viewModel.loadFilterParameters(selectedRegion)
         }
         binding.regionRecyclerView.adapter = adapter
         binding.regionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun loadRegionsFromUseCase() {
-        lifecycleScope.launch {
-            val params = filteringUseCase.loadParameters()
-            val countryId = params?.countryId ?: 0 // Если null, используем 0
-
-            if (countryId == 0) {
-                // Если countryId = 0, загружаем все регионы всех стран
-                viewModel.getRegions(null)
-            } else {
-                // Иначе загружаем регионы конкретной страны
-                viewModel.getRegions(countryId)
-            }
-        }
+    private fun onRegionSelected() {
+        findNavController().navigateUp()
     }
 
     private fun showEmpty() {
