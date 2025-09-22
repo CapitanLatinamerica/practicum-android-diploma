@@ -241,6 +241,6 @@ val regionModule = module {
     }
 
     viewModel {
-        RegionViewModel(get())
+        RegionViewModel(get(), get())
     }
 }
