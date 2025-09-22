@@ -10,10 +10,10 @@
     <!-- Тулбар -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/OurCommonToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/OurCommonToolbar"
         app:navigationIcon="@null"
         app:title="@string/title_favourites" />
 
@@ -23,15 +23,16 @@
         android:id="@+id/container"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="@dimen/zero_dp"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingStart="@dimen/padding_16"
         android:paddingEnd="@dimen/padding_16"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="visible">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/placeholderImage"
@@ -39,16 +40,16 @@
             android:layout_height="@dimen/fav_ph_height"
             android:layout_gravity="center"
             android:contentDescription="@string/favorites_placeholder"
-            android:src="@drawable/favorites_placeholder"/>
+            android:src="@drawable/favorites_placeholder" />
 
         <TextView
             android:id="@+id/emptyListTextView"
+            style="@style/TextMedium22"
             android:layout_width="@dimen/fav_empty_list_width"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_16"
             android:gravity="center"
             android:maxLines="2"
-            style="@style/TextMedium22"
             android:text="@string/empty_list" />
 
     </LinearLayout>
@@ -58,13 +59,13 @@
         android:id="@+id/favoritesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"
+        android:layout_marginTop="@dimen/padding_16"
         android:paddingStart="@dimen/padding_16"
         android:paddingEnd="@dimen/padding_16"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/padding_16"
-        tools:listitem="@layout/vacancy_item"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:listitem="@layout/vacancy_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

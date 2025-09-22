@@ -75,8 +75,7 @@ class FavouritesFragment : Fragment() {
     private fun updateUI(favouritesState: FavouritesState) {
         when (favouritesState) {
             is FavouritesState.Empty -> {
-                binding.emptyListTextView.visibility = View.VISIBLE
-                binding.placeholderImage.visibility = View.VISIBLE
+                binding.container.visibility = View.VISIBLE
                 binding.favoritesRecyclerView.visibility = View.GONE
             }
 
@@ -86,15 +85,13 @@ class FavouritesFragment : Fragment() {
                     vacancyMapper.mapToUi(vacancy)
                 }
                 adapter?.updateData(vacancyUiList)
-                binding.emptyListTextView.visibility = View.GONE
-                binding.placeholderImage.visibility = View.GONE
+                binding.container.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE
             }
 
             is FavouritesState.Error -> {
-                binding.emptyListTextView.visibility = View.VISIBLE
+                binding.container.visibility = View.VISIBLE
                 binding.emptyListTextView.setText(R.string.nothing_found)
-                binding.placeholderImage.visibility = View.VISIBLE
                 binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
                 binding.favoritesRecyclerView.visibility = View.GONE
             }
