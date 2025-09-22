@@ -15,16 +15,6 @@ class FilterParametersMapper {
         )
     }
 
-    fun mapParamsToDomain(params: FilterState): FilterParameters {
-        return FilterParameters(
-            country = params.country,
-            region = params.region,
-            industry = params.industry,
-            salary = params.salary,
-            onlyWithSalary = params.onlyWithSalary
-        )
-    }
-
     fun mapToSearchParams(storage: FilterParameters?): FilteredVacancyParameters {
         if (storage == null) {
             return FilteredVacancyParameters(null, null, null, null, null, null)

@@ -12,18 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
-import ru.practicum.android.diploma.filtersettings.data.FilterParameters
-import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class IndustryFragment : Fragment() {
-    private val filteringUseCase: FilteringUseCase by inject()
 
     private var _binding: FragmentIndustryBinding? = null
     private val binding: FragmentIndustryBinding
@@ -33,13 +27,12 @@ class IndustryFragment : Fragment() {
     private val networkChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (Tools.isConnected(context)) {
-                // Интернет появился - перезагружаем данные
-                viewModel.getIndustries()
+                viewModel.loadInitialIndustries()
             }
         }
     }
 
-    private val viewModel: IndustryVIewModel by viewModel()
+    private val viewModel: IndustryViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,13 +54,6 @@ class IndustryFragment : Fragment() {
 
         binding.industryRecyclerView.adapter = adapter
 
-        lifecycleScope.launch {
-            val params = filteringUseCase.loadParameters()
-            val selectedIndustryId = params?.industryId?.toString() ?: ""
-
-            viewModel.getIndustries(selectedIndustryId) // передаем ID для выделения
-        }
-
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 IndustryState.Loading -> {
@@ -85,8 +71,18 @@ class IndustryFragment : Fragment() {
                     binding.progressbar.visibility = View.GONE
                     onIndustryStateErrorShowElements()
                 }
+
+                IndustryState.Saving -> {
+                    binding.progressbar.visibility = View.VISIBLE
+                    binding.applyButton.isEnabled = false
+                }
+
+                IndustryState.Saved -> {
+                    parentFragmentManager.popBackStack()
+                }
             }
         }
+
         defineListeners()
         binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
     }
@@ -118,20 +114,7 @@ class IndustryFragment : Fragment() {
 
         binding.applyButton.setOnClickListener {
             val selectedIndustry = adapter.getSelectedIndustry()
-            lifecycleScope.launch {
-                // Загружаем текущие параметры
-                val currentParams = filteringUseCase.loadParameters()
-
-                // Создаем обновленные параметры
-                val updatedParams = (currentParams ?: FilterParameters()).copy(
-                    industry = selectedIndustry?.name.toString(),
-                    industryId = selectedIndustry?.id ?: 0
-                )
-
-                // Сохраняем
-                filteringUseCase.saveParameters(updatedParams)
-                parentFragmentManager.popBackStack()
-            }
+            viewModel.saveSelectedIndustry(selectedIndustry)
         }
 
         binding.toolbar.setNavigationOnClickListener {
