@@ -26,7 +26,6 @@ class RegionFragment : Fragment() {
 
     private val viewModel: RegionViewModel by viewModel()
 
-
     private var allRegions: List<Area> = emptyList()
     private var adapter: RegionAdapter? = null
 
@@ -79,7 +78,6 @@ class RegionFragment : Fragment() {
     private fun onRegionSelected() {
         findNavController().navigateUp()
     }
-
 
     private fun showEmpty() {
         binding.progressbar.visibility = View.GONE
@@ -160,5 +158,3 @@ class RegionFragment : Fragment() {
         requireContext().unregisterReceiver(networkChangeReceiver)
     }
 }
-
-
