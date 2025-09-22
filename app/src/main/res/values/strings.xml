@@ -74,6 +74,7 @@
     <string name="edit_region">Введите регион</string>
     <string name="no_region">Такого региона нет</string>
     <string name="error_region">Не удалось получить список</string>
+    <string name="industry_not_found">Отрасль не найдена</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
