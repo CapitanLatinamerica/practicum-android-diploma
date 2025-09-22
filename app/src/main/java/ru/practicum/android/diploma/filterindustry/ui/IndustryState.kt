@@ -9,4 +9,7 @@ sealed interface IndustryState {
         val industryList: List<Industry>,
         val selectedIndustryId: String? = null // ← добавляем выбранный ID
     ) : IndustryState
+
+    data object Saving : IndustryState
+    data object Saved : IndustryState
 }

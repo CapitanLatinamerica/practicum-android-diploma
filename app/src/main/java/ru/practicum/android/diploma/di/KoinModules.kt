@@ -37,7 +37,7 @@ import ru.practicum.android.diploma.filtercountry.domain.CountryInteractor
 import ru.practicum.android.diploma.filtercountry.domain.CountryRepository
 import ru.practicum.android.diploma.filtercountry.domain.impl.CountryInteractorImpl
 import ru.practicum.android.diploma.filtercountry.ui.CountryViewModel
-import ru.practicum.android.diploma.filterindustry.ui.IndustryVIewModel
+import ru.practicum.android.diploma.filterindustry.ui.IndustryViewModel
 import ru.practicum.android.diploma.filterregion.data.RegionInteractorImpl
 import ru.practicum.android.diploma.filterregion.data.RegionRepositoryImpl
 import ru.practicum.android.diploma.filterregion.domain.RegionInteractor
@@ -207,7 +207,7 @@ val industryModule = module {
     }
 
     viewModel {
-        IndustryVIewModel(get())
+        IndustryViewModel(get(), get())
     }
 }
 
