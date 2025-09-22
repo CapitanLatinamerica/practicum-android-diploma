@@ -1,5 +1,10 @@
 package ru.practicum.android.diploma.filterregion.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +20,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.databinding.FragmentRegionBinding
 import ru.practicum.android.diploma.filtersettings.data.FilterParameters
@@ -30,6 +36,15 @@ class RegionFragment : Fragment() {
     private var allRegions: List<Area> = emptyList()
     private var adapter: RegionAdapter? = null
 
+    private val networkChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (Tools.isConnected(context)) {
+                // Интернет появился - перезагружаем данные
+                loadRegionsFromUseCase()
+            }
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRegionBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,9 +54,21 @@ class RegionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupToolbar()
+
+        // Настройка тулбара
+        binding.toolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         setupSearch()
-        setupObservers()
+        viewModel.regionState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is RegionState.Loading -> showLoading()
+                is RegionState.Content -> showContent(state.regions)
+                is RegionState.Empty -> showEmpty()
+                is RegionState.Error -> showError()
+            }
+        }
 
         loadRegionsFromUseCase()
     }
@@ -74,23 +101,6 @@ class RegionFragment : Fragment() {
         }
         binding.regionRecyclerView.adapter = adapter
         binding.regionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-    }
-
-    private fun setupObservers() {
-        viewModel.regionState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is RegionState.Loading -> showLoading()
-                is RegionState.Content -> showContent(state.regions)
-                is RegionState.Empty -> showEmpty()
-                is RegionState.Error -> showError()
-            }
-        }
     }
 
     private fun loadRegionsFromUseCase() {
@@ -174,5 +184,16 @@ class RegionFragment : Fragment() {
         super.onDestroyView()
         adapter = null
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        requireContext().registerReceiver(networkChangeReceiver, filter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireContext().unregisterReceiver(networkChangeReceiver)
     }
 }
