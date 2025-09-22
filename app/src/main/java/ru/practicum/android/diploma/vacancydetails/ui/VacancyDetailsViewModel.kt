@@ -10,15 +10,15 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Resource
-import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
+import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
 import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
 import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(
     private val sharingInteractor: SharingInteractor,
-    private val repository: VacancyRepository,
+    private val detailsUseCase: SearchVacancyDetailsUseCase,
     private val favouritesInteractor: FavouritesInteractor,
     private val vacancyId: String,
     private val errorMessageProvider: ErrorMessageProvider
@@ -43,7 +43,7 @@ class VacancyDetailsViewModel(
         viewModelScope.launch {
             _vacancyState.value = VacancyDetailsState.Loading
 
-            val resource = repository.getVacancyDetailsById(vacancyId)
+            val resource = detailsUseCase.getVacancyDetailsById(vacancyId)
 
             when (resource) {
                 is Resource.Success -> {
