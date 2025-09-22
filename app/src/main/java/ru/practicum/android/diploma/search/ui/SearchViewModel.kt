@@ -146,11 +146,7 @@ class SearchViewModel(
     private fun startLoading(page: Int, isFirstRequest: Boolean) {
         requestedPages.add(page)
         isNextPageLoading = true
-        if (!isFirstRequest) {
-            _isBottomLoading.postValue(true)
-        } else {
-            _isBottomLoading.postValue(false)
-        }
+        _isBottomLoading.postValue(!isFirstRequest)
     }
 
     private fun handleSuccess(page: Int, pageObj: VacanciesPage) {
@@ -160,11 +156,8 @@ class SearchViewModel(
         val newUi = pageObj.items.map { vacancyToVacancyUiMapper.mapToUi(it) }
         if (page == 1) {
             vacanciesList.clear()
-            vacanciesList.addAll(newUi)
-        } else {
-            vacanciesList.addAll(newUi)
         }
-
+        vacanciesList.addAll(newUi)
         if (page == 1 && vacanciesList.isEmpty()) {
             _searchState.postValue(
                 SearchState.Empty(errorMessageProvider.nothingFound())
