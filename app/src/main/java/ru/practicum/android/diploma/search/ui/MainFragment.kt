@@ -2,14 +2,13 @@ package ru.practicum.android.diploma.search.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -103,18 +102,12 @@ class MainFragment : Fragment() {
     }
 
     private fun defineListeners() {
-        binding.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                extracted(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) = Unit
-        })
+        binding.editText.doOnTextChanged { text, _, _, _ ->
+            handleTextChange(text)
+        }
 
         binding.btnEditAction.setOnClickListener {
-            extracted1()
+            handleEditText()
         }
 
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
@@ -139,7 +132,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun extracted1() {
+    private fun handleEditText() {
         val text = binding.editText.text?.toString().orEmpty()
         if (text.isNotEmpty()) {
             binding.editText.setText("")
@@ -151,7 +144,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun extracted(s: CharSequence?) {
+    private fun handleTextChange(s: CharSequence?) {
         val text = s?.toString().orEmpty().trim()
         updateEditActionIcon(text.isNotEmpty())
         if (text.isBlank()) {

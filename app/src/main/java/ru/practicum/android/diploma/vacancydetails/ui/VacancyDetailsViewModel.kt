@@ -47,9 +47,11 @@ class VacancyDetailsViewModel(
 
             when (resource) {
                 is Resource.Success -> {
-                    currentVacancy = resource.data // сохраняем вакансию
-                    _vacancyState.value = VacancyDetailsState.Content(resource.data!!)
-                    _isLiked.value = favouritesInteractor.isFavourite(vacancyId)
+                    resource.data?.let { vacancy ->
+                        currentVacancy = vacancy
+                        _vacancyState.value = VacancyDetailsState.Content(vacancy)
+                        _isLiked.value = favouritesInteractor.isFavourite(vacancyId)
+                    } ?: handleRequestError("Vacancy data is null")
                 }
 
                 is Resource.Error -> {

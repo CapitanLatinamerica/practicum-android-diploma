@@ -91,19 +91,9 @@ class IndustryFragment : Fragment() {
         binding.industryEditText.addTextChangedListener { editable ->
             onChangedText(editable)
             if (adapter.itemCount == 0 && binding.industryEditText.text.isNotEmpty()) {
-                binding.industryScrolls.visibility = View.GONE
-                binding.placeholderImage.visibility = View.VISIBLE
-                binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
-                binding.placeholderText.visibility = View.VISIBLE
-                binding.placeholderText.text = "Отрасль не найдена"
-                binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
+                showIndustryNotFound()
             } else {
-                binding.industryScrolls.visibility = View.VISIBLE
-                binding.placeholderImage.visibility = View.GONE
-                binding.placeholderImage.setImageResource(R.drawable.error_region)
-                binding.placeholderText.visibility = View.GONE
-                binding.placeholderText.text = getString(R.string.error_region)
-                binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
+                showCantGetList()
             }
         }
 
@@ -120,6 +110,24 @@ class IndustryFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    private fun showIndustryNotFound() {
+        binding.industryScrolls.visibility = View.GONE
+        binding.placeholderImage.visibility = View.VISIBLE
+        binding.placeholderImage.setImageResource(R.drawable.fav_error_cat_meme)
+        binding.placeholderText.visibility = View.VISIBLE
+        binding.placeholderText.text = getString(R.string.industry_not_found)
+        binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
+    }
+
+    private fun showCantGetList() {
+        binding.industryScrolls.visibility = View.VISIBLE
+        binding.placeholderImage.visibility = View.GONE
+        binding.placeholderImage.setImageResource(R.drawable.error_region)
+        binding.placeholderText.visibility = View.GONE
+        binding.placeholderText.text = getString(R.string.error_region)
+        binding.applyButton.visibility = if (adapter.hasSelection()) View.VISIBLE else View.GONE
     }
 
     private fun onChangedText(editable: Editable?) {
