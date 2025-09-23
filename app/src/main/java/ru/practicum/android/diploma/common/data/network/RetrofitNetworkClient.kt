@@ -33,35 +33,19 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             try {
                 when (dto) {
-                    is VacanciesRequest ->
-                        headHunterApi.searchAllVacancies(token)
-                            .success()
-
-                    is VacancyRequest ->
-                        headHunterApi.getVacancyById(
-                            token,
-                            dto.id
-                        ).success()
-
-                    is AreasRequest ->
-                        AreasResponse(
-                            headHunterApi.getAreas(token)
-                        ).success()
-
-                    is IndustriesRequest ->
-                        IndustriesResponse(
-                            headHunterApi.getIndustries(token)
-                        ).success()
-
-                    is FilteredVacancyRequest ->
-                        handleFilteredRequest(dto)
-
-                    else ->
-                        NetResponse().serverError()
+                    is VacanciesRequest -> headHunterApi.searchAllVacancies(token).success()
+                    is VacancyRequest -> headHunterApi.getVacancyById(token, dto.id).success()
+                    is AreasRequest -> AreasResponse(headHunterApi.getAreas(token)).success()
+                    is IndustriesRequest -> IndustriesResponse(headHunterApi.getIndustries(token)).success()
+                    is FilteredVacancyRequest -> handleFilteredRequest(dto)
+                    else -> NetResponse().serverError()
                 }
             } catch (e: SocketTimeoutException) {
                 Log.e(TAG, "Socket timeout", e)
                 NetResponse().error(ErrorConst.TIMEOUT_ERROR)
+            } catch (e: java.net.UnknownHostException) {
+                Log.e(TAG, "Network error", e)
+                NetResponse().error(ErrorConst.INTERNET_ERROR)
             } catch (e: retrofit2.HttpException) {
                 Log.e(TAG, "HTTP ${e.code()} ${e.message()}", e)
                 NetResponse().error(e.code())
