@@ -12,9 +12,8 @@ import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
-import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
+import ru.practicum.android.diploma.search.domain.SearchVacancyDetailsUseCase
 import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 
 class VacancyDetailsViewModel(
     private val sharingInteractor: SharingInteractor,

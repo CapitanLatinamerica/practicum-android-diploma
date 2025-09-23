@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.vacancydetails.domain
+package ru.practicum.android.diploma.vacancydetails.ui
 
 import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.common.domain.entity.Vacancy

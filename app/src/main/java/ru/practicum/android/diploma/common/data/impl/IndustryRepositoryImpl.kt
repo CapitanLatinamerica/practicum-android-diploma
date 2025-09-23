@@ -1,11 +1,11 @@
-package ru.practicum.android.diploma.common.data
+package ru.practicum.android.diploma.common.data.impl
 
 import ru.practicum.android.diploma.ErrorConst
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.model.IndustriesRequest
 import ru.practicum.android.diploma.common.data.model.IndustriesResponse
-import ru.practicum.android.diploma.common.data.model.NetworkClient
+import ru.practicum.android.diploma.common.data.network.NetworkClient
 import ru.practicum.android.diploma.common.domain.IndustryRepository
 import ru.practicum.android.diploma.common.domain.entity.Industry
 

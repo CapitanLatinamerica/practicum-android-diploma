@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.common.data.model.GetIndustriesUseCase
 import ru.practicum.android.diploma.common.domain.entity.Industry
+import ru.practicum.android.diploma.filterindustry.domain.GetIndustriesUseCase
 import ru.practicum.android.diploma.filtersettings.data.FilterParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 
 class IndustryViewModel(
-    private val useCase: GetIndustriesUseCase,
+    private val getIndustriesUseCase: GetIndustriesUseCase,
     private val filteringUseCase: FilteringUseCase
 ) : ViewModel() {
 
@@ -25,7 +25,7 @@ class IndustryViewModel(
             val params = filteringUseCase.loadParameters()
             val selectedId = params?.industryId?.toString() ?: ""
             // Загружаем список отраслей и передаём selectedId в состояние
-            val resource = useCase.execute()
+            val resource = getIndustriesUseCase.execute()
             if (resource.data != null) {
                 _industryState.value = IndustryState.Content(
                     industryList = resource.data,

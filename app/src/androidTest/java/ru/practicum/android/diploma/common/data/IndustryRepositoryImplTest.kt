@@ -13,6 +13,7 @@ import org.junit.runner.RunWith
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
+import ru.practicum.android.diploma.common.data.impl.IndustryRepositoryImpl
 import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.network.HeadHunterApi
 import ru.practicum.android.diploma.common.data.network.JsonApiMock

@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.filterregion.data
+package ru.practicum.android.diploma.filterregion.domain.impl
 
 import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.Area

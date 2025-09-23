@@ -12,7 +12,6 @@ import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
 import ru.practicum.android.diploma.common.data.model.IndustriesRequest
 import ru.practicum.android.diploma.common.data.model.IndustriesResponse
 import ru.practicum.android.diploma.common.data.model.NetResponse
-import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacanciesRequest
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import java.net.ConnectException

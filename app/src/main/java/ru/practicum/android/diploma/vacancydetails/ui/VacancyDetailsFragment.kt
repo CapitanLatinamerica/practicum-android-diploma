@@ -15,7 +15,6 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.ToolsText
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyDetailsUi
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
 

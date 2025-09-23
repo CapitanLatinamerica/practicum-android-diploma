@@ -15,8 +15,8 @@ import ru.practicum.android.diploma.Resource
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
 import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
+import ru.practicum.android.diploma.search.domain.SearchUseCase
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
-import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import ru.practicum.android.diploma.search.ui.model.VacancyUi
 

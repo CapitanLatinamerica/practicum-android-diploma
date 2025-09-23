@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.common.data
+package ru.practicum.android.diploma.common.data.impl
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +13,9 @@ import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyRequest
 import ru.practicum.android.diploma.common.data.model.FilteredVacancyResponse
 import ru.practicum.android.diploma.common.data.model.NetResponse
-import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.model.VacancyRequest
 import ru.practicum.android.diploma.common.data.model.VacancyResponse
+import ru.practicum.android.diploma.common.data.network.NetworkClient
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
 import ru.practicum.android.diploma.common.domain.entity.Vacancy

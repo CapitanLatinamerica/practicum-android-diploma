@@ -311,4 +311,3 @@ private fun StringBuilder.breakLine(
 private class ContextState(
     var insideList: Boolean = false
 )
-

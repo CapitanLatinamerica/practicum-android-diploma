@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.common.data.domain.api.AreaDto
 import ru.practicum.android.diploma.common.data.mapper.AreaMapper
 import ru.practicum.android.diploma.common.data.model.AreasRequest
 import ru.practicum.android.diploma.common.data.model.AreasResponse
-import ru.practicum.android.diploma.common.data.model.NetworkClient
+import ru.practicum.android.diploma.common.data.network.NetworkClient
 import ru.practicum.android.diploma.common.domain.entity.Area
 import ru.practicum.android.diploma.filterregion.domain.RegionRepository
 
