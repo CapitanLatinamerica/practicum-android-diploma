@@ -157,7 +157,7 @@ object ToolsText {
 
             // Элемент списка: "- ", ";", либо "." если продолжается блок списка
             line.startsWith("- ") || line.endsWith(";") ||
-                (line.endsWith(".") && params.contextState.insideList) -> {
+                line.endsWith(".") && params.contextState.insideList -> {
                 val cleanLine = when {
                     line.startsWith("- ") -> line.removePrefix("- ")
                     else -> line
@@ -308,6 +308,7 @@ private fun StringBuilder.breakLine(
 }
 
 // Флаговое состояние контекста: находимся ли мы внутри списка
-private data class ContextState(
+private class ContextState(
     var insideList: Boolean = false
 )
+
