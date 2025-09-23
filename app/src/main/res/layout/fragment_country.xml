@@ -56,7 +56,7 @@
     <ImageView
         android:id="@+id/placeholderImage"
         android:layout_width="@dimen/zero_dp"
-        android:layout_height="223dp"
+        android:layout_height="@dimen/fav_ph_height"
         android:src="@drawable/error_region"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -69,7 +69,7 @@
         style="@style/TextMedium22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/padding_16"
         android:gravity="center"
         android:text="@string/error_region"
         android:visibility="gone"

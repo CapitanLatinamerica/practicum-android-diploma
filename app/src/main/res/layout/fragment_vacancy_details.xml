@@ -242,7 +242,7 @@
 
         <ImageView
             android:id="@+id/exatclyPlaceholder"
-            android:layout_width="328dp"
+            android:layout_width="@dimen/details_placeholder_width"
             android:layout_height="@dimen/fav_ph_height"
             android:layout_gravity="center"
             android:contentDescription="@string/image_view_details_descr"
