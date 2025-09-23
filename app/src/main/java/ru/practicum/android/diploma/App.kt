@@ -28,7 +28,6 @@ class App : Application() {
                 industryModule,
                 workplaceModule,
                 regionModule,
-                // appModule
             )
         }
     }

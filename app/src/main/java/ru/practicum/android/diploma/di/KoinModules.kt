@@ -67,11 +67,6 @@ import java.util.concurrent.TimeUnit
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
 
-// Общие зависимости
-// val appModule = module {
-//    single<SharedPreferences> { provideSharedPreferences(androidContext()) }
-// }
-
 // Модуль для работы с Room
 val databaseModule = module {
     factory { VacancyMapper }
@@ -161,10 +156,6 @@ val favouritesModule = module {
 
     viewModel { FavouritesViewModel(get()) }
 }
-
-// fun provideSharedPreferences(context: Context): SharedPreferences {
-//    return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-// }
 
 // Модуль для экрана "фильтры"
 val filteringModule = module {
