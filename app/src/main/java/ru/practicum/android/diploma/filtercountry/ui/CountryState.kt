@@ -6,4 +6,5 @@ sealed interface CountryState {
     data object Loading : CountryState
     data class Error(val message: String) : CountryState
     data class Content(val countries: List<Area>) : CountryState
+    object CountrySelected : CountryState
 }

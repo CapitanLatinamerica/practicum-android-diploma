@@ -154,7 +154,7 @@ val favouritesModule = module {
         FavouritesRepositoryImpl(get(), get())
     }
 
-    viewModel { FavouritesViewModel(get()) }
+    viewModel { FavouritesViewModel(get(), get()) }
 }
 
 // Модуль для экрана "фильтры"
@@ -205,7 +205,7 @@ val industryModule = module {
 val workplaceModule = module {
     viewModel { WorkplaceViewModel(get()) }
 
-    viewModel { CountryViewModel(get()) }
+    viewModel { CountryViewModel(get(), get()) }
 
     factory { AreaMapper }
 

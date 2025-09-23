@@ -14,7 +14,6 @@ import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
 class RegionViewModel(
     private val interactor: RegionInteractor,
     private val filteringUseCase: FilteringUseCase
-
 ) : ViewModel() {
 
     private val _regionState =

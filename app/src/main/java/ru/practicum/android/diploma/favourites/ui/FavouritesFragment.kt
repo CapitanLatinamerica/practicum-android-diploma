@@ -8,21 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools
 import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
-import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 
 class FavouritesFragment : Fragment() {
 
     private val favouritesViewModel: FavouritesViewModel by viewModel()
-    private val vacancyMapper: VacancyToVacancyUiMapper by inject()
+
     private var _binding: FragmentFavouritesBinding? = null
     private val binding: FragmentFavouritesBinding
         get() = _binding!!
+
     private var adapter: FavouritesAdapter? = null
+
     private var debouncedClick: ((String) -> Unit)? = null
 
     override fun onCreateView(
@@ -80,11 +80,7 @@ class FavouritesFragment : Fragment() {
             }
 
             is FavouritesState.Content -> {
-                // Используем маппер для преобразования списка
-                val vacancyUiList = favouritesState.favouritesList.map { vacancy ->
-                    vacancyMapper.mapToUi(vacancy)
-                }
-                adapter?.updateData(vacancyUiList)
+                adapter?.updateData(favouritesState.favouritesList)
                 binding.container.visibility = View.GONE
                 binding.favoritesRecyclerView.visibility = View.VISIBLE
             }
