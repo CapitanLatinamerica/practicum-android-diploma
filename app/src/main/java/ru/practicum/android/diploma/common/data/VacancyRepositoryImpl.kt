@@ -62,14 +62,6 @@ class VacancyRepositoryImpl(
         }
             .flowOn(Dispatchers.IO)
 
-    override fun searchAllVacancies(): List<Vacancy> {
-        TODO("Not yet implemented")
-    }
-
-    override fun searchVacanciesWithFilter(filteredVacancyParameters: FilteredVacancyParameters): List<Vacancy> {
-        TODO("Not yet implemented")
-    }
-
     // Получение детали вакансии по ID
     override suspend fun getVacancyDetailsById(id: String): Resource<Vacancy> {
         val response = networkClient.doRequest(VacancyRequest(id))
@@ -135,14 +127,6 @@ class VacancyRepositoryImpl(
         return entity?.let {
             mapper.mapFromEntityToVacancy(entity)
         }
-    }
-
-    override fun deleteById(id: String): Boolean {
-        TODO("Not implemented deleteById")
-    }
-
-    override fun deleteVacancyFromFavorites(id: String) {
-        TODO("Not implemented deleteVacancyFromFavorites")
     }
 
     private suspend fun FlowCollector<Resource<VacanciesPage>>.doOnSuccess(

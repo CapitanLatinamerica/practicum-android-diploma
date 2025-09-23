@@ -7,19 +7,9 @@ import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
 
 interface VacancyRepository {
-
     // Поиск вакансий с фильтрацией по тексту и страницам
     fun searchVacancies(filteredVacancyParameters: FilteredVacancyParameters): Flow<Resource<VacanciesPage>>
 
-    fun searchAllVacancies(): List<Vacancy>
-
-    fun searchVacanciesWithFilter(filteredVacancyParameters: FilteredVacancyParameters): List<Vacancy>
-
     // Получение детальной информации о вакансии по ID, возвращает Resource с Vacancy
     suspend fun getVacancyDetailsById(id: String): Resource<Vacancy>
-
-    fun deleteById(id: String): Boolean
-
-    fun deleteVacancyFromFavorites(id: String)
-
 }

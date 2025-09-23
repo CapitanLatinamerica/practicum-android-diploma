@@ -60,8 +60,6 @@ class RetrofitNetworkClient(
                     else ->
                         NetResponse().serverError()
                 }
-//            } catch (e: CancellationException) {
-//                throw e
             } catch (e: SocketTimeoutException) {
                 Log.e(TAG, "Socket timeout", e)
                 NetResponse().error(ErrorConst.TIMEOUT_ERROR)
