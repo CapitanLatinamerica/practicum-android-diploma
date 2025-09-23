@@ -54,6 +54,8 @@ class IndustryFragment : Fragment() {
 
         binding.industryRecyclerView.adapter = adapter
 
+        viewModel.loadInitialIndustries()
+
         viewModel.industryState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 IndustryState.Loading -> {
