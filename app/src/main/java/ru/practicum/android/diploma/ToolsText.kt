@@ -7,6 +7,15 @@ import android.text.TextPaint
 import android.text.style.TextAppearanceSpan
 
 object ToolsText {
+    /**
+     * Автоматически форматирует текст с использованием переноса строк и префиксов.
+     * Используется для списков (требования, условия, навыки).
+     *
+     * Логика:
+     * - строки, заканчивающиеся на ":" — заголовки;
+     * - строки, начинающиеся с "- " или заканчивающиеся на ";" — элементы списка;
+     * - остальные строки — обычный текст.
+     */
     // Метод для форматирования списка описания, требований, условий, навыков
     fun autoFormatTextWithPaint(
         text: String,
@@ -23,7 +32,7 @@ object ToolsText {
                     if (lineIndex > 0) append("\n")
                     if (line.endsWith(":")) { // Если строка заканчивается двоеточием
                         append(line) // НЕ добавляем префикс, а применяем стиль TextMedium16
-                    } else if (line.startsWith("- ")) {
+                    } else if (line.startsWith("- ") || line.endsWith(";")) {
                         // Если строка начинается с "- ", убираем и добавляем префикс
                         val modifiedLine = line.removePrefix("- ")
                         // форматируем эту строку с префиксом
@@ -37,6 +46,7 @@ object ToolsText {
         }
     }
 
+    // Обрабатывает одну строку текста: добавляет префикс (•), переносит по ширине
     private fun StringBuilder.processLine(
         line: String,
         context: FormattingContext
@@ -57,6 +67,10 @@ object ToolsText {
         appendCurrentLineIfNotEmpty(currentLine)
     }
 
+    /**
+     * Обрабатывает слово: решает, поместить ли его в текущую строку
+     * или перенести на новую строку
+     */
     private fun StringBuilder.processWord(
         word: String,
         currentLine: StringBuilder,
@@ -74,6 +88,7 @@ object ToolsText {
         }
     }
 
+    // Форматирует многострочный текст для описаний вакансии
     fun formatDescriptionTextWithPaint(
         context: Context,
         text: String,
@@ -83,6 +98,7 @@ object ToolsText {
         val spannable = SpannableStringBuilder()
         val lines = text.lines()
         var previousLineWasHeader = false
+        val contextState = ContextState()
 
         lines.forEachIndexed { index, originalLine ->
             val line = originalLine.trim()
@@ -96,7 +112,8 @@ object ToolsText {
                         index = index,
                         paint = paint,
                         availableWidth = availableWidth,
-                        previousLineWasHeader = previousLineWasHeader
+                        previousLineWasHeader = previousLineWasHeader,
+                        contextState = contextState
                     )
                 )
                 previousLineWasHeader = line.endsWith(":")
@@ -115,6 +132,13 @@ object ToolsText {
         return autoFormatTextWithPaint(text, paint, availableWidth, prefix)
     }
 
+    /**
+     * Определяет, как обрабатывать конкретную строку:
+     * - заголовок
+     * - элемент списка (•)
+     * - обычный текст
+     * Учитывает контекст (находимся ли мы внутри списка)
+     */
     private fun processLine(params: LineProcessingParams) {
         addExtraNewlineIfNeeded(
             spannable = params.spannable,
@@ -123,29 +147,33 @@ object ToolsText {
             previousLineWasHeader = params.previousLineWasHeader
         )
 
+        val line = params.line
+
         when {
-            params.line.endsWith(":") -> processHeaderLine(
-                context = params.context,
-                spannable = params.spannable,
-                line = params.line
-            )
+            line.endsWith(":") -> {
+                processHeaderLine(params.context, params.spannable, line)
+                params.contextState.insideList = false
+            }
 
-            params.line.startsWith("- ") -> processListItem(
-                spannable = params.spannable,
-                line = params.line,
-                paint = params.paint,
-                availableWidth = params.availableWidth
-            )
+            // Элемент списка: "- ", ";", либо "." если продолжается блок списка
+            line.startsWith("- ") || line.endsWith(";") ||
+                (line.endsWith(".") && params.contextState.insideList) -> {
+                val cleanLine = when {
+                    line.startsWith("- ") -> line.removePrefix("- ")
+                    else -> line
+                }
+                processListItem(params.spannable, cleanLine, params.paint, params.availableWidth)
+                params.contextState.insideList = true
+            }
 
-            else -> processRegularLine(
-                spannable = params.spannable,
-                line = params.line,
-                paint = params.paint,
-                availableWidth = params.availableWidth
-            )
+            else -> {
+                processRegularLine(params.spannable, line, params.paint, params.availableWidth)
+                params.contextState.insideList = false
+            }
         }
     }
 
+    // Добавляет дополнительный перенос строки
     private fun addExtraNewlineIfNeeded(
         spannable: SpannableStringBuilder,
         line: String,
@@ -160,6 +188,7 @@ object ToolsText {
         }
     }
 
+    // Обрабатывает заголовок: применяет стиль TextMedium16
     private fun processHeaderLine(
         context: Context,
         spannable: SpannableStringBuilder,
@@ -176,6 +205,7 @@ object ToolsText {
         )
     }
 
+    // Обрабатывает элемент списка: добавляет префикс • и форматирует переносы
     private fun processListItem(
         spannable: SpannableStringBuilder,
         line: String,
@@ -192,6 +222,7 @@ object ToolsText {
         spannable.append(formattedText)
     }
 
+    // Обрабатывает обычный текст без префикса
     private fun processRegularLine(
         spannable: SpannableStringBuilder,
         line: String,
@@ -207,10 +238,9 @@ object ToolsText {
         spannable.append(formattedText)
     }
 
-    // Data class для группировки параметров форматирования
-
 }
 
+// Контекст форматирования одной строки
 private data class FormattingContext(
     val prefix: String,
     val indent: String,
@@ -218,6 +248,7 @@ private data class FormattingContext(
     val availableWidth: Int
 )
 
+// Параметры для обработки строки в Spannable
 private data class LineProcessingParams(
     val context: Context,
     val spannable: SpannableStringBuilder,
@@ -225,9 +256,11 @@ private data class LineProcessingParams(
     val index: Int,
     val paint: TextPaint,
     val availableWidth: Int,
-    val previousLineWasHeader: Boolean
+    val previousLineWasHeader: Boolean,
+    val contextState: ContextState
 )
 
+// Проверяет, нужно ли переносить слово на новую строку
 private fun shouldBreakLine(
     currentLineWidth: Float,
     wordWidth: Float,
@@ -238,6 +271,7 @@ private fun shouldBreakLine(
         currentLine.length > context.prefix.length
 }
 
+// Добавляет слово в текущую строку
 private fun addWordToCurrentLine(
     word: String,
     currentLine: StringBuilder,
@@ -254,12 +288,14 @@ private fun addWordToCurrentLine(
     return newLineWidth
 }
 
+// Добавляет текущую строку в итоговый текст, если она не пустая
 private fun StringBuilder.appendCurrentLineIfNotEmpty(currentLine: StringBuilder) {
     if (currentLine.isNotEmpty()) {
         append(currentLine.toString())
     }
 }
 
+// Переносит слово на новую строку с учётом отступа
 private fun StringBuilder.breakLine(
     currentLine: StringBuilder,
     word: String,
@@ -270,3 +306,8 @@ private fun StringBuilder.breakLine(
     currentLine.clear()
     currentLine.append(context.indent).append(word)
 }
+
+// Флаговое состояние контекста: находимся ли мы внутри списка
+private data class ContextState(
+    var insideList: Boolean = false
+)
