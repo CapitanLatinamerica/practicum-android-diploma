@@ -154,7 +154,7 @@ val favouritesModule = module {
         FavouritesRepositoryImpl(get(), get())
     }
 
-    viewModel { FavouritesViewModel(get()) }
+    viewModel { FavouritesViewModel(get(), get()) }
 }
 
 // Модуль для экрана "фильтры"
