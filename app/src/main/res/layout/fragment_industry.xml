@@ -49,7 +49,7 @@
         android:id="@+id/clearIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
+        android:layout_marginEnd="@dimen/padding_13"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/find_or_clean"
         android:scaleType="center"
@@ -61,7 +61,7 @@
 
     <ScrollView
         android:id="@+id/industryScrolls"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/zero_dp"
         android:layout_height="@dimen/zero_dp"
         android:layout_marginTop="@dimen/padding_16"
         android:visibility="visible"
@@ -73,7 +73,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/industryRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/zero_dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </ScrollView>
 

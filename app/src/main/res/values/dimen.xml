@@ -13,10 +13,12 @@
     <dimen name="vacancy_icon_shape_size">48dp</dimen>
     <dimen name="vacancy_icon_corner_radius">12dp</dimen>
 
+    <dimen name="padding_56">56dp</dimen>
     <dimen name="padding_30">30dp</dimen>
     <dimen name="padding_16">16dp</dimen>
     <dimen name="padding_17">17dp</dimen>
     <dimen name="padding_24">24dp</dimen>
+    <dimen name="padding_13">13dp</dimen>
     <dimen name="padding_12">12dp</dimen>
     <dimen name="padding_11">11dp</dimen>
     <dimen name="padding_4">4dp</dimen>
