@@ -60,6 +60,21 @@
     <string name="server_error">Ошибка сервера</string>
     <string name="no_vacancies_title">Таких вакансий нет</string>
     <string name="no_salary">Зарплата не указана</string>
+    <string name="share_vacancy">Поделиться вакансией</string>
+    <string name="workplace">Место работы</string>
+    <string name="industry">Отрасль</string>
+    <string name="salary_input">Введите сумму</string>
+    <string name="salary_hint">Ожидаемая зарплата</string>
+    <string name="only_with_salary">Не показывать без зарплаты</string>
+    <string name="apply_button">Применить</string>
+    <string name="delete_button">Сбросить</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
+    <string name="choose">Выбрать</string>
+    <string name="edit_region">Введите регион</string>
+    <string name="no_region">Такого региона нет</string>
+    <string name="error_region">Не удалось получить список</string>
+    <string name="industry_not_found">Отрасль не найдена</string>
 
     <!-- Тексты для описаний блоков в разметках -->
     <string name="image_view_details_descr">The same image as at the main screen</string>
@@ -69,6 +84,32 @@
     <string name="requirements_text">Какие-то требования</string>
     <string name="conditions_text">Какие-то условия\nУсловия номер два</string>
     <string name="skills_text">Верстать экраны\nПить чай без сахара</string>
-    <string name="vacancy_denied">Вакансия не найдена или удалена</string>
+    <string name="vacancy_denied">Вакансия не найдена или\nудалена</string>
     <string name="salary_not_specified">Зарплата не указана</string>
+
+    <string name="share_vacancy_title">Интересная вакансия</string>
+    <string name="share_vacancy_default">Посмотрите эту интересную вакансию!</string>
+    <string name="choose_email_app">Выберите почтовое приложение</string>
+    <string name="no_email_app">Почтовое приложение не найдено</string>
+    <string name="no_phone_app">Приложение для звонков не найдено</string>
+    <string name="contacts_default_text">+7 999 999 99 99\n+593 151 153 96 65</string>
+    <string name="vacancy_contacts">Контакты</string>
+    <string name="email_default_text">my.awesome.email@gmail.com\njust-another-fkng-email@gmail.com</string>
+    <string name="choose_phone_number">Выберите номер телефона</string>
+    <string name="cancel">Отмена</string>
+    <string name="email_icon">"📧 "</string>
+    <string name="industry_input">Введите отрасль</string>
+    <string name="choose_button">Выбрать</string>
+    <string name="find_or_clean">find or clean</string>
+    <string name="checkbox">checkbox</string>
+    <string name="item_industry_description">IT</string>
+    <string name="no_list_of_industries">Не удалось получить список</string>
+    <string name="industries_does_nt_exist">When a list of industries does\'nt exist</string>
+    <string name="do_search">do search</string>
+    <string name="initial_placeholder">initial placeholder</string>
+    <string name="industry_loading_error">Ошибка загрузки отраслей</string>
+    <string name="share_vacancy_with_link">Интересная вакансия: %1$s\n%2$s</string>
+    <string name="share_vacancy_without_link">Интересная вакансия: %1$s</string>
+    <string name="choose_email_client">Выберите почтовое приложение</string>
+    <string name="no_dialer_app">Нет доступных приложений для вызова</string>
 </resources>

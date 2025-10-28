@@ -34,7 +34,7 @@ class VacancyToVacancyUiMapper {
             from != null && to != null && from == to -> "${format(from)} ${symbolFor(currency)}"
             from != null && to != null -> "от ${format(from)} до ${format(to)} ${symbolFor(currency)}"
             from != null -> "от ${format(from)} ${symbolFor(currency)}"
-            to != null -> "${format(to)} ${symbolFor(currency)}"
+            to != null -> "до ${format(to)} ${symbolFor(currency)}"
             else -> "Зарплата не указана"
         }
     }

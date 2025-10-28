@@ -27,10 +27,14 @@ class RootActivity : AppCompatActivity() {
 
         // Слушатель места, где мы находимся, чтобы скрывать панель
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.vacancyDetailsFragment) {
-                binding.bottomNavigationView.visibility = View.GONE
-            } else {
-                binding.bottomNavigationView.visibility = View.VISIBLE
+            binding.bottomNavigationView.visibility = when (destination.id) {
+                R.id.vacancyDetailsFragment,
+                R.id.filteringFragment,
+                R.id.industryFragment,
+                R.id.workplaceFragment,
+                R.id.countryFragment,
+                R.id.regionFragment -> View.GONE
+                else -> View.VISIBLE
             }
         }
     }

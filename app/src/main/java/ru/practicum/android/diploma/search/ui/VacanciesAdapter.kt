@@ -62,9 +62,9 @@ class VacanciesAdapter(
         if (showFooter == show) return
         showFooter = show
         if (show) {
-            notifyItemInserted(itemCount)
+            notifyItemInserted(vacancies.size)
         } else {
-            notifyItemRemoved(itemCount)
+            notifyItemRemoved(vacancies.size)
         }
     }
 

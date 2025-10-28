@@ -1,15 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/industry_filter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".filterindustry.ui.IndustryFragment">
+    tools:context=".filtersettings.ui.FilteringFragment">
+
+    <!-- Вертикальные Guideline слева и справа -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/padding_16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/padding_16" />
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/OurCommonToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/industry_header" />
+
+    <EditText
+        android:id="@+id/industryEditText"
+        style="@style/EditText"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/tb_height"
+        android:layout_marginTop="@dimen/padding_8"
+        android:autofillHints="MyAwesomeHint"
+        android:hint="@string/industry_input"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_56"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <ImageButton
+        android:id="@+id/clearIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_13"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/find_or_clean"
+        android:scaleType="center"
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/industryEditText"
+        app:layout_constraintEnd_toEndOf="@id/industryEditText"
+        app:layout_constraintTop_toTopOf="@id/industryEditText"
+        app:tint="@color/black_universal" />
+
+    <ScrollView
+        android:id="@+id/industryScrolls"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
+        android:layout_marginTop="@dimen/padding_16"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/applyButton"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/industryEditText">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/industryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero_dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/applyButton"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/height_59"
+        android:layout_marginHorizontal="@dimen/padding_17"
+        android:layout_marginBottom="@dimen/padding_24"
+        android:backgroundTint="@color/blue"
+        android:text="@string/choose_button"
+        android:textAppearance="@style/TextMedium16"
+        android:textColor="@color/white_universal"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/radius_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/placeholderImage"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/fav_ph_height"
+        android:contentDescription="@string/industries_does_nt_exist"
+        android:src="@drawable/error_region"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@id/toolbar" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/placeholderText"
+        style="@style/TextMedium22"
+        android:layout_width="@dimen/ph_text_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_16"
         android:gravity="center"
-        android:text="@string/name_filter_industry"
-        android:textSize="30sp" />
+        android:text="@string/no_list_of_industries"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/placeholderImage" />
 
-</FrameLayout>
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="@dimen/search_progress_bar_diameter"
+        android:layout_height="@dimen/search_progress_bar_diameter"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

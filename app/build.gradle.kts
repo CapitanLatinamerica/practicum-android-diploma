@@ -87,6 +87,7 @@ dependencies {
     // region UI tests
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     // endregion
 
     // Jetpack Navigation Component

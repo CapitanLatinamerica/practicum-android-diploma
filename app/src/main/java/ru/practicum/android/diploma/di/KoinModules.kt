@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -12,34 +14,58 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.ErrorMessageProvider
 import ru.practicum.android.diploma.ErrorMessageProviderImpl
-import ru.practicum.android.diploma.common.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.common.data.db.AppDataBase
+import ru.practicum.android.diploma.common.data.impl.IndustryRepositoryImpl
+import ru.practicum.android.diploma.common.data.impl.VacancyRepositoryImpl
+import ru.practicum.android.diploma.common.data.mapper.AreaMapper
+import ru.practicum.android.diploma.common.data.mapper.IndustryMapper
 import ru.practicum.android.diploma.common.data.mapper.VacancyMapper
-import ru.practicum.android.diploma.common.data.model.NetworkClient
 import ru.practicum.android.diploma.common.data.network.HeadHunterApi
+import ru.practicum.android.diploma.common.data.network.NetworkClient
 import ru.practicum.android.diploma.common.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.common.domain.IndustryRepository
 import ru.practicum.android.diploma.common.domain.VacancyRepository
 import ru.practicum.android.diploma.favourites.data.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesInteractor
 import ru.practicum.android.diploma.favourites.domain.db.FavouritesRepository
 import ru.practicum.android.diploma.favourites.domain.impl.FavouritesInteractorImpl
 import ru.practicum.android.diploma.favourites.ui.FavouritesViewModel
-import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
-import ru.practicum.android.diploma.search.domain.usecase.SearchUseCaseImpl
-import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCase
-import ru.practicum.android.diploma.search.domain.usecase.SearchVacancyDetailsUseCaseImpl
+import ru.practicum.android.diploma.filtercountry.data.CountryRepositoryImpl
+import ru.practicum.android.diploma.filtercountry.domain.CountryInteractor
+import ru.practicum.android.diploma.filtercountry.domain.CountryRepository
+import ru.practicum.android.diploma.filtercountry.domain.impl.CountryInteractorImpl
+import ru.practicum.android.diploma.filtercountry.ui.CountryViewModel
+import ru.practicum.android.diploma.filterindustry.domain.GetIndustriesUseCase
+import ru.practicum.android.diploma.filterindustry.domain.impl.GetIndustriesUseCaseImpl
+import ru.practicum.android.diploma.filterindustry.ui.IndustryViewModel
+import ru.practicum.android.diploma.filterregion.data.RegionRepositoryImpl
+import ru.practicum.android.diploma.filterregion.domain.RegionInteractor
+import ru.practicum.android.diploma.filterregion.domain.RegionRepository
+import ru.practicum.android.diploma.filterregion.domain.impl.RegionInteractorImpl
+import ru.practicum.android.diploma.filterregion.ui.RegionViewModel
+import ru.practicum.android.diploma.filtersettings.data.FilterStorage
+import ru.practicum.android.diploma.filtersettings.data.impl.FilteringRepositoryImpl
+import ru.practicum.android.diploma.filtersettings.domain.FilteringRepository
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
+import ru.practicum.android.diploma.filtersettings.domain.impl.FilteringUseCaseImpl
+import ru.practicum.android.diploma.filtersettings.ui.FilteringViewModel
+import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
+import ru.practicum.android.diploma.filterworkplace.ui.WorkplaceViewModel
+import ru.practicum.android.diploma.search.domain.SearchUseCase
+import ru.practicum.android.diploma.search.domain.SearchVacancyDetailsUseCase
+import ru.practicum.android.diploma.search.domain.impl.SearchUseCaseImpl
+import ru.practicum.android.diploma.search.domain.impl.SearchVacancyDetailsUseCaseImpl
 import ru.practicum.android.diploma.search.ui.SearchViewModel
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
+import ru.practicum.android.diploma.vacancydetails.data.SharingInteractorImpl
+import ru.practicum.android.diploma.vacancydetails.data.SharingRepositoryImpl
+import ru.practicum.android.diploma.vacancydetails.domain.SharingInteractor
+import ru.practicum.android.diploma.vacancydetails.domain.SharingRepository
 import ru.practicum.android.diploma.vacancydetails.ui.VacancyDetailsViewModel
 import java.util.concurrent.TimeUnit
 
 private const val NETWORK_TIMEOUT_SECONDS = 30L
 private const val NETWORK_CONNECT_TIMEOUT_SECONDS = 10L
-
-// Общие зависимости
-val appModule = module {
-
-}
 
 // Модуль для работы с Room
 val databaseModule = module {
@@ -47,8 +73,7 @@ val databaseModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDataBase::class.java, "database.db")
-            .fallbackToDestructiveMigration(false)
-            .build()
+            .fallbackToDestructiveMigration(false).build()
     }
 }
 
@@ -60,13 +85,10 @@ val searchModule = module {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
-        OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
+        OkHttpClient.Builder().retryOnConnectionFailure(true)
             .connectTimeout(NETWORK_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .addInterceptor(logging)
-            .build()
+            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS).addInterceptor(logging).build()
     }
 
     // Gson
@@ -76,11 +98,8 @@ val searchModule = module {
 
     // Retrofit
     single {
-        Retrofit.Builder()
-            .baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/")
-            .client(get())
-            .addConverterFactory(GsonConverterFactory.create(get()))
-            .build()
+        Retrofit.Builder().baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/").client(get())
+            .addConverterFactory(GsonConverterFactory.create(get())).build()
     }
 
     // API
@@ -111,14 +130,17 @@ val searchModule = module {
         ErrorMessageProviderImpl(androidContext())
     }
 
-    viewModel { SearchViewModel(get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get()) }
 }
 
 // Модуль для деталей вакансии
 val vacancyDetailsModule = module {
 
+    single<SharingRepository> { SharingRepositoryImpl() }
+    single<SharingInteractor> { SharingInteractorImpl(get()) }
+
     viewModel { (vacancyId: String) ->
-        VacancyDetailsViewModel(get(), get(), vacancyId)
+        VacancyDetailsViewModel(get(), get(), get(), vacancyId, get())
     }
 }
 
@@ -132,5 +154,84 @@ val favouritesModule = module {
         FavouritesRepositoryImpl(get(), get())
     }
 
-    viewModel { FavouritesViewModel(get()) }
+    viewModel { FavouritesViewModel(get(), get()) }
+}
+
+// Модуль для экрана "фильтры"
+val filteringModule = module {
+
+    single<SharedPreferences> {
+        androidContext().getSharedPreferences(
+            FilterStorage.FILTER_PARAMETERS_NAME,
+            Context.MODE_PRIVATE
+        )
+    }
+
+    single { FilterStorage(get(), get()) }
+
+    single<FilteringRepository> {
+        FilteringRepositoryImpl(get())
+    }
+
+    single<FilteringUseCase> {
+        FilteringUseCaseImpl(get())
+    }
+
+    factory<FilterParametersMapper> { FilterParametersMapper() }
+
+    viewModel { FilteringViewModel(get(), get()) }
+}
+
+val industryModule = module {
+
+    factory { IndustryMapper }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(
+            networkClient = get(),
+            mapper = get()
+        )
+    }
+
+    single<GetIndustriesUseCase> {
+        GetIndustriesUseCaseImpl(get())
+    }
+
+    viewModel {
+        IndustryViewModel(get(), get())
+    }
+}
+
+val workplaceModule = module {
+    viewModel { WorkplaceViewModel(get()) }
+
+    viewModel { CountryViewModel(get(), get()) }
+
+    factory { AreaMapper }
+
+    single<CountryRepository> {
+        CountryRepositoryImpl(
+            networkClient = get(),
+            mapper = get()
+        )
+    }
+
+    single<CountryInteractor> {
+        CountryInteractorImpl(get())
+    }
+}
+
+val regionModule = module {
+
+    single<RegionInteractor> {
+        RegionInteractorImpl(get())
+    }
+
+    single<RegionRepository> {
+        RegionRepositoryImpl(get(), get())
+    }
+
+    viewModel {
+        RegionViewModel(get(), get())
+    }
 }

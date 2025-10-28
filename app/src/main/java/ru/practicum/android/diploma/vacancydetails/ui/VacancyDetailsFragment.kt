@@ -10,11 +10,12 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.ToolsText
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailsBinding
-import ru.practicum.android.diploma.vacancydetails.domain.VacancyDetailsState
+import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyDetailsUi
 import ru.practicum.android.diploma.vacancydetails.ui.model.VacancyToVacancyDetailsUiMapper
 
 class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
@@ -33,7 +34,11 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Получение ID вакансии из аргументов навигации
         vacancyId = arguments?.getString("vacancyId") ?: run {
-            showError("Vacancy ID is required")
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Vacancy ID is required",
+                android.widget.Toast.LENGTH_LONG
+            ).show()
             return
         }
 
@@ -48,7 +53,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
                 when (state) {
                     is VacancyDetailsState.Loading -> showLoading()
                     is VacancyDetailsState.Content -> showVacancyDetails(state.vacancy)
-                    is VacancyDetailsState.Error -> showError(state.message)
+                    is VacancyDetailsState.Error -> showError(state.errorType, state.message)
                 }
             }
         }
@@ -98,15 +103,7 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
         binding.progressBar.visibility = View.GONE
 
         // Заполняем данные
-        binding.vacancyTitle.text = vacancy.name
-        binding.experienceLine.text = vacancy.experience
-        binding.scheduleTextView.text = vacancy.schedule
-        binding.vacancySalary.text = uiModel.salaryText
-        binding.vacancyDescriptionTextView.text = vacancy.description
-        binding.companyName.text = vacancy.employer
-        binding.companyCity.text = vacancy.area
-        binding.experienceLine.text = vacancy.experience
-        binding.skillsTextView.text = vacancy.skills.toString()
+        fillData(vacancy, uiModel)
 
         Glide.with(this)
             .load(vacancy.logo)
@@ -119,20 +116,43 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
 
         // Обычное форматирование для skills
         formatSkillsTextView()
+
+        formatContactsTextViews()
+
+        // Отображаем контакты
+        setupContacts(vacancy)
+
+        // Обработчик кнопки поделиться
+        view?.findViewById<TextView>(R.id.share_btn)?.setOnClickListener {
+            viewModel.shareVacancy(requireContext())
+        }
+    }
+
+    private fun fillData(
+        vacancy: Vacancy,
+        uiModel: VacancyDetailsUi
+    ) {
+        binding.vacancyTitle.text = vacancy.name
+        binding.experienceLine.text = vacancy.experience
+        binding.scheduleTextView.text = vacancy.schedule
+        binding.vacancySalary.text = uiModel.salaryText
+        binding.vacancyDescriptionTextView.text = vacancy.description
+        binding.companyName.text = vacancy.employer
+        binding.companyCity.text = if (vacancy.address.isNullOrEmpty()) vacancy.area else vacancy.address
+        binding.skillsTextView.text = vacancy.skills.toString()
     }
 
     // Показать состояние ошибки
-    private fun showError(message: String) {
+    private fun showError(errorType: ErrorType, message: String) {
+        val placeholderImage = when (errorType) {
+            ErrorType.DENIED_VACANCY -> R.drawable.no_vacancy_placeholder
+            else -> R.drawable.server_error_placeholder_vac_det
+        }
         binding.progressBar.visibility = View.GONE
         binding.detailsScrollView.visibility = View.GONE
         binding.placeholdersBlock.visibility = View.VISIBLE
-
-        // Покажем тост с сообщением об ошибке
-        android.widget.Toast.makeText(
-            requireContext(),
-            message,
-            android.widget.Toast.LENGTH_LONG
-        ).show()
+        binding.exatclyPlaceholder.setImageResource(placeholderImage)
+        binding.placeholderText.text = message
     }
 
     // Обновление иконки "лайка" в тулбаре в зависимости от статуса избранного
@@ -165,17 +185,57 @@ class VacancyDetailsFragment : Fragment(R.layout.fragment_vacancy_details) {
     private fun formatSkillsTextView() {
         binding.skillsTextView.post {
             val text = binding.skillsTextView.text?.toString()
-            if (!text.isNullOrBlank()) {
-                val widthLeft = binding.skillsTextView.paddingLeft
-                val widthRight = binding.skillsTextView.paddingRight
-                val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
+            val widthLeft = binding.skillsTextView.paddingLeft
+            val widthRight = binding.skillsTextView.paddingRight
+            val availableWidth = binding.skillsTextView.width - widthLeft - widthRight
 
+            if (!text.isNullOrBlank()) {
                 binding.skillsTextView.text = ToolsText.formatSkillsTextWithPaint(
                     text,
                     binding.skillsTextView.paint,
                     availableWidth
                 )
+            } else {
+                binding.skillsTextView.visibility = View.GONE
             }
+        }
+    }
+
+    private fun formatContactsTextViews() {
+        listOf(binding.phoneTextView, binding.emailTextView).forEach { textView ->
+            textView.post {
+                val text = textView.text?.toString()
+                if (!text.isNullOrBlank()) {
+                    val widthLeft = textView.paddingLeft
+                    val widthRight = textView.paddingRight
+                    val availableWidth = textView.width - widthLeft - widthRight
+
+                    val formattedText = ToolsText.autoFormatTextWithPaint(
+                        text,
+                        textView.paint,
+                        availableWidth,
+                        prefix = "" // Без префиксов для контактов
+                    )
+                    textView.text = formattedText
+                }
+            }
+        }
+    }
+
+    private fun setupContacts(vacancy: Vacancy) {
+        // Настройка телефонов
+        ContactHandler(this).setupPhones(vacancy.contactPhones, binding.phoneTextView)
+
+        // Настройка email
+        ContactHandler(this).setupEmail(vacancy.contactEmail, binding.emailTextView)
+
+        // Скрываем секцию контактов если нет данных
+        if (vacancy.contactPhones.isNullOrEmpty() && vacancy.contactEmail.isNullOrBlank()) {
+            binding.vacancyContacts.visibility = View.GONE
+            binding.phoneTextView.visibility = View.GONE
+            binding.emailTextView.visibility = View.GONE
+        } else {
+            binding.vacancyContacts.visibility = View.VISIBLE
         }
     }
 

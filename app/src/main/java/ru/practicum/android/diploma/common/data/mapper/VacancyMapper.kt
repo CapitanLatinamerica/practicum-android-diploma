@@ -1,10 +1,14 @@
 package ru.practicum.android.diploma.common.data.mapper
 
+import com.google.gson.Gson
 import ru.practicum.android.diploma.common.data.db.entity.VacancyEntity
 import ru.practicum.android.diploma.common.data.domain.api.VacancyDto
+import ru.practicum.android.diploma.common.domain.entity.Phone
 import ru.practicum.android.diploma.common.domain.entity.Vacancy
 
 object VacancyMapper {
+    private val gson = Gson()
+
     fun mapFromVacancyDtoToVacancy(vacancyDto: VacancyDto): Vacancy {
         return Vacancy(
             id = vacancyDto.id ?: "",
@@ -19,7 +23,14 @@ object VacancyMapper {
             employment = vacancyDto.employmentDto?.name,
             schedule = vacancyDto.scheduleDto?.name,
             description = vacancyDto.description,
-            skills = vacancyDto.skills?.joinToString("\n") ?: ""
+            skills = vacancyDto.skills?.joinToString("\n") ?: "",
+            contactEmail = vacancyDto.contactsDto?.email,
+            contactPhones = vacancyDto.contactsDto?.phoneDtos?.map {
+                Phone(it.formatted, it.comment)
+            },
+            contactPerson = vacancyDto.contactsDto?.name,
+            vacancyUrl = vacancyDto.url,
+            address = vacancyDto.addressDto?.raw ?: ""
         )
     }
 
@@ -37,7 +48,12 @@ object VacancyMapper {
             employment = vacancy.employment,
             schedule = vacancy.schedule,
             description = vacancy.description,
-            skills = vacancy.skills
+            skills = vacancy.skills,
+            contactEmail = vacancy.contactEmail,
+            contactPhonesJson = vacancy.contactPhones?.let { gson.toJson(it) },
+            contactPerson = vacancy.contactPerson,
+            vacancyUrl = vacancy.vacancyUrl,
+            address = vacancy.address
         )
     }
 
@@ -55,7 +71,14 @@ object VacancyMapper {
             employment = vacancyEntity.employment,
             schedule = vacancyEntity.schedule,
             description = vacancyEntity.description,
-            skills = vacancyEntity.skills
+            skills = vacancyEntity.skills,
+            contactEmail = vacancyEntity.contactEmail,
+            contactPhones = vacancyEntity.contactPhonesJson?.let {
+                gson.fromJson(it, Array<Phone>::class.java).toList()
+            },
+            contactPerson = vacancyEntity.contactPerson,
+            vacancyUrl = vacancyEntity.vacancyUrl,
+            address = vacancyEntity.address
         )
     }
 }

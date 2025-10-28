@@ -9,17 +9,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.ErrorMessageProvider
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.Event
 import ru.practicum.android.diploma.Resource
+import ru.practicum.android.diploma.common.domain.entity.FilteredVacancyParameters
+import ru.practicum.android.diploma.filtersettings.domain.FilteringUseCase
+import ru.practicum.android.diploma.filtersettings.ui.mapper.FilterParametersMapper
+import ru.practicum.android.diploma.search.domain.SearchUseCase
 import ru.practicum.android.diploma.search.domain.model.VacanciesPage
-import ru.practicum.android.diploma.search.domain.usecase.SearchUseCase
 import ru.practicum.android.diploma.search.ui.model.VacancyToVacancyUiMapper
 import ru.practicum.android.diploma.search.ui.model.VacancyUi
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val mapper: VacancyToVacancyUiMapper,
-    private val errorMessageProvider: ErrorMessageProvider
+    private val vacancyToVacancyUiMapper: VacancyToVacancyUiMapper,
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val filteringUseCase: FilteringUseCase,
+    private val filterParametersMapper: FilterParametersMapper
 ) : ViewModel() {
 
     companion object {
@@ -35,6 +41,9 @@ class SearchViewModel(
     private val _toastMessage = MutableLiveData<Event<String>?>()
     val toastMessage: LiveData<Event<String>?> = _toastMessage
 
+    private val _isFilterApplied = MutableLiveData(false)
+    val isFilterApplied: LiveData<Boolean> = _isFilterApplied
+
     private var latestSearchText: String? = null
 
     private var debounceJob: Job? = null
@@ -45,9 +54,31 @@ class SearchViewModel(
     private var isNextPageLoading = false
     private val requestedPages = mutableSetOf<Int>()
     private val vacanciesList = mutableListOf<VacancyUi>()
+    private var pageErrorToastShowed = false
+
+    private var currentFilterParams = FilteredVacancyParameters(
+        areaId = null,
+        industryId = null,
+        text = null,
+        salary = null,
+        page = null,
+        onlyWithSalary = null
+    )
 
     init {
         _searchState.value = SearchState.Initial
+        viewModelScope.launch {
+            val saved = filteringUseCase.loadParameters()
+            val mapped = filterParametersMapper.mapToSearchParams(saved)
+            currentFilterParams = mapped
+        }
+    }
+
+    fun checkFilterStatus() {
+        viewModelScope.launch {
+            val applied = filteringUseCase.isNotBlank()
+            _isFilterApplied.postValue(applied)
+        }
     }
 
     fun clearSearch() {
@@ -62,7 +93,6 @@ class SearchViewModel(
     fun searchDebounce(changedText: String) {
         if (changedText == latestSearchText) return
         latestSearchText = changedText
-
         debounceJob?.cancel()
         debounceJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
@@ -93,11 +123,14 @@ class SearchViewModel(
         startLoading(page, isFirstRequest)
 
         collectJob = viewModelScope.launch {
-            searchUseCase.searchVacancies(query, page)
+            val params = buildParamsForSearch(page, query)
+
+            searchUseCase.searchVacancies(params)
                 .onCompletion { finishLoading(page) }
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
+                            pageErrorToastShowed = false
                             val pageObj = resource.data!!
                             handleSuccess(page, pageObj)
                         }
@@ -113,25 +146,18 @@ class SearchViewModel(
     private fun startLoading(page: Int, isFirstRequest: Boolean) {
         requestedPages.add(page)
         isNextPageLoading = true
-        if (!isFirstRequest) {
-            _isBottomLoading.postValue(true)
-        } else {
-            _isBottomLoading.postValue(false)
-        }
+        _isBottomLoading.postValue(!isFirstRequest)
     }
 
     private fun handleSuccess(page: Int, pageObj: VacanciesPage) {
         currentPage = pageObj.page
         maxPages = pageObj.pages
 
-        val newUi = pageObj.items.map { mapper.mapToUi(it) }
+        val newUi = pageObj.items.map { vacancyToVacancyUiMapper.mapToUi(it) }
         if (page == 1) {
             vacanciesList.clear()
-            vacanciesList.addAll(newUi)
-        } else {
-            vacanciesList.addAll(newUi)
         }
-
+        vacanciesList.addAll(newUi)
         if (page == 1 && vacanciesList.isEmpty()) {
             _searchState.postValue(
                 SearchState.Empty(errorMessageProvider.nothingFound())
@@ -144,11 +170,14 @@ class SearchViewModel(
     }
 
     private fun handleRequestError(page: Int, message: String) {
-        val displayMessage = mapErrorMessage(message)
+        val (errorType, displayMessage) = mapErrorMessage(message)
         if (page == 1) {
-            _searchState.postValue(SearchState.Error(displayMessage))
+            _searchState.postValue(SearchState.Error(errorType, displayMessage))
         } else {
-            _toastMessage.postValue(Event(displayMessage))
+            if (!pageErrorToastShowed) {
+                _toastMessage.postValue(Event(displayMessage))
+            }
+            pageErrorToastShowed = true
         }
     }
 
@@ -166,11 +195,67 @@ class SearchViewModel(
         vacanciesList.clear()
     }
 
-    private fun mapErrorMessage(errMsg: String?): String {
+    private fun mapErrorMessage(errMsg: String?): Pair<ErrorType, String> {
         return when (errMsg) {
-            "Проверьте подключение к интернету" -> errorMessageProvider.noInternet()
-            "Ошибка сервера" -> errorMessageProvider.serverError()
-            else -> errorMessageProvider.serverError()
+            "Проверьте подключение к интернету" -> ErrorType.NO_INTERNET to errorMessageProvider.noInternet()
+            "Ошибка сервера" -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
+            else -> ErrorType.SERVER_ERROR to errorMessageProvider.serverError()
+        }
+    }
+
+    private fun buildParamsForSearch(page: Int, text: String?): FilteredVacancyParameters {
+        val finalText = text?.takeIf { it.isNotBlank() }
+
+        val areaId = currentFilterParams.areaId?.takeIf { it != 0 }
+        val industryId = currentFilterParams.industryId?.takeIf { it != 0 }
+        val salary = currentFilterParams.salary?.takeIf { it != 0 }
+        val onlyWithSalary = currentFilterParams.onlyWithSalary?.takeIf { it }
+
+        return FilteredVacancyParameters(
+            areaId = areaId,
+            industryId = industryId,
+            text = finalText,
+            salary = salary,
+            page = page,
+            onlyWithSalary = onlyWithSalary
+        )
+    }
+
+    // Это событие, когда была нажата кнопка "Применить" на экране фильтров
+    private fun applyFilters(newParams: FilteredVacancyParameters) {
+        currentFilterParams = FilteredVacancyParameters(
+            areaId = newParams.areaId,
+            industryId = newParams.industryId,
+            text = null,
+            salary = newParams.salary,
+            page = null,
+            onlyWithSalary = newParams.onlyWithSalary
+        )
+
+        resetPaging()
+
+        val lastText = latestSearchText
+        if (!lastText.isNullOrBlank()) {
+            _searchState.postValue(SearchState.Loading)
+            loadPage(lastText, 1, isFirstRequest = true)
+        } else {
+            _searchState.postValue(SearchState.Initial)
+        }
+    }
+
+    // Это обработчик внешнего сигнала, что фильтры были изменены (или просто сохранились)
+    fun onFiltersApplied(performSearch: Boolean) {
+        viewModelScope.launch {
+            val savedParams = filteringUseCase.loadParameters()
+            val mapped = filterParametersMapper.mapToSearchParams(savedParams)
+
+            if (mapped != currentFilterParams) {
+                if (performSearch) {
+                    applyFilters(mapped)
+                } else {
+                    currentFilterParams = mapped
+                }
+            }
         }
     }
 }

@@ -2,19 +2,21 @@ package ru.practicum.android.diploma.search.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.ErrorType
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.Tools.debounce
 import ru.practicum.android.diploma.databinding.FragmentMainBinding
@@ -48,6 +50,11 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.isFilterApplied.observe(viewLifecycleOwner) { applied ->
+            switchFilterMarkIcon(applied)
+        }
+        viewModel.checkFilterStatus()
+
         onVacancyClickDebounce = debounce(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -68,24 +75,6 @@ class MainFragment : Fragment() {
             renderState(state)
         }
 
-        binding.editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Для многоуважаемого детекта
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                extracted(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Для многоуважаемого детекта
-            }
-        })
-
-        binding.btnEditAction.setOnClickListener {
-            extracted1()
-        }
-
         viewModel.isBottomLoading.observe(viewLifecycleOwner) { loading ->
             adapter?.showLoadingFooter(loading)
         }
@@ -99,18 +88,51 @@ class MainFragment : Fragment() {
         binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
-                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                val lastVisible = lm.findLastVisibleItemPosition()
-                val itemCount = adapter?.itemCount ?: 0
-                if (lastVisible >= itemCount - 1) {
-                    viewModel.onLastItemReached()
-                }
+                onScroll(dy, recyclerView)
             }
         })
+
+        // Cлушатель результата от FilteringFragment о том, запускать поиск или просто обновить параметры
+        setFragmentResultListener("filters_applied") { _, bundle ->
+            val performSearch = bundle.getBoolean("perform_search", false)
+            viewModel.onFiltersApplied(performSearch)
+        }
+
+        defineListeners()
     }
 
-    private fun extracted1() {
+    private fun defineListeners() {
+        binding.editText.doOnTextChanged { text, _, _, _ ->
+            handleTextChange(text)
+        }
+
+        binding.btnEditAction.setOnClickListener {
+            handleEditText()
+        }
+
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.filter -> {
+                    findNavController().navigate(R.id.action_mainFragment_to_filteringFragment)
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun onScroll(dy: Int, recyclerView: RecyclerView) {
+        if (dy <= 0) return
+        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+        val lastVisible = lm.findLastVisibleItemPosition()
+        val itemCount = adapter?.itemCount ?: 0
+        if (lastVisible >= itemCount - 1) {
+            viewModel.onLastItemReached()
+        }
+    }
+
+    private fun handleEditText() {
         val text = binding.editText.text?.toString().orEmpty()
         if (text.isNotEmpty()) {
             binding.editText.setText("")
@@ -122,7 +144,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun extracted(s: CharSequence?) {
+    private fun handleTextChange(s: CharSequence?) {
         val text = s?.toString().orEmpty().trim()
         updateEditActionIcon(text.isNotEmpty())
         if (text.isBlank()) {
@@ -140,7 +162,7 @@ class MainFragment : Fragment() {
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.found, state.vacancies)
             is SearchState.Empty -> showEmpty(state.message)
-            is SearchState.Error -> showError(state.errorMessage)
+            is SearchState.Error -> showError(state.errorType, state.errorMessage)
         }
     }
 
@@ -162,6 +184,16 @@ class MainFragment : Fragment() {
             placeholderText.visibility = View.GONE
             countVacancies.visibility = View.GONE
         }
+    }
+
+    private fun switchFilterMarkIcon(enabled: Boolean) {
+        val id = binding.toolbar.menu.findItem(R.id.filter)
+        var iconId = R.drawable.ic_filter
+        if (enabled) {
+            iconId = R.drawable.ic_filter_active
+        }
+        id?.icon = ContextCompat.getDrawable(requireContext(), iconId)
+
     }
 
     private fun showContent(found: Int, vacancies: List<VacancyUi>) {
@@ -189,12 +221,16 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun showError(errorMessage: String) {
+    private fun showError(errorType: ErrorType, errorMessage: String) {
+        val placeholderImage = when (errorType) {
+            ErrorType.NO_INTERNET -> R.drawable.no_internet_placeholder
+            else -> R.drawable.server_error_placeholder
+        }
         with(binding) {
             progressbar.visibility = View.GONE
             recyclerViewMain.visibility = View.GONE
             placeholderMainScreen.visibility = View.VISIBLE
-            placeholderMainScreen.setImageResource(R.drawable.no_internet_placeholder)
+            placeholderMainScreen.setImageResource(placeholderImage)
             placeholderText.visibility = View.VISIBLE
             placeholderText.text = errorMessage
             countVacancies.visibility = View.GONE
